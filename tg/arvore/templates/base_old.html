@@ -1,0 +1,35 @@
+{% load staticfiles %}
+<html>
+    <head>
+        <title>{% block title %}Inicio{% endblock %}</title>
+        <link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/bootstrap.min.css'%}">
+    </head>
+    <body>
+        
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                    </button>
+                    <a class="navbar-brand" href="{% url 'index' %}">Inicio</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a href="{% url 'arvore_list' %}">Listagem de Arvores</a></li>
+            
+            {% if user.is_authenticated %}
+                <li> Ola {{user.username}} </li>
+			<li><a href="/logout/">Sair</a></li>              	
+            {% else %}
+			<li><a href="{% url 'registrar' %}">Registrar</a></li>
+            <li><a href="/login/">Logar</a></li>
+            {% endif %}		    
+                    </ul>
+                </div>
+            </div>
+        </nav>
+  
+        {% block content %}Ola Pessoas Bonitas =)!!!{% endblock %}
+    </body>
+</html>

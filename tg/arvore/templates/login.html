@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block content %}
+  <link href="{% static 'css/style_pages.css' %}" rel="stylesheet" />
+
+  <div class="container">
+  
+    <div class="col-md-6 col-md-offset-3">
+      
+      <div class="panel panel-default">
+       
+        <div class="panel-body">  
+           
+          <h2 align="center">
+            <img class="img" src="/static/lock-login.png"/>
+            <br/>
+            <small>Acesse com suas credenciais ou clique em <a href="{% url 'registrar' %}"> Registrar </a> para criar nova conta</small>
+          </h2>
+          
+          <hr>
+          
+          <form class="form-login" method="POST">
+            {% csrf_token %}
+    
+            {{ form.as_p }}
+            
+            <button class="btn btn-primary btn-block" type="submit">Acessar</button>
+            
+            <hr/>
+
+            <h2 align="center"><small> Ou </small></h2>
+            
+            <p align="center">
+              <a class="btn btn-social btn-google"><i class="fa fa-google-plus-square"></i> Acesse com o Google</a>
+
+              <a class="btn btn-social btn-facebook"><i class="fa fa-facebook-square"></i> Acesse com o Facebook</a>
+            </p>
+
+          </form>
+
+        </div>
+    
+      </div> <!-- panel -->
+    
+    </div> 
+
+  </div> <!-- /container -->
+    
+{% endblock content %}

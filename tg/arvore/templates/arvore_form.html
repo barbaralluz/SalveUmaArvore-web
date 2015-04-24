@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Formulário {{ form.instance.nome }}
+{% endblock %}
+
+{% block content %}
+        <form method="POST">
+            {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" >
+                {% if not form.instance.id %}
+                    Cadastrar
+                {% else %}
+                    Alterar
+                {% endif %}
+                </button>
+                <input type="reset" value="Cancelar" />
+            </div>
+        </form>
+{% endblock content %}
