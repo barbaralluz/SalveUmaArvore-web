@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}
+    Formulário de Árvores
+{% endblock %}
+
+{% block content %}
+  
+  <link href="{% static 'css/tree_form.css' %}" rel="stylesheet" />
+
+    
+  <div class="container">
+
+    <div class="row profile">
+      <div class="col-md-3">
+
+        <!-- Sidebar -->
+        <div class="profile-sidebar">
+        
+          <!-- Imagem -->
+          <div class="profile-userpic">
+            <img src="/static/img/user.png" class="img-responsive" alt="">
+          </div>
+        
+          <!-- Titulo -->
+          <div class="profile-usertitle">
+            <div class="profile-usertitle-name" font style="text-transform: uppercase;"> 
+              {{user.username}} 
+            </div>
+          </div>
+        
+          <!-- Menu -->
+          <div class="profile-usermenu">
+            <ul class="nav">
+              <li>
+                <a href="{% url 'profile' %}">
+                  <i class="glyphicon glyphicon-user"></i>
+                  MEU PERFIL
+                </a> 
+              </li>
+              
+              <li>
+                <a href="#">
+                  <i class="glyphicon glyphicon-cog"></i>
+                  CONFIGURAÇÕES
+                </a>
+              </li>
+            
+              <li>
+                <a href="{% url 'tree_list' %}">
+                  <span class="glyphicon glyphicon-map-marker"></span>
+                    VISUALIZAR MEU MAPA
+                </a>
+              </li>
+              
+              <li>
+                <a href="javascript:;" data-toggle="collapse" data-target="#demo">
+                  <span class="glyphicon glyphicon-tree-deciduous"></span>
+                  ÁRVORE 
+                  <i class="fa fa-fw fa-caret-down"></i>
+                </a>
+                <ul id="demo" class="nav">
+                    {% if not form.instance.id %}
+                  <li class="active">
+                    {% else %}
+                    <li>
+                        {% endif %}
+                    <a href="{% url 'tree_form' %}">
+                    <i class="glyphicon glyphicon-plus-sign"></i>
+                    ADICIONAR</a>
+                  </li>
+                  {% if form.instance.id %}
+                  <li class="active">
+                    {% else %}
+                    <li>
+                        {% endif %}
+                  
+                    <a href="{% url 'tree_list' %}">
+                    <i class="glyphicon glyphicon-list"></i>
+                    LISTAR | EDITAR | EXCLUIR </a>
+                  </li>
+                </ul>
+              </li>
+         
+          </ul>
+
+        </div> <!-- Final do Menu -->
+      </div> <!-- Final do Sidebar -->
+    </div> <!-- Final do Div md-6 -->
+
+    <div class="col-md-9">
+      <div class="profile-content">
+        <div id="mapdiv" style="width: 785px; height: 400px;"></div> <!-- Mapa -->
+        <br/>
+        <p align="right" id="d">
+          <button class="btn btn-primary btn-success" onclick='getLocation()'>
+            <span class="glyphicon glyphicon-map-marker"></span> 
+            Me localize!
+          </button>
+        </p>
+        
+        <form method="POST"  enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        {{ form.as_p }}
+        
+        <p align="center">
+            {% if not form.instance.id %}
+            <button type="submit" class="btn btn-success">
+                <span class="glyphicon glyphicon-plus-sign"></span> 
+                Cadastrar
+            {% else %}
+            <button type="submit" class="btn btn-warning">
+                <span class="glyphicon glyphicon-pencil"></span> 
+                Alterar
+            {% endif %}
+        </button>
+        &nbsp;
+        &nbsp;
+        &nbsp;
+        <button type="reset" class="btn btn-danger">
+            <span class="glyphicon glyphicon-remove"></span> 
+            Cancelar
+        </button>
+        </p> 
+    </form>
+        </div>
+      </div> <!-- Final do Div md-9 -->
+  </div>
+
+</div> <!-- Final do Container -->
+    
+    <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+    <script src="static/js/geolocation.js"></script>
+        
+    <style type="text/css">
+      html, body, #mapdiv {
+        width:100%; height:100%; margin:0;
+      }
+          
+      .olImageLoadError { display: none; } /* no pink tiles */ 
+    </style>
+        
+    <script type="text/javascript">  
+
+      
+      
+      //Define o tipo de click dentro do mapa - single click 
+      OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {                
+        defaultHandlerOptions: {
+          'single': true,
+          'double': false,
+          'pixelTolerance': 0,
+          'stopSingle': false,
+          'stopDouble': false
+        },
+
+        initialize: function(options) {
+          this.handlerOptions = OpenLayers.Util.extend({}, this.defaultHandlerOptions);
+          OpenLayers.Control.prototype.initialize.apply(this, arguments); 
+          this.handler = new OpenLayers.Handler.Click(this, 
+            {'click': this.trigger}, this.handlerOptions);
+        }, 
+           
+        trigger: function(e) {
+          markers = new OpenLayers.Layer.Markers( "Markers" );
+          markers.id = "Markers";
+          map.addLayer(markers);
+        
+          var lonlat = map.getLonLatFromPixel(e.xy);
+          var size = new OpenLayers.Size(40,42);
+          var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+          var icon = new OpenLayers.Icon('/static/img/marker.png', size, offset);   
+          var markerslayer = map.getLayer('Markers');
+
+          markerslayer.clearMarkers();
+          markerslayer.addMarker(new OpenLayers.Marker(lonlat,icon));
+
+          lonlat.transform(
+            new OpenLayers.Projection("EPSG:900913"), 
+            new OpenLayers.Projection("EPSG:4326")
+          );
+
+          id_latitude.value = lonlat.lat.toPrecision(6);
+          id_longitude.value = lonlat.lon.toPrecision(6);   
+                       
+        } // fim da função trigger
+      
+      }); // fim da função click no mapa
+            
+      var map = new OpenLayers.Map('mapdiv');
+                
+                map.addLayer(new OpenLayers.Layer.OSM());
+                map.zoomToMaxExtent();
+                
+                var click = new OpenLayers.Control.Click();
+                map.addControl(click);
+                click.activate();
+
+      var x = document.getElementById("d");
+
+      function getLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition);
+        } else { 
+          x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+      }
+
+      function showPosition(position) {
+        var lonlat = new OpenLayers.LonLat( position.coords.longitude, position.coords.latitude )
+        
+        markers = new OpenLayers.Layer.Markers( "Markers" );
+        markers.id = "Markers";
+        map.addLayer(markers);
+        
+          
+        var size = new OpenLayers.Size(40,42);
+        var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+        var icon = new OpenLayers.Icon('/static/img/marker.png', size, offset);   
+        var markerslayer = map.getLayer('Markers');
+
+        markerslayer.clearMarkers();
+        markerslayer.addMarker(new OpenLayers.Marker(lonlat,icon));
+
+        lonlat.transform(
+            new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+            map.getProjectionObject() // to Spherical Mercator Projection
+          );
+
+        map.setCenter (lonlat, 18);
+
+        id_latitude.value = position.coords.latitude.toPrecision(6);
+        id_longitude.value = position.coords.longitude.toPrecision(6);   
+          
+
+    }
+
+
+   
+        </script>
+
+{% endblock content %}

@@ -1,0 +1,24 @@
+body {
+	padding-top: 92px;
+}
+  
+#footer {
+  	
+    margin-top: 66px;
+    background-color: #000; 
+    color: #fff; 
+    text-align: right; 
+    padding: 10px 30px 10px 31px;
+}
+
+.img {
+    margin: 5px;
+    padding: 5px;
+    width: 250px;  /* largura da div = largura thumbnail */ 
+	height: 250px; /* altura da div = altura thumbnail */ 
+}
+
+p > input {
+	font-size: 14px;
+	width: 510px;
+}

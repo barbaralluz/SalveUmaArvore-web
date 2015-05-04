@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block title %} Listar | Editar | Excluir Árvores {% endblock %}
+
+{% block content %}
+
+ 
+  <link href="{% static 'css/list_tree.css' %}" rel="stylesheet" />
+    
+  <div class="container">
+
+    <div class="row profile">
+      <div class="col-md-3">
+
+        <!-- Sidebar -->
+        <div class="profile-sidebar">
+        
+          <!-- Imagem -->
+          <div class="profile-userpic">
+            <img src="/static/img/user.png" class="img-responsive" alt="">
+          </div>
+        
+          <!-- Titulo -->
+          <div class="profile-usertitle">
+            <div class="profile-usertitle-name" font style="text-transform: uppercase;"> 
+              {{user.username}} 
+            </div>
+          </div>
+        
+          <!-- Menu -->
+          <div class="profile-usermenu">
+            <ul class="nav">
+              <li>
+                <a href="{% url 'profile' %}">
+                  <i class="glyphicon glyphicon-user"></i>
+                  MEU PERFIL
+                </a> 
+              </li>
+              
+              <li>
+                <a href="#">
+                  <i class="glyphicon glyphicon-cog"></i>
+                  CONFIGURAÇÕES
+                </a>
+              </li>
+            
+              <li>
+                <a href="{% url 'tree_list' %}">
+                  <span class="glyphicon glyphicon-map-marker"></span>
+                    VISUALIZAR MEU MAPA
+                </a>
+              </li>
+              
+              <li>
+                <a href="javascript:;" data-toggle="collapse" data-target="#demo">
+                  <span class="glyphicon glyphicon-tree-deciduous"></span>
+                  ÁRVORE 
+                  <i class="fa fa-fw fa-caret-down"></i>
+                </a>
+                <ul id="demo" class="nav">
+                  <li>
+                    <a href="{% url 'tree_form' %}">
+                    <i class="glyphicon glyphicon-plus-sign"></i>
+                    ADICIONAR</a>
+                  </li>
+                  <li class="active">
+                    <a href="{% url 'tree_list' %}">
+                    <i class="glyphicon glyphicon-list"></i>
+                    LISTAR | EDITAR | EXCLUIR </a>
+                  </li>
+                </ul>
+              </li>
+         
+          </ul>
+
+        </div> <!-- Final do Menu -->
+      </div> <!-- Final do Sidebar -->
+    </div> <!-- Final do Div md-6 -->
+
+    <div class="col-md-9">
+      <div class="profile-content">
+        <div id="mapa_tree_list" style="width: 785px; height: 400px;"></div> <!-- Mapa -->
+          <!-- Lista de Árvores -->
+          <table class="table table-condensed text-center">
+            
+            <thead>
+              <tr>
+                <td style="width: 90px;"></td>
+                <td>Id</td>
+                <td>Espécie</td>
+                <td>Longitude</td>
+                <td>Latitude</td>
+                <td>Data de Cadastro</td>
+                <td style="width: 80px;"></td>
+              </tr> 
+            </thead>  
+            
+            <tbody>
+              {% for arvore in object_list %}
+              <tr>
+                
+                <td>
+                  <a href="{% url 'tree_form' arvore.pk %}" class="btn btn-warning">
+                    <span class="glyphicon glyphicon-pencil"></span> 
+                    Editar
+                  </a>
+                </td>
+                
+                <td>{{ arvore.id }}</td>
+                <td>{{ arvore.especie }}</td>
+                <td>{{ arvore.longitude }}</td>
+                <td>{{ arvore.latitude }}</td>
+                <td>{{ arvore.data_cadastro }}</td>
+                
+                <td>
+                  <a href="{% url 'tree_delete' arvore.pk %}" class="btn btn-danger">
+                    <span class="glyphicon glyphicon-trash"></span> 
+                    Excluir
+                  </a>
+                </td>
+
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div> <!-- Final do Div md-9 -->
+  </div>
+
+</div> <!-- Final do Container -->
+
+<!-- JavaScript Mapa -->
+<script src="http://www.openlayers.org/api/OpenLayers.js"></script> 
+
+<script>
+  function jump(lat,lon, zoom) {
+       
+       var lonLat = new OpenLayers.LonLat( lon, lat )
+          .transform(
+            new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+            map.getProjectionObject() // to Spherical Mercator Projection
+          );
+       map.setCenter (lonLat, zoom);
+    }
+
+  map = new OpenLayers.Map("mapa_tree_list");
+  map.addLayer(new OpenLayers.Layer.OSM());
+  
+  epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
+  projectTo = map.getProjectionObject(); //The map projection (Spherical Mercator)
+   
+  var lonLat = new OpenLayers.LonLat( -47.5356, -18.2246).transform(epsg4326, projectTo);
+          
+  var zoom=3;
+    
+  var markers = new Array();
+  map.setCenter (lonLat, zoom);
+
+  var vectorLayer = new OpenLayers.Layer.Vector("Overlay");
+
+
+
+  {% for arvore in object_list %}
+    markers.push([{{arvore.longitude}}, {{arvore.latitude}}]);
+  {% endfor %}
+
+  for (var i=0; i<markers.length; i++) {
+    var lon = markers[i][0];
+    var lat = markers[i][1];
+       
+    var feature = new OpenLayers.Feature.Vector(
+        new OpenLayers.Geometry.Point( lon, lat ).transform(epsg4326, projectTo),
+          {description: "<a href='#' onClick='jump("+markers[i][1]+", "+markers[i][0]+", 18); return false;'>Zoom</a><br>Latitude " + markers[i][1] + "<br>Longitude " + markers[i][0] + "<br/><a href='#' onClick='jump(-18.2246, -47.5356, 3); return false;'>Voltar</a>"},
+          {externalGraphic: '/static/img/marker.png', graphicHeight: 45, graphicWidth: 43, graphicXOffset:-12, graphicYOffset:-36}
+    );             
+
+
+    
+     vectorLayer.addFeatures(feature);
+
+
+
+  }    
+
+
+
+  map.addLayer(vectorLayer);
+
+  
+  //Add a selector control to the vectorLayer with popup functions
+  var controls = {
+    selector: new OpenLayers.Control.SelectFeature(vectorLayer, { onSelect: createPopup, onUnselect: destroyPopup })
+  };
+   
+  function createPopup(feature) {
+    feature.popup = new OpenLayers.Popup.FramedCloud("pop",
+      feature.geometry.getBounds().getCenterLonLat(),
+      null,
+      '<div class="markerContent">'+feature.attributes.description+'</div>',
+      null,
+      true,
+      function() { controls['selector'].unselectAll(); 
+  });
+  
+  //feature.popup.closeOnMove = true;
+  map.addPopup(feature.popup);
+  }
+
+  function destroyPopup(feature) {
+    feature.popup.destroy();
+    feature.popup = null;
+  }
+    
+  map.addControl(controls['selector']);
+    controls['selector'].activate();
+
+  
+
+</script>          
+
+{% endblock content %}
