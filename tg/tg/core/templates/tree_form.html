@@ -142,9 +142,7 @@
     </style>
         
     <script type="text/javascript">  
-
-      
-      
+  
       //Define o tipo de click dentro do mapa - single click 
       OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {                
         defaultHandlerOptions: {
@@ -190,12 +188,38 @@
             
       var map = new OpenLayers.Map('mapdiv');
                 
-                map.addLayer(new OpenLayers.Layer.OSM());
-                map.zoomToMaxExtent();
+      map.addLayer(new OpenLayers.Layer.OSM());
+      map.zoomToMaxExtent();
                 
-                var click = new OpenLayers.Control.Click();
-                map.addControl(click);
-                click.activate();
+      var click = new OpenLayers.Control.Click();
+      
+      map.addControl(click);
+      click.activate();
+
+      //aparece icone em local já cadastrado
+      {% if form.instance.id%}
+    
+        var lonlat = new OpenLayers.LonLat( id_longitude.value, id_latitude.value )
+        
+        markers = new OpenLayers.Layer.Markers( "Markers" );
+        markers.id = "Markers";
+        map.addLayer(markers);
+          
+        var size = new OpenLayers.Size(32,36);
+        var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+        var icon = new OpenLayers.Icon('/static/img/marker.png', size, offset);   
+        var markerslayer = map.getLayer('Markers');
+
+        markerslayer.addMarker(new OpenLayers.Marker(lonlat,icon));
+
+        lonlat.transform(
+            new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+            map.getProjectionObject() // to Spherical Mercator Projection
+          );
+
+        map.setCenter (lonlat, 16);
+    
+      {%endif%}
 
       var x = document.getElementById("d");
 
@@ -232,12 +256,8 @@
 
         id_latitude.value = position.coords.latitude.toPrecision(6);
         id_longitude.value = position.coords.longitude.toPrecision(6);   
-          
+      }
 
-    }
-
-
-   
-        </script>
+    </script>
 
 {% endblock content %}
