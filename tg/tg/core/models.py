@@ -13,8 +13,8 @@ class Tree(models.Model):
     diametro = models.CharField(u'Diâmetro', max_length=100)
     informacoes_adicionais = models.TextField(u'Informações Adicionais', null=True, blank=True)
     data_cadastro = models.DateField(default=datetime.now)  
-    foto1 = models.ImageField(upload_to='tg/core/static/images/', null=True, blank=True)
-    foto2 = models.ImageField(upload_to='tg/core/static/images/', null=True, blank=True)
+    foto1 = models.ImageField(upload_to='tg/core/static/img/trees', null=True, blank=True)
+    foto2 = models.ImageField(upload_to='tg/core/static/img/trees', null=True, blank=True)
     usuario = models.ForeignKey(User)
 
     def __unicode__(self):

@@ -7,8 +7,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
 class TreeForm(forms.ModelForm):
-    foto1 = forms.ImageField(label='Adicione Fotos')
-    foto2 = forms.ImageField(label='')
+    foto1 = forms.ImageField(label='Adicione Fotos', required=False)
+    foto2 = forms.ImageField(label='', required=False)
     
     class Meta:
         model = Tree

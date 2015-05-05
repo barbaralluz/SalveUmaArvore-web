@@ -5,7 +5,7 @@ Licensed under MIT
 ***/
 
 body {
-    padding-top: 92px;
+    
 }
 
 /* Profile container */
@@ -107,6 +107,53 @@ background-color: #fafcfd;
 .profile-content {
   padding: 20px;
   background: #fff;
-  min-height: 460px;
+  min-height: 640px;
 }
 
+.huge {
+    font-size: 40px;
+}
+
+.panel-green {
+    border-color: #5cb85c;
+}
+
+.panel-green > .panel-heading {
+    border-color: #5cb85c;
+    color: #fff;
+    background-color: #5cb85c;
+}
+
+.panel-green > a {
+    color: #5cb85c;
+}
+
+.panel-green > a:hover {
+    color: #3d8b3d;
+}
+
+.panel-yellow {
+    border-color: #f0ad4e;
+}
+
+.panel-yellow > .panel-heading {
+    border-color: #f0ad4e;
+    color: #fff;
+    background-color: #f0ad4e;
+}
+
+.panel-yellow > a {
+    color: #f0ad4e;
+}
+
+.panel-yellow > a:hover {
+    color: #df8a13;
+}
+
+#footer {    
+    margin-top: 60px;
+    background-color: #000; 
+    color: #fff; 
+    text-align: right; 
+    padding: 10px 30px 10px 31px;
+}

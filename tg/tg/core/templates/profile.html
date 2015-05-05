@@ -5,7 +5,7 @@
 {% block title %} Meu Perfil {% endblock %}
 
 {% block content %}
-
+  
   <link href="{% static 'css/profile.css' %}" rel="stylesheet" />
     
   <div class="container">
@@ -81,79 +81,199 @@
     <div class="col-md-9">
       <div class="profile-content">
         
-        <div id="mapa_tree_list" style="width: 785px; height: 400px;"></div> <!-- Mapa -->
-        
-
+        <!-- Quantidade de Árvores Cadastradas -->
+        <div class="col-md-4">
+          <div class="panel panel-green">
+            <div class="panel-heading">
+              
+              <div class="row">
+                <div class="col-xs-3">
+                  <i class="fa fa-pagelines fa-5x"></i>
+                </div>
+                <div class="col-xs-9 text-right">
+                  <div>Parabéns! Você já localizou</div>
+                  <br/>
+                 
+                  <div class="huge">
+                    {% if object_list %}
+                      {{ object_list|length }}
+                    {% endif %}
+                  </div>
+                  <br/>
+                  <div>Árvores</div>
+                </div>
+              </div>
+            
+            </div>
+            
+            <a href="{% url 'tree_list' %}">
+              <div class="panel-footer">
+                <span class="pull-left">Visualizar Lista</span>
+                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                <div class="clearfix"></div>
+              </div>
+            </a>
+          </div>
         </div>
-      </div> <!-- Final do Div md-9 -->
+        
+        <!-- Para cadastrar Árvore -->
+        <div class="col-md-4">
+          <div class="panel panel-primary">
+            <div class="panel-heading">
+              
+              <div class="row">
+                <div class="col-xs-3">
+                  <i class="fa fa-map-marker fa-5x"></i>
+                </div>
+                <div class="col-xs-9 text-right">
+                  <div>Continue a montar seu mapa !</div>
+                  <br/>
+                  <div>Clique em Cadastrar para adicionar nova árvore</div>
+                </div>
+              </div>
+            
+            </div>
+            
+            <a href="{% url 'tree_form' %}">
+              <div class="panel-footer">
+                <span class="pull-left">Cadastrar</span>
+                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                <div class="clearfix"></div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Alterar Perfil do Usuário -->
+        <div class="col-md-4">
+          <div class="panel panel-yellow">
+            <div class="panel-heading">
+              
+              <div class="row">
+                <div class="col-xs-3">
+                  <i class="fa fa-cog fa-5x"></i>
+                </div>
+                <div class="col-xs-9 text-right">
+                  <div>Adicione informações ao seu Perfil</div>
+                  <br/>
+                  <div>Clique abaixo para alterar ou inserir informações</div>
+                </div>
+              </div>
+            
+            </div>
+            
+            <a href="#">
+              <div class="panel-footer">
+                <span class="pull-left">Configurações de Perfil</span>
+                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                <div class="clearfix"></div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Para visualizar Mapa -->
+        <div class="col-md-9">   
+          <div class="panel panel-success" style="width: 755px; height: 430px;">
+            <div class="panel-heading">
+              <div id="mapa_tree_list" style="width: 725px; height: 370px;"></div> <!-- Mapa -->
+            </div>
+            <a href="#">
+              <div class="panel-footer">
+                <span class="pull-left">Clique para Expandir Mapa</span>
+                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                <div class="clearfix"></div>
+              </div>
+            </a>
+            
+          </div>
+        </div>
+        
+      </div>
+    </div> <!-- Final do Div md-9 -->
   </div>
 
 </div> <!-- Final do Container -->
 
 <!-- JavaScript Mapa -->
-<script src="http://www.openlayers.org/api/OpenLayers.js"></script> 
+  <script src="{% static 'openlayers/OpenLayers.js' %}"></script> 
 
-<script>
-  map = new OpenLayers.Map("mapa_tree_list");
-  map.addLayer(new OpenLayers.Layer.OSM());
-  
-  epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
-  projectTo = map.getProjectionObject(); //The map projection (Spherical Mercator)
-   
-  var lonLat = new OpenLayers.LonLat( -47.5356, -18.2246).transform(epsg4326, projectTo);
-          
-  var zoom=1;
+  <script>
     
-  var markers = new Array();
-  map.setCenter (lonLat, zoom);
-
-  var vectorLayer = new OpenLayers.Layer.Vector("Overlay");
-
-  {% for arvore in object_list %}
-    markers.push([{{arvore.longitude}}, {{arvore.latitude}}]);
-  {% endfor %}
-
-  for (var i=0; i<markers.length; i++) {
-    var lon = markers[i][0];
-    var lat = markers[i][1];
+    function jump(lat,lon, zoom) {
        
-    var feature = new OpenLayers.Feature.Vector(
-        new OpenLayers.Geometry.Point( lon, lat ).transform(epsg4326, projectTo),
-          {description: "<br>Latitude " + markers[i][1] + "<br>Longitude " + markers[i][0]},
-          {externalGraphic: '/static/img/marker.png', graphicHeight: 45, graphicWidth: 43, graphicXOffset:-12, graphicYOffset:-36}
-    );             
-    
-     vectorLayer.addFeatures(feature);
+      var lonLat = new OpenLayers.LonLat( lon, lat ).transform(
+        new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+        map.getProjectionObject() // to Spherical Mercator Projection
+      );
+      map.setCenter (lonLat, zoom);
+    }
 
-  }                        
-    
-  map.addLayer(vectorLayer);
-
-  //Add a selector control to the vectorLayer with popup functions
-  var controls = {
-    selector: new OpenLayers.Control.SelectFeature(vectorLayer, { onSelect: createPopup, onUnselect: destroyPopup })
-  };
-
-  function createPopup(feature) {
-    feature.popup = new OpenLayers.Popup.FramedCloud("pop",
-      feature.geometry.getBounds().getCenterLonLat(),
-      null,
-      '<div class="markerContent">'+feature.attributes.description+'</div>',
-      null,
-      true,
-      function() { controls['selector'].unselectAll(); 
-  });
+    map = new OpenLayers.Map("mapa_tree_list");
+    map.addLayer(new OpenLayers.Layer.OSM());
   
-  //feature.popup.closeOnMove = true;
-  map.addPopup(feature.popup);
-  }
-
-  function destroyPopup(feature) {
-    feature.popup.destroy();
-    feature.popup = null;
-  }
+    epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
+    projectTo = map.getProjectionObject(); //The map projection (Spherical Mercator)
+   
+    var lonLat = new OpenLayers.LonLat( -47.5356, -18.2246).transform(epsg4326, projectTo);
+          
+    var zoom=3;
     
-  map.addControl(controls['selector']);
+    var markers = new Array();
+    map.setCenter (lonLat, zoom);
+
+    var vectorLayer = new OpenLayers.Layer.Vector("VectorPoints");
+
+    {% for arvore in object_list %}
+      markers.push([{{arvore.id}}, {{arvore.longitude}}, {{arvore.latitude}}]);
+    {% endfor %}
+
+    for (var i=0; i<markers.length; i++) {
+      var lon = markers[i][1];
+      var lat = markers[i][2];
+       
+      var feature = new OpenLayers.Feature.Vector(
+        new OpenLayers.Geometry.Point( lon, lat ).transform(epsg4326, projectTo),
+          {description: "<div style='text-align:right'>" + 
+            "<a href='#' onClick='jump(" +markers[i][2]+", "+markers[i][1]+", 18); return false;'>Ampliar</a></div>" + 
+            "<div style='text-align:left'>Id: " + markers[i][0] + "<br/>Latitude: " + markers[i][2] + 
+            "<br/>Longitude: " + markers[i][1] + "</div>" + 
+            "<div style='text-align:right'><a href='#' onClick='jump(-18.2246, -47.5356, 3); return false;'>Voltar</a></div>"},
+          {externalGraphic: '/static/img/marker.png', graphicHeight: 36, graphicWidth: 32, graphicXOffset:-12, graphicYOffset:-26}
+      );             
+      
+      vectorLayer.addFeatures(feature);
+
+    } // fim do for   
+
+    map.addLayer(vectorLayer);
+
+    //Add popup
+    var controls = {
+      selector: new OpenLayers.Control.SelectFeature(vectorLayer, 
+        { onSelect: createPopup, onUnselect: destroyPopup })
+    };
+   
+    function createPopup(feature) {
+      feature.popup = new OpenLayers.Popup.FramedCloud("popup",
+        feature.geometry.getBounds().getCenterLonLat(),
+        null,
+        '<div class="markerContent">'+feature.attributes.description+'</div>',
+        null,
+        true,
+        function() { controls['selector'].unselectAll(); 
+    });
+  
+    //feature.popup.closeOnMove = true;
+    map.addPopup(feature.popup);
+    }
+
+    function destroyPopup(feature) {
+      feature.popup.destroy();
+      feature.popup = null;
+    }
+    
+    map.addControl(controls['selector']);
     controls['selector'].activate();
 
 </script>          
