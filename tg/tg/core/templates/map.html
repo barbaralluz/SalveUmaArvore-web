@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block title %} Listar | Editar | Excluir Árvores {% endblock %}
+
+{% block content %}
+
+  <link href="{% static 'css/map.css' %}" rel="stylesheet" />
+    
+  <div id="mapa_tree_list" style="width: 1306px; height: 555px;"></div> <!-- Mapa -->
+
+<!-- JavaScript Mapa -->
+  <script src="{% static 'openlayers/OpenLayers.js' %}"></script> 
+
+  <script>
+    
+    function jump(lat,lon, zoom) {
+       
+      var lonLat = new OpenLayers.LonLat( lon, lat ).transform(
+        new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+        map.getProjectionObject() // to Spherical Mercator Projection
+      );
+      map.setCenter (lonLat, zoom);
+    }
+
+    map = new OpenLayers.Map("mapa_tree_list");
+    map.addLayer(new OpenLayers.Layer.OSM());
+  
+    epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
+    projectTo = map.getProjectionObject(); //The map projection (Spherical Mercator)
+   
+    var lonLat = new OpenLayers.LonLat( -47.5356, -18.2246).transform(epsg4326, projectTo);
+          
+    var zoom=3;
+    
+    var markers = new Array();
+    map.setCenter (lonLat, zoom);
+
+    var vectorLayer = new OpenLayers.Layer.Vector("VectorPoints");
+
+    {% for arvore in object_list %}
+      markers.push([{{arvore.id}}, {{arvore.longitude}}, {{arvore.latitude}}]);
+    {% endfor %}
+
+    for (var i=0; i<markers.length; i++) {
+      var lon = markers[i][1];
+      var lat = markers[i][2];
+       
+      var feature = new OpenLayers.Feature.Vector(
+        new OpenLayers.Geometry.Point( lon, lat ).transform(epsg4326, projectTo),
+          {description: "<div style='text-align:right'>" + 
+            "<a href='#' onClick='jump(" +markers[i][2]+", "+markers[i][1]+", 18); return false;'>Ampliar</a></div>" + 
+            "<div style='text-align:left'>Id: " + markers[i][0] + "<br/>Latitude: " + markers[i][2] + 
+            "<br/>Longitude: " + markers[i][1] + "</div>" + 
+            "<div style='text-align:right'><a href='#' onClick='jump(-18.2246, -47.5356, 3); return false;'>Voltar</a></div>"},
+          {externalGraphic: '/static/img/marker.png', graphicHeight: 36, graphicWidth: 32, graphicXOffset:-12, graphicYOffset:-26}
+      );             
+      
+      vectorLayer.addFeatures(feature);
+
+    } // fim do for   
+
+    map.addLayer(vectorLayer);
+
+    //Add popup
+    var controls = {
+      selector: new OpenLayers.Control.SelectFeature(vectorLayer, 
+        { onSelect: createPopup, onUnselect: destroyPopup })
+    };
+   
+    function createPopup(feature) {
+      feature.popup = new OpenLayers.Popup.FramedCloud("popup",
+        feature.geometry.getBounds().getCenterLonLat(),
+        null,
+        '<div class="markerContent">'+feature.attributes.description+'</div>',
+        null,
+        true,
+        function() { controls['selector'].unselectAll(); 
+    });
+  
+    //feature.popup.closeOnMove = true;
+    map.addPopup(feature.popup);
+    }
+
+    function destroyPopup(feature) {
+      feature.popup.destroy();
+      feature.popup = null;
+    }
+    
+    map.addControl(controls['selector']);
+    controls['selector'].activate();
+
+</script>          
+
+{% endblock content %}

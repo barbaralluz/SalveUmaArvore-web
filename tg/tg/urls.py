@@ -10,6 +10,9 @@ urlpatterns = patterns(
     '',
     url(r'^$', 'tg.core.views.index', name="index"),
     url(r'^profile/$', 'tg.core.views.profile', name="profile"),
+
+    #Mapa
+    url(r'^map/$', 'tg.core.views.map', name="map"),
  
     # Árvores
     url(r'^list/tree/$', 'tg.core.views.tree_list', name="tree_list"),

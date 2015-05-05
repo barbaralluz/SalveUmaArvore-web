@@ -43,10 +43,16 @@ def log_in(request):
 
 @login_required
 def profile(request):
-    
     return ListView.as_view(
         queryset = Tree.objects.filter(usuario=request.user),
         template_name='profile.html')(request)
+
+#Mapa
+@login_required
+def map(request):
+    return ListView.as_view(
+        queryset = Tree.objects.filter(usuario=request.user),
+        template_name='map.html')(request)
 
 #CRUD Árvores
 @login_required

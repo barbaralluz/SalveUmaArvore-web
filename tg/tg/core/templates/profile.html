@@ -46,7 +46,7 @@
               </li>
             
               <li>
-                <a href="{% url 'tree_list' %}">
+                <a href="{% url 'map' %}">
                   <span class="glyphicon glyphicon-map-marker"></span>
                     VISUALIZAR MEU MAPA
                 </a>
@@ -178,7 +178,7 @@
             <div class="panel-heading">
               <div id="mapa_tree_list" style="width: 725px; height: 370px;"></div> <!-- Mapa -->
             </div>
-            <a href="#">
+            <a href="{% url 'map' %}">
               <div class="panel-footer">
                 <span class="pull-left">Clique para Expandir Mapa</span>
                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
