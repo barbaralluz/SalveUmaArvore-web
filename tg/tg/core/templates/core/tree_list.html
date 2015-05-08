@@ -40,9 +40,9 @@
               </li>
               
               <li>
-                <a href="#">
+                <a href="{% url 'password_change' %}">
                   <i class="glyphicon glyphicon-cog"></i>
-                  CONFIGURAÇÕES
+                  ALTERAR SENHA
                 </a>
               </li>
             
@@ -61,20 +61,24 @@
                 </a>
                 <ul id="demo" class="nav">
                   <li>
-                    <a href="{% url 'tree_form' %}">
-                    <i class="glyphicon glyphicon-plus-sign"></i>
-                    ADICIONAR</a>
-                  </li>
-                  <li class="active">
-                    <a href="{% url 'tree_list' %}">
-                    <i class="glyphicon glyphicon-list"></i>
-                    LISTAR | EDITAR | EXCLUIR </a>
+                    <li>
+                      <a href="{% url 'tree_form' %}">
+                        <i class="glyphicon glyphicon-plus-sign"></i>
+                        ADICIONAR
+                      </a>
+                    </li>
+                    
+                    <li class="active">
+                      <a href="{% url 'tree_list' %}">
+                        <i class="glyphicon glyphicon-list"></i>
+                        LISTAR | EDITAR | EXCLUIR 
+                      </a>
+                    </li>
                   </li>
                 </ul>
               </li>
-         
           </ul>
-
+          
         </div> <!-- Final do Menu -->
       </div> <!-- Final do Sidebar -->
     </div> <!-- Final do Div md-6 -->

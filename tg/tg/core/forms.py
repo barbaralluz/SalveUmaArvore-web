@@ -18,9 +18,15 @@ class TreeForm(forms.ModelForm):
 
 class UserForm(UserCreationForm):
     email = forms.EmailField(required=True)
-    first_name = forms.CharField(label='Nome')
-    last_name = forms.CharField(label='Sobrenome')
+    
 
     class Meta:
         model = User
-        fields = ("username", "email", "first_name", "last_name")
+        fields = ("username", "email")
+
+    
+    def __init__(self, *args, **kwargs):
+        super(UserForm, self).__init__(*args, **kwargs)
+
+        for fieldname in ['username', "password2"]:
+            self.fields[fieldname].help_text = None

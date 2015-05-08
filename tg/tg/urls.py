@@ -10,7 +10,7 @@ urlpatterns = patterns(
     '',
     url(r'^$', 'tg.core.views.index', name="index"),
     url(r'^profile/$', 'tg.core.views.profile', name="profile"),
-
+    
     #Mapa
     url(r'^map/$', 'tg.core.views.map', name="map"),
  
@@ -27,10 +27,17 @@ urlpatterns = patterns(
     
     url(r'^logout/$', 'django.contrib.auth.views.logout_then_login',
                     {'login_url': 'login'}),
+    
+    url(r'^password_change/$', 'django.contrib.auth.views.password_change', 
+                    {'template_name': 'change_password.html'}, name='password_change'),
+    
+    url(r'^password_change/done/$', 'django.contrib.auth.views.password_change_done', 
+                    {'template_name': 'change_password_done.html'}, name='password_change_done'),
 
     # Admin	
     url(r'^admin/', include(admin.site.urls)),
 
+   
 
 )
 

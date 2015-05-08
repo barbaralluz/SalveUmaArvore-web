@@ -40,9 +40,9 @@
               </li>
               
               <li>
-                <a href="#">
+                <a href="{% url 'password_change' %}">
                   <i class="glyphicon glyphicon-cog"></i>
-                  CONFIGURAÇÕES
+                  ALTERAR SENHA
                 </a>
               </li>
             
@@ -60,24 +60,29 @@
                   <i class="fa fa-fw fa-caret-down"></i>
                 </a>
                 <ul id="demo" class="nav">
+                  <li>
                     {% if not form.instance.id %}
-                  <li class="active">
+                    <li class="active">
                     {% else %}
                     <li>
-                        {% endif %}
-                    <a href="{% url 'tree_form' %}">
-                    <i class="glyphicon glyphicon-plus-sign"></i>
-                    ADICIONAR</a>
-                  </li>
-                  {% if form.instance.id %}
-                  <li class="active">
+                    {% endif %}
+                      <a href="{% url 'tree_form' %}">
+                        <i class="glyphicon glyphicon-plus-sign"></i>
+                        ADICIONAR
+                      </a>
+                    </li>
+                    
+                    {% if form.instance.id %}
+                    <li class="active">
                     {% else %}
                     <li>
-                        {% endif %}
-                  
-                    <a href="{% url 'tree_list' %}">
-                    <i class="glyphicon glyphicon-list"></i>
-                    LISTAR | EDITAR | EXCLUIR </a>
+                    {% endif %}
+                      <a href="{% url 'tree_list' %}">
+                        <i class="glyphicon glyphicon-list"></i>
+                        LISTAR | EDITAR | EXCLUIR 
+                      </a>
+                    </li>
+
                   </li>
                 </ul>
               </li>
@@ -118,10 +123,10 @@
         &nbsp;
         &nbsp;
         &nbsp;
-        <button type="reset" class="btn btn-danger">
+        <a href="{% url 'tree_list' %}" class="btn btn-danger">
             <span class="glyphicon glyphicon-remove"></span> 
             Cancelar
-        </button>
+        </a>
         </p> 
     </form>
         </div>
