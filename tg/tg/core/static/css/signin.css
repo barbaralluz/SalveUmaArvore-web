@@ -2,23 +2,20 @@ body {
 	padding-top: 35px;
 }
   
-#footer {
-  	
-    margin-top: 10px;
-    background-color: #000; 
-    color: #fff; 
-    text-align: right; 
-    padding: 10px 30px 10px 30px;
-}
-
 .img {
     margin: 5px;
     padding: 5px;
     width: 250px;  /* largura da div = largura thumbnail */ 
 	height: 250px; /* altura da div = altura thumbnail */ 
+        display: block;
+  max-width: 100%;
+  height: auto;
+  max-width: 100%;
+  height: auto;
 }
 
 p > input {
 	font-size: 14px;
 	width: 510px;
+  width:100%;
 }

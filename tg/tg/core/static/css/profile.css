@@ -5,7 +5,7 @@ Licensed under MIT
 ***/
 
 body {
-    
+  padding-top: 35px;
 }
 
 /* Profile container */
@@ -150,10 +150,3 @@ background-color: #fafcfd;
     color: #df8a13;
 }
 
-#footer {    
-    margin-top: 60px;
-    background-color: #000; 
-    color: #fff; 
-    text-align: right; 
-    padding: 10px 30px 10px 31px;
-}

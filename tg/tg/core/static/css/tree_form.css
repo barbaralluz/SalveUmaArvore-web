@@ -5,9 +5,10 @@ Licensed under MIT
 ***/
 
 body {
-    padding-top: 92px;
+   padding-top: 35px;
 }
 
+@media (max-width: 1200px) {
 p >  label {
   text-align: right; 
   width: 150px;
@@ -15,10 +16,86 @@ p >  label {
 
 p >  input {
   width: 300px;
+  
 }
 
 p > textarea {
   width: 300px;
+  
+}
+}
+
+@media (min-width: 1200px) {
+p >  label {
+  text-align: right; 
+  width: 150px;
+}
+
+p >  input {
+  width: 300px;
+  
+}
+
+p > textarea {
+  width: 300px;
+  
+}
+}
+
+@media (min-width: 768px) and (max-width: 979px){
+p >  label {
+  text-align: right; 
+  width: 150px;
+}
+
+p >  input {
+  width: 300px;
+  
+}
+
+p > textarea {
+  width: 300px;
+  
+}
+}
+
+@media (max-width: 767px){
+p >  label {
+  text-align: left; 
+  width: 150px;
+}
+
+p >  input {
+  width: 300px;
+  
+}
+
+p > textarea {
+  width: 300px;
+  
+}
+}
+
+
+
+@media (max-width: 480px) {
+  
+  p > label{
+    width: 100%;
+    float: none;
+    margin: 0 0 5px 0;
+  }
+  
+  p > input {
+    width: 100%;
+    float: none;
+  }
+
+  p > textarea {
+    width: 100%;
+    float: none;
+  }
+  
 }
 
 /* Profile container */
@@ -122,4 +199,6 @@ background-color: #fafcfd;
   background: #fff;
   min-height: 460px;
 }
+
+
 
