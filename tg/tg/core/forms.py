@@ -2,18 +2,25 @@
 
 from django import forms
 
-from tg.core.models  import Tree
+from tg.core.models  import Map, Tree, Profile
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
+class MapForm(forms.ModelForm):
+    foto = forms.ImageField(label="Adicione uma foto", required=False)
+    
+    class Meta:
+        model = Map
+        fields = ("nome", "descricao", "publico", "foto")
+
+
 class TreeForm(forms.ModelForm):
-    foto1 = forms.ImageField(label='Adicione Fotos', required=False)
-    foto2 = forms.ImageField(label='', required=False)
+    foto = forms.ImageField(label="Adicione uma foto", required=False)
     
     class Meta:
         model = Tree
         fields = ("longitude", "latitude", "especie", "altura", "diametro", "informacoes_adicionais",
-        	"foto1", "foto2")
+        	"foto")
 
 
 class UserForm(UserCreationForm):
@@ -29,4 +36,16 @@ class UserForm(UserCreationForm):
         super(UserForm, self).__init__(*args, **kwargs)
 
         for fieldname in ['username', "password2"]:
+            self.fields[fieldname].help_text = None
+
+class ProfileForm(forms.ModelForm):
+
+    class Meta:
+        model = User
+        fields = ("username", "email", "first_name", "last_name")
+    
+    def __init__(self, *args, **kwargs):
+        super(ProfileForm, self).__init__(*args, **kwargs)
+
+        for fieldname in ['username']:
             self.fields[fieldname].help_text = None

@@ -5,7 +5,7 @@ Licensed under MIT
 ***/
 
 body {
-  padding-top: 10px;
+  padding-top: 8px;
 }
 
 /* Profile container */
@@ -31,7 +31,7 @@ body {
 
 .profile-usertitle {
   text-align: center;
-  margin-top: 20px;
+  margin-top: 12px;
 }
 
 .profile-usertitle-name {

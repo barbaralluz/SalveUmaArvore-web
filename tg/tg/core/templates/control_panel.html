@@ -1,0 +1,337 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block title %} Painel de Controle {% endblock %}
+
+{% block content %}
+  
+  <link href="{% static 'css/profile.css' %}" rel="stylesheet" />
+    
+  <div class="container">
+
+    <div class="row profile">
+      <div class="col-md-3">
+
+        <!-- Sidebar -->
+        <div class="profile-sidebar">
+        
+          <!-- Imagem -->
+          <div class="profile-userpic">
+            <img src="/static/img/user.png" class="img-responsive" alt="">
+          </div>
+        
+          <!-- Titulo -->
+          <div class="profile-usertitle">
+            <div class="profile-usertitle-name" font style="text-transform: uppercase;"> 
+              {{user.username}} 
+            </div>
+          </div>
+        
+          <!-- Menu -->
+          <div class="profile-usermenu">
+            <ul class="nav">
+              <li class="active">
+                <a href="{% url 'map_form' %}">
+                  <i class="fa fa-globe"></i>
+                  MEU MAPA
+                </a> 
+              </li>
+              
+              <li>
+                <a href="{% url 'profile' %}">
+                  <i class="glyphicon glyphicon-user"></i>
+                  MEU PERFIL
+                </a>
+              </li>
+
+               {% if not backend.associated %}
+
+              <li>
+                <a href="{% url 'password_change' %}">
+                  <i class="glyphicon glyphicon-cog"></i>
+                  ALTERAR SENHA
+                </a>
+              </li>
+
+              {% endif %}
+            
+              <li>
+                <a href="{% url 'map' %}">
+                  <span class="glyphicon glyphicon-map-marker"></span>
+                    VISUALIZAR MEU MAPA
+                </a>
+              </li>
+              
+              <li>
+                <a href="javascript:;" data-toggle="collapse" data-target="#demo">
+                  <span class="glyphicon glyphicon-tree-deciduous"></span>
+                  ÁRVORE 
+                  <i class="fa fa-fw fa-caret-down"></i>
+                </a>
+                <ul id="demo" class="collapse nav">
+                  <li>
+                    <li>
+                      <a href="{% url 'tree_form' %}">
+                        <i class="glyphicon glyphicon-plus-sign"></i>
+                        ADICIONAR
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="{% url 'tree_list' %}">
+                        <i class="glyphicon glyphicon-list"></i>
+                        LISTAR | EDITAR | EXCLUIR 
+                      </a>
+                    </li>
+                  </li>
+                </ul>
+              </li>
+          </ul>
+
+        </div> <!-- Final do Menu -->
+      </div> <!-- Final do Sidebar -->
+    </div> <!-- Final do Div md-6 -->
+
+    <div class="col-md-9">
+      <div class="profile-content">
+
+
+        <!-- Informações do Mapa -->
+        <div class="col-md-4">
+          <div class="panel panel-yellow">
+            <div class="panel-heading">
+              
+              <div class="row">
+                <div class="col-xs-3">
+                  <i class="fa fa-globe fa-5x"></i>
+                </div>
+                <div class="col-xs-9 text-right">
+                  
+                  <div>Clique abaixo para adicionar e visualizar informações do seu Mapa</div>
+                  <br/>
+                    
+                </div>
+              </div>
+            
+            </div>
+            
+            <a href="{% url 'password_change' %}">
+              <div class="panel-footer">
+                <span class="pull-left">Dados do Mapa</span>
+                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                <div class="clearfix"></div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        
+        <!-- Quantidade de Árvores Cadastradas -->
+
+        {% if object_list %}
+        
+        <div class="col-md-4">
+          <div class="panel panel-green">
+            <div class="panel-heading">
+              
+              <div class="row">
+                <div class="col-xs-3">
+                  <i class="fa fa-pagelines fa-5x"></i>
+                </div>
+                <div class="col-xs-9 text-right">
+                  <div>Parabéns! Você já localizou</div>
+                  <br/>
+                 
+                  <div class="huge">
+                    
+                      {{ object_list|length }}
+                    
+                  </div>
+                  <br/>
+                  <div>Árvores</div>
+                </div>
+              </div>
+            
+            </div>
+            
+            <a href="{% url 'tree_list' %}">
+              <div class="panel-footer">
+                <span class="pull-left">Visualizar Lista</span>
+                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                <div class="clearfix"></div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Para cadastrar Árvore -->
+        <div class="col-md-4">
+          <div class="panel panel-primary">
+            <div class="panel-heading">
+              
+              <div class="row">
+                <div class="col-xs-3">
+                  <i class="fa fa-map-marker fa-5x"></i>
+                </div>
+                <div class="col-xs-9 text-right">
+                  <div>Continue a montar seu mapa !</div>
+                  <br/>
+                  <div>Clique em Cadastrar para adicionar nova árvore</div>
+                </div>
+              </div>
+            
+            </div>
+            
+            <a href="{% url 'tree_form' %}">
+              <div class="panel-footer">
+                <span class="pull-left">Cadastrar</span>
+                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                <div class="clearfix"></div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        
+        {% else %}
+        <!-- Se ñ tiver nenhuma árvore cadastrada -->
+        <div class="col-md-4">
+          <div class="panel panel-danger">
+            <div class="panel-heading">
+              
+              <div class="row">
+                <div class="col-xs-3">
+                  <i class="fa fa-pagelines fa-5x"></i>
+                </div>
+                <div class="col-xs-9 text-right">
+                  <div>Comece a montar seu mapa !</div>
+                  <br/>
+                  <div>Clique em Cadastrar para adicionar uma árvore</div>
+                </div>
+              </div>
+            
+            </div>
+            
+            <a href="{% url 'tree_form' %}">
+              <div class="panel-footer">
+                <span class="pull-left" style="color: #FF5F5F;">Cadastrar</span>
+                <span class="pull-right" style="color: #FF5F5F;"><i class="fa fa-arrow-circle-right"></i></span>
+                <div class="clearfix"></div>
+              </div>
+            </a>
+          </div>
+        </div>
+                      
+        {% endif %}
+        
+
+        <!-- Para visualizar Mapa -->
+         <div class="row-fluid">
+        <div class="col-md-12">   
+
+          <div class="panel panel-success" style="width: 100%; height: 100%;">
+            <div class="panel-heading">
+              <div id="mapa_tree_list" style="width: 100%; height: 370px;"></div> <!-- Mapa -->
+            </div>
+            <a href="{% url 'map' %}">
+              <div class="panel-footer">
+                <span class="pull-left">Clique para Expandir Mapa</span>
+                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                <div class="clearfix"></div>
+              </div>
+            </a>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div> <!-- Final do Div md-9 -->
+  </div>
+
+</div> <!-- Final do Container -->
+
+<!-- JavaScript Mapa -->
+  <script src="{% static 'openlayers/OpenLayers.js' %}"></script> 
+
+  <script>
+    
+    function jump(lat,lon, zoom) {
+       
+      var lonLat = new OpenLayers.LonLat( lon, lat ).transform(
+        new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+        map.getProjectionObject() // to Spherical Mercator Projection
+      );
+      map.setCenter (lonLat, zoom);
+    }
+
+    map = new OpenLayers.Map("mapa_tree_list");
+    map.addLayer(new OpenLayers.Layer.OSM());
+  
+    epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
+    projectTo = map.getProjectionObject(); //The map projection (Spherical Mercator)
+   
+    var lonLat = new OpenLayers.LonLat( -47.5356, -18.2246).transform(epsg4326, projectTo);
+          
+    var zoom=3;
+    
+    var markers = new Array();
+    map.setCenter (lonLat, zoom);
+
+    var vectorLayer = new OpenLayers.Layer.Vector("VectorPoints");
+
+    {% for arvore in object_list %}
+      markers.push([{{arvore.id}}, {{arvore.longitude}}, {{arvore.latitude}}]);
+    {% endfor %}
+
+    for (var i=0; i<markers.length; i++) {
+      var lon = markers[i][1];
+      var lat = markers[i][2];
+       
+      var feature = new OpenLayers.Feature.Vector(
+        new OpenLayers.Geometry.Point( lon, lat ).transform(epsg4326, projectTo),
+          {description: "<div style='text-align:right'>" + 
+            "<a href='#' onClick='jump(" +markers[i][2]+", "+markers[i][1]+", 18); return false;'>Ampliar</a></div>" + 
+            "<div style='text-align:left'>Id: " + markers[i][0] + "<br/>Latitude: " + markers[i][2] + 
+            "<br/>Longitude: " + markers[i][1] + "</div>" + 
+            "<div style='text-align:right'><a href='#' onClick='jump(-18.2246, -47.5356, 3); return false;'>Voltar</a></div>"},
+          {externalGraphic: '/static/img/marker.png', graphicHeight: 36, graphicWidth: 32, graphicXOffset:-12, graphicYOffset:-26}
+      );             
+      
+      vectorLayer.addFeatures(feature);
+
+    } // fim do for   
+
+    map.addLayer(vectorLayer);
+
+    //Add popup
+    var controls = {
+      selector: new OpenLayers.Control.SelectFeature(vectorLayer, 
+        { onSelect: createPopup, onUnselect: destroyPopup })
+    };
+   
+    function createPopup(feature) {
+      feature.popup = new OpenLayers.Popup.FramedCloud("popup",
+        feature.geometry.getBounds().getCenterLonLat(),
+        null,
+        '<div class="markerContent">'+feature.attributes.description+'</div>',
+        null,
+        true,
+        function() { controls['selector'].unselectAll(); 
+    });
+  
+    //feature.popup.closeOnMove = true;
+    map.addPopup(feature.popup);
+    }
+
+    function destroyPopup(feature) {
+      feature.popup.destroy();
+      feature.popup = null;
+    }
+    
+    map.addControl(controls['selector']);
+    controls['selector'].activate();
+
+</script>          
+
+{% endblock content %}

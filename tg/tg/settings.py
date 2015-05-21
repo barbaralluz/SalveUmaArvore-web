@@ -37,7 +37,22 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'tg.core',
+    'social_auth',
 )
+
+AUTHENTICATION_BACKENDS = (
+    'social_auth.backends.facebook.FacebookBackend',
+    'social_auth.backends.google.GoogleOAuth2Backend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+FACEBOOK_APP_ID              = '816917028387261'
+FACEBOOK_API_SECRET          = '22cdeb8801ab73a78b686491a97aee17'
+
+GOOGLE_OAUTH2_CLIENT_ID  = '184120370259-06c93doeviuph4nvlu1jj4fglhd4s7rb.apps.googleusercontent.com'
+GOOGLE_OAUTH2_CLIENT_SECRET = 'LCzMnVkHWnl3GtJ1wcvAuZsr'
+
+SESSION_SERIALIZER='django.contrib.sessions.serializers.PickleSerializer'
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -52,7 +67,6 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'tg.urls'
 
 WSGI_APPLICATION = 'tg.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
@@ -90,8 +104,17 @@ TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, '../templates/'),
 )
 
+MEDIA_ROOT = 'tg/core/media/'
+
+MEDIA_URL = '/media/'
+
 STATIC_URL = '/static/'
 
 LOGIN_URL = "/login/"
 LOGOUT_URL = "/logout/"
-LOGIN_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = "/control_panel/"
+
+# configurando o usuario do django para ser
+# o usuario definido pelo projeto e nao o usuario
+# padrao do Django.contrib.auth
+AUTH_PROFILE_MODULE = 'tg.core.Profile'

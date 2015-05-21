@@ -33,19 +33,30 @@
           <div class="profile-usermenu">
             <ul class="nav">
               <li>
+                <a href="{% url 'control_panel' %}">
+                  <i class="glyphicon glyphicon-th-list"></i>
+                  PAINEL DE CONTROLE
+                </a> 
+              </li>
+
+              <li>
                 <a href="{% url 'profile' %}">
                   <i class="glyphicon glyphicon-user"></i>
                   MEU PERFIL
                 </a> 
               </li>
               
+              {% if not request.user.userprofile.google_id %}
+
               <li>
                 <a href="{% url 'password_change' %}">
                   <i class="glyphicon glyphicon-cog"></i>
                   ALTERAR SENHA
                 </a>
               </li>
-            
+              
+              {% endif %}
+              
               <li>
                 <a href="{% url 'map' %}">
                   <span class="glyphicon glyphicon-map-marker"></span>
@@ -85,53 +96,71 @@
 
     <div class="col-md-9">
       <div class="profile-content">
-        <div id="mapa_tree_list" style="width: 100%; height: 400px;"></div> <!-- Mapa -->
+       <!-- <div id="mapa_tree_list" style="width: 100%; height: 400px;"></div> <!-- Mapa 
+        <br/>
           <!-- Lista de Árvores -->
-          <div id="no-more-tables">
-                    <table class="table table-condensed text-cente cf">
-            
-            <thead class="cf">
-              <tr>
-                <th style="width: 120px;"></th>
-                <th>Id</th>
-                <th>Espécie</th>
-                <th>Longitude</th>
-                <th>Latitude</th>
-                <th>Data de Cadastro</th>
-                <th style="width: 30px;"></th>
-              </tr> 
-            </thead>  
-            
-            <tbody>
-              {% for arvore in object_list %}
-              <tr>
-                
-                <td>
-                  <a href="{% url 'tree_form' arvore.pk %}" class="btn btn-warning">
-                    <span class="glyphicon glyphicon-pencil"></span> 
-                    Editar
-                  </a>
-                </td>
-                
-                <td data-title="Id">{{ arvore.id }}</td>
-                <td data-title="Espécie">{{ arvore.especie }}</td>
-                <td data-title="Longitude">{{ arvore.longitude }}</td>
-                <td data-title="Latitude">{{ arvore.latitude }}</td>
-                <td data-title="Data Cadastro">{{ arvore.data_cadastro }}</td>
-                
-                <td>
-                  <a href="{% url 'tree_delete' arvore.pk %}" class="btn btn-danger">
-                    <span class="glyphicon glyphicon-trash"></span> 
-                    Excluir
-                  </a>
-                </td>
-
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+    
+          {% for arvore in object_list %}
+            <div class="well">
+              <div class="media">
+        
+                <div class="media-body">
+                  <p class="pull-right">
+                    {% if arvore.foto %}
+                      <img class="thumbnail" src="{{arvore.foto.url}}" width="100%" height="200">
+                    {% else %}
+                      <img class="thumbnail" src="/static/img/thumb.jpg" width="100%" height="200">
+                    {% endif %}
+                  </p>
+                  <h4 class="media-heading"> <strong> {{ arvore.especie }}</strong></h4>
+                  <p style="text-align:justify; line-height: 1,1;">
+                    <strong>Identificação: </strong> {{ arvore.id}}
+                    <br/>
+                    <strong>Data de Cadastro: </strong> {{ arvore.data_cadastro }}
+                    <br/>
+                    <strong>Latitude: </strong>{{ arvore.latitude }}
+                    <br/>
+                    <strong>Longitude: </strong>{{ arvore.longitude }}
+                    <br/>
+                    <strong>Altura: </strong>{{ arvore.altura }}
+                    <br/>
+                    <strong>Diâmetro: </strong>{{ arvore.diametro }}
+                    <br/>
+                    <strong>Informações Adicionais: </strong>{{ arvore.informacoes_adicionais }}
+                  </p>
+                  <ul class="list-inline list-unstyled pull-right" >
+                    
+                    <li>
+                      <span>
+                        <a href="#">
+                          <i class="fa fa-map-marker fa-lg"></i>
+                          Visualizar no Mapa
+                        </a>
+                      </span>
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                    </li>
+                    
+                    <li>
+                      <a href="{% url 'tree_form' arvore.pk %}" class="btn btn-warning">
+                        <span class="glyphicon glyphicon-pencil"></span> 
+                        Editar
+                      </a>
+                      
+                      &nbsp;
+                      &nbsp;
+                      &nbsp;
+                      
+                      <a href="{% url 'tree_delete' arvore.pk %}" class="btn btn-danger">
+                        <span class="glyphicon glyphicon-trash"></span> 
+                        Excluir
+                      </a>
+                    </li>  
+                  </ul>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
         </div>
-      </div>
       </div> <!-- Final do Div md-9 -->
     </div>
 

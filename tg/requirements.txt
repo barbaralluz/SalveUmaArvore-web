@@ -1,0 +1,7 @@
+Django==1.7
+django-social-auth==0.7.28
+httplib2==0.9.1
+oauth2==1.5.211
+PIL==1.1.7
+Pillow==2.8.1
+python-openid==2.2.5

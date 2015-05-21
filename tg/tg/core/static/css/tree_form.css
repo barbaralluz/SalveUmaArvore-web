@@ -8,16 +8,39 @@ body {
    padding-top: 35px;
 }
 
+#foto-clear_id{
+   width: 60px;
+   text-align: right; 
+  
+}
+
+
+
+label[for=foto-clear_id]{
+  width: 40px;
+  text-align: left; 
+}
+
+
+#id_foto{
+   width: 400px;
+   text-align: left; 
+  
+}
+
 @media (max-width: 1200px) {
 p >  label {
   text-align: right; 
   width: 150px;
 }
 
-p >  input {
+p > input {
   width: 300px;
+
   
 }
+
+
 
 p > textarea {
   width: 300px;
