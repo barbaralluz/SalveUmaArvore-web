@@ -129,7 +129,13 @@
     var vectorLayer = new OpenLayers.Layer.Vector("VectorPoints");
 
     {% for arvore in object_list %}
-      markers.push([{{arvore.id}}, {{arvore.longitude}}, {{arvore.latitude}}]);
+
+      var lat1 = String([{{ arvore.geometry.x }}]);
+      var lat = lat1.replace(",", ".")
+
+      var lon1 = String([{{ arvore.geometry.y }}]);
+      var lon = lon1.replace(",", ".")
+      markers.push([{{arvore.id}}, lon, lat]);
     {% endfor %}
 
     for (var i=0; i<markers.length; i++) {

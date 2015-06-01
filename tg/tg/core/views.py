@@ -6,8 +6,8 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
 from django.core.urlresolvers import reverse_lazy, reverse
 
-from tg.core.models import Map, Tree, User, Profile
-from tg.core.forms import MapForm, TreeForm, UserForm, ProfileForm
+from tg.core.models import Tree, User, Profile
+from tg.core.forms import TreeForm, UserForm, ProfileForm
 
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
@@ -59,7 +59,7 @@ def profile(request):
 @login_required
 def control_panel(request):
     return ListView.as_view(
-        queryset = Map.objects.filter(user=request.user),
+        queryset = Tree.objects.filter(usuario=request.user),
         template_name='control_panel.html')(request)
 
 #Visualizar Mapa
@@ -68,34 +68,6 @@ def map(request):
     return ListView.as_view(
         queryset = Tree.objects.filter(usuario=request.user),
         template_name='map.html')(request)
-
-#Cadastrar Mapa - Para ser possível liberar visualização pública
-@login_required
-def map_create(request):
-    if request.method == 'POST': 
-        form = MapForm(request.POST, request.FILES)
-        if form.is_valid():
-            m = form.save(commit=False)
-            m.user = request.user
-            m.save()
-            return redirect(control_panel)
-    else:
-        form = MapForm()
-    return render_to_response("map_form.html", {'form': form},
-            context_instance=RequestContext(request))
-
-@login_required
-def map_update(request, nr_map):
-    m = get_object_or_404(Map, user=request.user, id=nr_map)
-    if request.method == "POST":
-        form = MapForm(request.POST, request.FILES, instance=m)
-        if form.is_valid():
-            form.save()
-            return redirect(control_panel)
-    else:
-        form = MapForm(instance=m)
-    return render_to_response("map_form.html", {'form':form},
-            context_instance=RequestContext(request))
 
 #CRUD Árvores
 @login_required

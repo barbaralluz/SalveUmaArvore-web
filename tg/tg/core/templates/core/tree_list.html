@@ -118,9 +118,9 @@
                     <br/>
                     <strong>Data de Cadastro: </strong> {{ arvore.data_cadastro }}
                     <br/>
-                    <strong>Latitude: </strong>{{ arvore.latitude }}
+                    <strong>Latitude: </strong> {{ arvore.geometry.x }}
                     <br/>
-                    <strong>Longitude: </strong>{{ arvore.longitude }}
+                    <strong>Longitude: </strong> {{ arvore.geometry.y }}
                     <br/>
                     <strong>Altura: </strong>{{ arvore.altura }}
                     <br/>
@@ -131,12 +131,12 @@
                   <ul class="list-inline list-unstyled pull-right" >
                     
                     <li>
-                      <span>
+                      <!-- <span>
                         <a href="#">
                           <i class="fa fa-map-marker fa-lg"></i>
                           Visualizar no Mapa
                         </a>
-                      </span>
+                      </span> -->
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                     </li>
                     
@@ -196,11 +196,18 @@
     var vectorLayer = new OpenLayers.Layer.Vector("VectorPoints");
 
     {% for arvore in object_list %}
-      markers.push([{{arvore.id}}, {{arvore.longitude}}, {{arvore.latitude}}]);
+
+      var lat1 = String([{{ arvore.geometry.x }}]);
+      var lat = lat1.replace(",", ".")
+
+      var lon1 = String([{{ arvore.geometry.y }}]);
+      var lon = lon1.replace(",", ".")
+
+      markers.push([{{arvore.id}}, lon, lat]);
     {% endfor %}
 
     for (var i=0; i<markers.length; i++) {
-      var lon = markers[i][1];
+      var lon = markers[i][1].toPrecision(6);
       var lat = markers[i][2];
        
       var feature = new OpenLayers.Feature.Vector(

@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'tg.core',
     'social_auth',
+    'django.contrib.gis',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -73,8 +74,12 @@ WSGI_APPLICATION = 'tg.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.contrib.gis.db.backends.postgis', 
+        'NAME': 'geology',                     
+        'USER': 'geouser',
+        'PASSWORD': 'geopassword',
+        'HOST': 'localhost',                      
+        'PORT': '',                
     }
 }
 

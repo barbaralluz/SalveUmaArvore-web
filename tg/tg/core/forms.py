@@ -2,36 +2,26 @@
 
 from django import forms
 
-from tg.core.models  import Map, Tree, Profile
+from tg.core.models  import Tree, Profile
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
-class MapForm(forms.ModelForm):
-    foto = forms.ImageField(label="Adicione uma foto", required=False)
-    
-    class Meta:
-        model = Map
-        fields = ("nome", "descricao", "publico", "foto")
-
-
 class TreeForm(forms.ModelForm):
     foto = forms.ImageField(label="Adicione uma foto", required=False)
-    
     class Meta:
         model = Tree
-        fields = ("longitude", "latitude", "especie", "altura", "diametro", "informacoes_adicionais",
-        	"foto")
-
+        fields = ("geometry", "country", "administrative_area_level_1", 
+                  "locality", "neighborhood", "route", 
+                  "numero", "postal_code", "point_of_interest",
+                  "especie", "altura", "diametro", "informacoes_adicionais", "foto")
 
 class UserForm(UserCreationForm):
     email = forms.EmailField(required=True)
     
-
     class Meta:
         model = User
         fields = ("username", "email")
 
-    
     def __init__(self, *args, **kwargs):
         super(UserForm, self).__init__(*args, **kwargs)
 

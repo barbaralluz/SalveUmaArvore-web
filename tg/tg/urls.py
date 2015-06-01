@@ -16,9 +16,6 @@ urlpatterns = patterns(
     #Mapa
     url(r'^map/$', 'tg.core.views.map', name="map"),
 
-    url(r'^create/map/$', 'tg.core.views.map_create', name="map_form"),
-    url(r'^update/map/(?P<nr_map>\d+)/$', 'tg.core.views.map_update', name="map_form"),
-
     # Árvores
     url(r'^list/tree/$', 'tg.core.views.tree_list', name="tree_list"),
     url(r'^create/tree/$', 'tg.core.views.tree_create', name="tree_form"),
@@ -46,9 +43,6 @@ urlpatterns = patterns(
 
     
 )
-
-
-
 
 if settings.DEBUG:
     # static files (images, css, javascript, etc.)
