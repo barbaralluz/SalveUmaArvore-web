@@ -25,8 +25,8 @@ Construir um inventário ["crowdsourcing"](http://pt.wikipedia.org/wiki/Crowdsou
 
 ## Contribuidores
 
-Barbara = @barbaralluz  
-Cadu = @cadu-leite
+Barbara Lopes Luz (@barbaralluz)  
+Carlos E. C. Leite (@cadu-leite)
 
 ## Tecnologias Utilizadas
 
