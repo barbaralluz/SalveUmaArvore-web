@@ -25,15 +25,15 @@ Construir um inventário ["crowdsourcing"](http://pt.wikipedia.org/wiki/Crowdsou
 
 ## Contribuidores
 
-@barbaralluz
-@cadu-leite
+Barbara = @barbaralluz  
+Cadu = @cadu-leite
 
 ## Tecnologias Utilizadas
 
 
 * [**Django (versão 1.7)**](https://www.djangoproject.com/)  
 Um framework Web Python de alto nível que incentiva o rápido desenvolvimento e design limpo e pragmático. É livre e open source.  
-_** Observação: Junto com o Django, foi utilizado o [GeoDjango](https://docs.djangoproject.com/en/1.8/ref/contrib/gis/tutorial/) que trata-se de um módulo incluso no Django, que possibilita criar aplicações Geográficas, com serviços baseados em localização .... **_
+_** Observação: Junto com o Django, foi utilizado o [GeoDjango](https://docs.djangoproject.com/en/1.8/ref/contrib/gis/tutorial/) que trata-se de um módulo incluso no Django, que possibilita criar aplicações Geográficas, com serviços baseados em localização **_
 
 * **[Django-Social-Auth (versão 0.7.28)](https://django-social-auth.readthedocs.org/en/latest/) e [Oauth2 (versão 1.5.211)](https://django-oauth2-provider.readthedocs.org/en/latest/)**  
 Tratam-se de aplicações utilizadas para realizar autenticação e registro de usuários, o _**Django-Social-Auth**_ possibilita autenticação e registro através de redes sociais (como Facebook, Twitter e Google) e o _**Oauth2**_ através do cadastro de um usuário com e-mail e senha.
