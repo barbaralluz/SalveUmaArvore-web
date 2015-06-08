@@ -17,7 +17,7 @@ class Tree(models.Model):
     postal_code = models.CharField(verbose_name=u'CEP', max_length=100)
     point_of_interest = models.TextField(u'Ponto de Referência', null=True, blank=True)
     
-    geometry = models.PointField(verbose_name=u'Localize')
+    geometry = models.PointField(verbose_name=u'Localização da Árvore no Mapa')
     objects = models.GeoManager()
     
     especie = models.CharField(verbose_name=u'Espécie', max_length=200)

@@ -109,19 +109,67 @@
 
     <div class="col-md-9">
       <div class="profile-content">
-        <p align="right" id="d">
+
+        <div class="tabbable-panel">
+        <div class="tabbable-line">
+          <ul class="nav nav-tabs ">
+            <li class="active">
+              <a href="#tab_default_1" data-toggle="tab">
+              Busque endereço com Google </a>
+            </li>
+            <li>
+              <a href="#tab_default_2" data-toggle="tab">
+              Busque endereço com Nominatim </a>
+            </li>
+          </ul>
+          <div class="tab-content">
+            <div class="tab-pane active" id="tab_default_1">
+              <br/>
+              <p>
+                
+                <input id="address_google" type="text" class="form-control" placeholder="Informe Logradouro, Bairro, Cidade, Estado, País" / >
+                <br/> 
+
+              
+                <button class="btn btn-success" type="submit" onclick="codeAddress()"><span class="glyphicon glyphicon-search"></span> Pesquisar</button>
+
+                <button class="btn btn-danger"  onclick="limpa_textfield_id('address_google')"><span class="glyphicon glyphicon-trash"></span> Limpar</button>
+             
+              </p>
+            </div>
+            <div class="tab-pane" id="tab_default_2">
+              <br/>
+              <p>
+                
+               <input id="address_nominatim" type="text" class="form-control" placeholder="Informe Logradouro, Bairro, Cidade, Estado, País" / >
+                <br/> 
+
+              
+                <button class="btn btn-success" onclick="addr_search();"><span class="glyphicon glyphicon-search"></span> Pesquisar</button>
+
+                <button class="btn btn-danger" onclick="limpa_textfield_id('address_nominatim')"><span class="glyphicon glyphicon-trash"></span> Limpar</button>
+
+                <div id="results"/>
+
+                
+                </div>
+
+                <p id="output"></p>
+                
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p align="right" id="d">
           <button class="btn btn-primary btn-success" onclick='getLocation()'>
             <span class="glyphicon glyphicon-map-marker"></span> 
             Me localize!
           </button>
         </p>
-        
-        <div align="center">
-          <input id="address" type="text">
-          <button class="btn btn-success" onclick="codeAddress()"><span class="glyphicon glyphicon-search"></span> Pesquisar</button>
-        </div>
-
         <form method="POST"  enctype="multipart/form-data">
+
+          
         {% csrf_token %}
         
         {{ form.as_p }}
@@ -204,6 +252,55 @@
       
       var geocoder = new google.maps.Geocoder();
 
+      function limpa_textfield_id(nome_id){
+        document.getElementById(nome_id).value = "";
+        document.getElementById(nome_id).placeholder="Informe Logradouro, Bairro, Cidade, Estado, País";
+
+      };
+
+      function clickmarcador(lonlat){
+        markers = new OpenLayers.Layer.Markers( "Markers" );
+          markers.id = "Markers";
+          map.addLayer(markers);
+
+          var size = new OpenLayers.Size(40,42);
+          var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+          var icon = new OpenLayers.Icon('/static/img/marker.png', size, offset);   
+          var markerslayer = map.getLayer('Markers');
+
+          markerslayer.clearMarkers();
+          
+          markerslayer.addMarker(new OpenLayers.Marker(lonlat,icon));
+
+          lonlat.transform(
+            new OpenLayers.Projection("EPSG:900913"), 
+            new OpenLayers.Projection("EPSG:4326")
+          );
+
+      };
+
+      function marca(lonlat){
+        markers = new OpenLayers.Layer.Markers( "Markers" );
+        markers.id = "Markers";
+        map.addLayer(markers);
+
+        var size = new OpenLayers.Size(40,42);
+        var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+        var icon = new OpenLayers.Icon('/static/img/marker.png', size, offset);   
+        var markerslayer = map.getLayer('Markers');
+
+        markerslayer.clearMarkers();
+        markerslayer.addMarker(new OpenLayers.Marker(lonlat,icon));
+
+        lonlat.transform(
+            new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+            map.getProjectionObject() // to Spherical Mercator Projection
+          );
+
+        map.setCenter (lonlat, 18);
+
+      };
+
       //Define o tipo de click dentro do mapa - single click 
       OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {                
         defaultHandlerOptions: {
@@ -222,24 +319,10 @@
         }, 
            
         trigger: function(e) {
-          markers = new OpenLayers.Layer.Markers( "Markers" );
-          markers.id = "Markers";
-          map.addLayer(markers);
         
           var lonlat = map.getLonLatFromPixel(e.xy);
 
-          var size = new OpenLayers.Size(40,42);
-          var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-          var icon = new OpenLayers.Icon('/static/img/marker.png', size, offset);   
-          var markerslayer = map.getLayer('Markers');
-
-          markerslayer.clearMarkers();
-          markerslayer.addMarker(new OpenLayers.Marker(lonlat,icon));
-
-          lonlat.transform(
-            new OpenLayers.Projection("EPSG:900913"), 
-            new OpenLayers.Projection("EPSG:4326")
-          );
+          clickmarcador(lonlat);
           
           document.getElementById("id_geometry").value =  "POINT(" +  lonlat.lat + " " + lonlat.lon + ")"
 
@@ -270,23 +353,7 @@
 
         var lonlat = new OpenLayers.LonLat( lon, lat )
         
-        markers = new OpenLayers.Layer.Markers( "Markers" );
-        markers.id = "Markers";
-        map.addLayer(markers);
-          
-        var size = new OpenLayers.Size(32,36);
-        var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-        var icon = new OpenLayers.Icon('/static/img/marker.png', size, offset);   
-        var markerslayer = map.getLayer('Markers');
-
-        markerslayer.addMarker(new OpenLayers.Marker(lonlat,icon));
-
-        lonlat.transform(
-            new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
-            map.getProjectionObject() // to Spherical Mercator Projection
-          );
-
-        map.setCenter (lonlat, 16);
+        marca(lonlat);
     
       {%endif%}
 
@@ -324,12 +391,12 @@
                 type =  components[i].types[0];
                 long_name =  components[i].long_name;
                 if (document.getElementById("id_"+type)){
-                  document.getElementById("id_"+type).value = short_name;
+                  document.getElementById("id_"+type).value = long_name;
                 };
               };
             }
           } else {
-            //alert("Geocoder failed due to: " + status);
+            //alert("Geocoder failed: " + status);
             document.getElementById('id_country').value = " ";
             document.getElementById('id_administrative_area_level_1').value = " ";
             document.getElementById('id_locality').value = " ";
@@ -343,7 +410,74 @@
       function showPosition(position) {
         
         var lonlat = new OpenLayers.LonLat( position.coords.longitude, position.coords.latitude )
+
+        marca(lonlat);
+
+        document.getElementById("id_geometry").value =  "POINT(" +  position.coords.latitude + " " + position.coords.longitude + ")"
         
+        codeLatLng(position.coords.latitude, position.coords.longitude);
+      }
+
+      function codeAddress(){
+        var address = document.getElementById("address_google").value;
+        geocoder.geocode( { 'address': address}, function(results, status){
+          if (status == google.maps.GeocoderStatus.OK){
+
+            latLng = results[0].geometry.location;
+
+            codeLatLng(latLng.lat(), latLng.lng());
+            
+            var lonlat = new OpenLayers.LonLat(latLng.lng(), latLng.lat())
+
+            marca(lonlat);
+
+            document.getElementById("id_geometry").value =  
+                              "POINT(" +  latLng.lat() + " " + latLng.lng() + ")";
+          }
+          
+          else {
+            alert("Geocode was not successful for the following reason: " + status);
+          }
+        });
+      };
+
+      function addr_search() {
+    var inp = document.getElementById("address_nominatim");
+
+    $.getJSON('http://nominatim.openstreetmap.org/search?format=json&limit=5&q=' + inp.value, function (data) {
+        var items = [];
+        $.each(data, function (key, val) {
+            var str = JSON.stringify([val.lat, val.lon]);
+            items.push("<li><a href='#' onclick='jump(" + JSON.stringify(val.lat) + "," + JSON.stringify(val.lon) + ");'>" + val.display_name + '</a></li><br/>');
+
+        });
+
+        $('#results').empty();
+        if (items.length !== 0) {
+            $('<p>', {
+                html: "Resultado:"
+            }).appendTo('#results');
+            $('<ul/>', {
+                'class': 'my-new-list',
+                html: items.join('')
+            }).appendTo('#results');
+        } else {
+            $('<p>', {
+                html:  "Resultado não encontrado"
+            }).appendTo('#results');
+        }
+    });
+}
+
+function jump(lat,lon) {
+      
+      search(lat, lon);
+      var zoom = 18;
+      var lonlat = new OpenLayers.LonLat(lon, lat).transform(
+            new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+            map.getProjectionObject() // to Spherical Mercator Projection
+          );
+
         markers = new OpenLayers.Layer.Markers( "Markers" );
         markers.id = "Markers";
         map.addLayer(markers);
@@ -356,61 +490,37 @@
         markerslayer.clearMarkers();
         markerslayer.addMarker(new OpenLayers.Marker(lonlat,icon));
 
-        lonlat.transform(
-            new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
-            map.getProjectionObject() // to Spherical Mercator Projection
-          );
-
-        map.setCenter (lonlat, 18);
-
-        document.getElementById("id_geometry").value =  "POINT(" +  position.coords.latitude + " " + position.coords.longitude + ")"
         
-        codeLatLng(position.coords.latitude, position.coords.longitude);
-      }
+        map.setCenter (lonlat, zoom);
 
-      function codeAddress(){
-        var address = document.getElementById("address").value;
-        geocoder.geocode( { 'address': address}, function(results, status){
-          if (status == google.maps.GeocoderStatus.OK){
+        id_geometry.value = 'POINT('+ lonlat.lat +' ' + lonlat.lon +')';
+        
+    }
 
-            latLng = results[0].geometry.location;
+    window.cb = function cb(json) {
+    //do what you want with the json
+    
+    //document.getElementById('output').innerHTML = json.address.road + ',' + json.address.city;
+    
+    document.getElementById('id_country').value = json.address.country;
+    document.getElementById('id_administrative_area_level_1').value = json.address.state;
+    document.getElementById('id_locality').value = json.address.city;
+    document.getElementById('id_neighborhood').value = json.address.suburb;
+    document.getElementById('id_route').value = json.address.road;
+    document.getElementById('id_postal_code').value = json.address.postcode;
+}
 
-            codeLatLng(latLng.lat(), latLng.lng());
+window.search = function search(lat, lon) {
+    var s = document.createElement('script');       
+    s.src = 'http://nominatim.openstreetmap.org/reverse?json_callback=cb&format=json&lat='+lat+'&lon='+lon+'&zoom=27&addressdetails=1';
+    document.getElementsByTagName('head')[0].appendChild(s);
 
-            var lonlat = new OpenLayers.LonLat(latLng.lng(), latLng.lat())
-
-            markers = new OpenLayers.Layer.Markers( "Markers" );
-            markers.id = "Markers";
-            map.addLayer(markers);
-      
-            var size = new OpenLayers.Size(40,42);
-            var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-            var icon = new OpenLayers.Icon('/static/img/marker.png', size, offset);   
-            var markerslayer = map.getLayer('Markers');
-
-            markerslayer.clearMarkers();
-            markerslayer.addMarker(new OpenLayers.Marker(lonlat, icon));
-
-            lonlat.transform(
-              new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
-              map.getProjectionObject() // to Spherical Mercator Projection
-            );
-
-            map.setCenter(lonlat, 18);
-            document.getElementById("id_geometry").value =  
-                              "POINT(" +  latLng.lat() + " " + latLng.lng() + ")";
-          }
-          
-          else {
-            alert("Geocode was not successful for the following reason: " + status);
-          }
-        });
-      };
+};
 
       jQuery(document).ready(function(){
-        jQuery('#id_country').width(30);
+        jQuery('#id_country').width(100);
         jQuery('#id_country').attr("readonly", true);
-        jQuery('#id_administrative_area_level_1').width(30);
+        jQuery('#id_administrative_area_level_1').width(100);
         jQuery('#id_administrative_area_level_1').attr("readonly", true);
         jQuery('#id_locality').attr("readonly",true);
         jQuery('#id_neighborhood').attr("readonly",true);

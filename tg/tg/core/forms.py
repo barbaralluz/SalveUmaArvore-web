@@ -8,6 +8,7 @@ from django.contrib.auth.forms import UserCreationForm
 
 class TreeForm(forms.ModelForm):
     foto = forms.ImageField(label="Adicione uma foto", required=False)
+    
     class Meta:
         model = Tree
         fields = ("geometry", "country", "administrative_area_level_1", 
