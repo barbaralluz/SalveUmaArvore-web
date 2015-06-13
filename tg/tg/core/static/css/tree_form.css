@@ -14,8 +14,6 @@ body {
   
 }
 
-
-
 label[for=foto-clear_id]{
   width: 40px;
   text-align: left; 
@@ -214,7 +212,6 @@ background-color: #fafcfd;
   border-left: 2px solid #6C8933;
   margin-left: -2px;
 }
-
 
 /* Profile Content */
 .profile-content {

@@ -45,9 +45,9 @@
     <!--END HEAD SECTION -->
 
 <body>  
-     <div class="loader"></div>
+    <div class="loader"></div>
  
-     <!-- NAV SECTION -->
+    <!-- NAV SECTION -> MENU -->
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -58,8 +58,10 @@
                 </button>
                 <a class="navbar-brand" href="/"><i class="fa fa-leaf color-green"></i> LOGO</a>
             </div>
+            
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
+                    
                     {% if user.is_authenticated %}
                         <li>
                             <a href="{% url 'control_panel' %}">
@@ -67,6 +69,7 @@
                                 PAINEL DE CONTROLE
                             </a>
                         </li>
+                    
                         <li>
                             <a href="{% url 'tree_form' %}">
                                 <span class="glyphicon glyphicon-plus-sign"></span>
@@ -116,9 +119,12 @@
         </div>
     </div>
     <!--END NAV SECTION -->
-    <!-- HEADER SECTION -->
 
+    <!-- HEADER SECTION -> IMAGEM -->
     {% block content %}
+    
+    {% if not user.is_authenticated %}
+
     <div id="header-section">
         <div class="container">
             <div class="row text-center">
@@ -135,125 +141,239 @@
             </div> 
         </div>
     </div> 
+
+    {% endif %}
+    
     <!--END HEADER SECTION -->
+
     <!-- BASIC INFO SECTION -->
-    <div id="basic-info">
-        <div class="container">
-            <div class="row main-top-margin text-center">
-                <div class="col-md-8 col-md-offset-2 " >
-                    <h1>Welcome Guest, We Are For You</h1>
-                    <h4>
-                       Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                         Curabitur nec nisl odio. Mauris vehicula at nunc id posuere.
-                    </h4>
+    <div class="container">
+
+        {% if user.is_authenticated %}
+        
+        <div class="row profile">
+            <div class="col-md-3">
+
+                <!-- Sidebar -->
+                <div class="profile-sidebar">
+        
+                <!-- Imagem -->
+                <div class="profile-userpic">
+                    <img src="/static/img/user.png" class="img-responsive" alt="">
                 </div>
-            </div>
-            <div class="row main-low-margin text-center">
-                
-                <div class="col-md-6" >
-                    <div class="text-center">
-                        <i class="fa fa-map-marker fa-5x color-green"></i>
-                        <h4>Responsive Design</h4>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec enim sapien. Aliquam erat volutpat.
-                         Quisque eu ante at tortor imperdiet gravida nec sed turpis. Phasellus augue augue.
-                            </p>
+        
+                <!-- Titulo -->
+                <div class="profile-usertitle">
+                    <div class="profile-usertitle-name" font style="text-transform: uppercase;"> 
+                        {{user.username}} 
                     </div>
                 </div>
+        
+                <!-- Menu -->
+                <div class="profile-usermenu">
+                    <ul class="nav">
+
+                        <!-- Opção Home -->
+                        <li class="active">
+                            <a href="{% url 'index' %}">
+                                <i class="fa fa-home"></i>
+                                HOME
+                            </a> 
+                        </li>
+
+                        <!-- Opção Painel de Controle -->
+                        <li>
+                            <a href="{% url 'control_panel' %}">
+                                <i class="fa fa-globe"></i>
+                                PAINEL DE CONTROLE
+                            </a> 
+                        </li>
+                        
+                        <!-- Opção Meu Perfil -->
+                        <li>
+                            <a href="{% url 'profile' %}">
+                                <i class="glyphicon glyphicon-user"></i>
+                                MEU PERFIL
+                            </a>
+                        </li>
+
+                        <!-- Opção Alterar Senha -->
+                        <li>
+                            <a href="{% url 'password_change' %}">
+                                <i class="glyphicon glyphicon-cog"></i>
+                                ALTERAR SENHA
+                            </a>
+                        </li>
+
+                        <!-- Opção Visualizar Meu Mapa -->
+                        <li>
+                            <a href="{% url 'map' %}">
+                                <span class="glyphicon glyphicon-map-marker"></span>
+                                VISUALIZAR MEU MAPA
+                            </a>
+                        </li>
+              
+                        <li>
+                            <a href="javascript:;" data-toggle="collapse" data-target="#demo">
+                                <span class="glyphicon glyphicon-tree-deciduous"></span>
+                                ÁRVORE 
+                                <i class="fa fa-fw fa-caret-down"></i>
+                            </a>
+                            
+                            <ul id="demo" class="collapse nav">
+                                <li>
+                                    <li>
+                                        <a href="{% url 'tree_form' %}">
+                                            <i class="glyphicon glyphicon-plus-sign"></i>
+                                            ADICIONAR
+                                        </a>
+                                    </li>
+                    
+                                    <li>
+                                        <a href="{% url 'tree_list' %}">
+                                            <i class="glyphicon glyphicon-list"></i>
+                                            LISTAR | EDITAR | EXCLUIR 
+                                        </a>
+                                    </li>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                </div> <!-- Final do Menu -->
+                </div> <!-- Final do Sidebar -->
+
+            </div> <!-- Final do Div md-3 -->
+    
+            <div class="col-md-9">
+
+            {% endif %}
+
+            <div id="basic-info">
+            
+                <div class="row main-top-margin text-center">
+                    <div class="col-md-8 col-md-offset-2 " >
+                        <h1>Welcome Guest, We Are For You</h1>
+                        <h4>
+                           Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                             Curabitur nec nisl odio. Mauris vehicula at nunc id posuere.
+                        </h4>
+                    </div>
+                </div>
+
+                <div class="row main-low-margin text-center">
+
+                    <div class="col-md-6" >
+                        <div class="text-center">
+                            <i class="fa fa-map-marker fa-5x color-green"></i>
+                            <h4>Responsive Design</h4>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec enim sapien. Aliquam erat volutpat.
+                             Quisque eu ante at tortor imperdiet gravida nec sed turpis. Phasellus augue augue.
+                                </p>
+                        </div>
+                    </div>
                 
-                <div class="col-md-6">
-                    <div class="text-center">
-                        <i class="fa fa-pagelines fa-5x color-green"></i>
-                        <h4>24x7 Support</h4>
+                    <div class="col-md-6">
+                        <div class="text-center">
+                            <i class="fa fa-pagelines fa-5x color-green"></i>
+                            <h4>24x7 Support</h4>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec enim sapien. Aliquam erat volutpat.
+                             Quisque eu ante at tortor imperdiet gravida nec sed turpis. Phasellus augue augue.
+                            </p>
+                        </div>
+                    </div>
+                </div>  
+           
+                <div class="row main-low-margin text-center">
+                 
+                    <div class="col-md-12 col-sm-12  text-justify" >
+                        <h3> Lorem ipsum dolor sit amet Riopsh</h3>
                         <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec enim sapien. Aliquam erat volutpat.
-                         Quisque eu ante at tortor imperdiet gravida nec sed turpis. Phasellus augue augue.
+                             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                             Curabitur nec nisl odio. Mauris vehicula at nunc id posuere.
+                             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                             Curabitur nec nisl odio. Mauris vehicula at nunc id posuere.
+                             Curabitur nec nisl odio. Mauris vehicula at nunc id posuere.
+
+                        </p>
+                        <p>
+                             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                             Curabitur nec nisl odio. Mauris vehicula at nunc id posuere.
+
                         </p>
                     </div>
                 </div>
-            </div>
-           
-                 <div class="row main-low-margin text-center">
-             
-                <div class="col-md-12 col-sm-12  text-justify" >
-                    <h3> Lorem ipsum dolor sit amet Riopsh</h3>
-                    <p>
-                         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                         Curabitur nec nisl odio. Mauris vehicula at nunc id posuere.
-                         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                         Curabitur nec nisl odio. Mauris vehicula at nunc id posuere.
-                         Curabitur nec nisl odio. Mauris vehicula at nunc id posuere.
+                
+                <div class="row main-low-margin text-center">
+                  
+                    <div class="col-md-8 col-sm-8   text-justify" >
+                        <h3> Lorem ipsum dolor sit amet Riopsh</h3>
+                        <p>
+                             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                             Curabitur nec nisl odio. Mauris vehicula at nunc id posuere.
+                             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                             Curabitur nec nisl odio. Mauris vehicula at nunc id posuere.
+                             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                             Curabitur nec nisl odio. Mauris vehicula at nunc id posuere.
 
-                    </p>
-                    <p>
-                         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                         Curabitur nec nisl odio. Mauris vehicula at nunc id posuere.
+                        </p>
+                        <p>
+                             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                             Curabitur nec nisl odio. Mauris vehicula at nunc id posuere.
+                             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                             Curabitur nec nisl odio. Mauris vehicula at nunc id posuere.
 
-                    </p>
+                        </p>
+                    </div>
+                    
+                    <div class="col-md-3" >
+                        <img class="img-circle" src="assets/img/team/team1.png" alt="">
+                        <h4><strong>Jhon Deo Alex</strong> </h4>
+                        <p>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                             Curabitur nec nisl odio. 
+
+                        </p>
+                        <p>
+                            <a href="#"><i class="fa fa-facebook-square fa-2x color-facebook"></i></a>
+                            <a href="#"><i class="fa fa-twitter-square fa-2x color-twitter"></i></a>
+                            <a href="#"><i class="fa fa-google-plus-square fa-2x color-google-plus"></i></a>
+                            <a href="#"><i class="fa fa-linkedin-square fa-2x color-linkedin"></i></a>
+                            <a href="#"><i class="fa fa-pinterest-square fa-2x color-pinterest"></i></a>
+
+                        </p>
+
+                    </div>
                 </div>
-                     </div>
-                    <div class="row main-low-margin text-center">
-              
-             
-                <div class="col-md-8 col-sm-8   text-justify" >
-                    <h3> Lorem ipsum dolor sit amet Riopsh</h3>
-                    <p>
-                         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                         Curabitur nec nisl odio. Mauris vehicula at nunc id posuere.
-                         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                         Curabitur nec nisl odio. Mauris vehicula at nunc id posuere.
-                         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                         Curabitur nec nisl odio. Mauris vehicula at nunc id posuere.
 
-                    </p>
-                    <p>
-                         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                         Curabitur nec nisl odio. Mauris vehicula at nunc id posuere.
-                         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                         Curabitur nec nisl odio. Mauris vehicula at nunc id posuere.
+            </div> <!-- Final do Div Basic-Info -->
+            </div> <!-- Final do Div md-9 -->
 
-                    </p>
-                </div>
-                  <div class="col-md-3  " >
-                    <img class="img-circle" src="assets/img/team/team1.png" alt="">
-                    <h4><strong>Jhon Deo Alex</strong> </h4>
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                         Curabitur nec nisl odio. 
+        </div>  <!-- Final do Div Row Profile -->
+    </div> <!-- Final do Container -->
 
-                    </p>
-                    <p>
-                       <a href="#"><i class="fa fa-facebook-square fa-2x color-facebook"></i></a>
-                        <a href="#"><i class="fa fa-twitter-square fa-2x color-twitter"></i></a>
-                        <a href="#"><i class="fa fa-google-plus-square fa-2x color-google-plus"></i></a>
-                        <a href="#"><i class="fa fa-linkedin-square fa-2x color-linkedin"></i></a>
-                        <a href="#"><i class="fa fa-pinterest-square fa-2x color-pinterest"></i></a>
-
-                    </p>
-
-                </div>
-            </div>
-            </div>
-    </div>
     {% endblock content %}
     <!--END BASIC INFO SECTION -->
-      <!--FOOTER SECTION -->
+    
+    <!--FOOTER SECTION -->
     <div id="footer">
         <div class="container">
             <div class="row ">
                 &copy; tree-inventory.herokuapp.com | 2015				
 		
             </div>
-            
         </div>
-       
     </div>  
      <!--END FOOTER SECTION -->
+
     <!-- JAVASCRIPT FILES PLACED AT THE BOTTOM TO REDUCE THE LOADING TIME  -->
     <!-- CORE JQUERY LIBRARY -->
-     <script src="{% static 'js/jquery.js' %}"></script>
-     <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>  
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
     <!-- CORE BOOTSTRAP LIBRARY -->
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <!-- CUSTOM SCRIPT-->

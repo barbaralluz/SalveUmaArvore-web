@@ -6,11 +6,10 @@
 
 {% block content %}
   
-  <link href="{% static 'css/profile.css' %}" rel="stylesheet" />
-    
-  <div class="container">
-
+  <div class="container">       
+        
     <div class="row profile">
+      
       <div class="col-md-3">
 
         <!-- Sidebar -->
@@ -27,57 +26,68 @@
               {{user.username}} 
             </div>
           </div>
-        
+
           <!-- Menu -->
           <div class="profile-usermenu">
             <ul class="nav">
-              <li class="active">
+
+              <!-- Opção Home -->
+              <li>
+                <a href="{% url 'index' %}">
+                  <i class="fa fa-home"></i>
+                  HOME
+                </a> 
+              </li>
+
+              <!-- Opção Painel de Controle -->
+              <li id="control_panel">
                 <a href="{% url 'control_panel' %}">
                   <i class="fa fa-globe"></i>
                   PAINEL DE CONTROLE
                 </a> 
               </li>
-              
-              <li>
+                        
+              <!-- Opção Meu Perfil -->
+              <li id="profile">
                 <a href="{% url 'profile' %}">
                   <i class="glyphicon glyphicon-user"></i>
                   MEU PERFIL
                 </a>
               </li>
 
-                {% if user.is_logged_in  and not backends.associated %}
-                <li>
-                <a href="{% url 'password_change' %}">
+              <!-- Opção Alterar Senha -->
+              <li id="password">
+                <a href="{% url 'password_change' %}" >
                   <i class="glyphicon glyphicon-cog"></i>
                   ALTERAR SENHA
                 </a>
               </li>
 
-              {% endif %}
-            
-              <li>
-                <a href="{% url 'map' %}">
+              <!-- Opção Visualizar Meu Mapa -->
+              <li id="mymap">
+                <a href="{% url 'user_map' %}">
                   <span class="glyphicon glyphicon-map-marker"></span>
-                    VISUALIZAR MEU MAPA
+                  VISUALIZAR MEU MAPA
                 </a>
               </li>
               
               <li>
-                <a href="javascript:;" data-toggle="collapse" data-target="#demo">
+                <a href="javascript:;" data-toggle="collapse" data-target="#tree">
                   <span class="glyphicon glyphicon-tree-deciduous"></span>
                   ÁRVORE 
                   <i class="fa fa-fw fa-caret-down"></i>
                 </a>
-                <ul id="demo" class="collapse nav">
+                            
+                <ul id="tree" class="collapse nav" >
                   <li>
-                    <li>
+                    <li id="add_tree">
                       <a href="{% url 'tree_form' %}">
                         <i class="glyphicon glyphicon-plus-sign"></i>
                         ADICIONAR
                       </a>
                     </li>
                     
-                    <li>
+                    <li id="list_edit_exclude_tree">
                       <a href="{% url 'tree_list' %}">
                         <i class="glyphicon glyphicon-list"></i>
                         LISTAR | EDITAR | EXCLUIR 
@@ -86,13 +96,17 @@
                   </li>
                 </ul>
               </li>
-          </ul>
+            </ul>
+          </div> <!-- Final do Menu -->
+        </div> <!-- Final do Sidebar -->
+      </div> <!-- Final do Div md-3 -->
+          
+      {% block content_logged %}
 
-        </div> <!-- Final do Menu -->
-      </div> <!-- Final do Sidebar -->
-    </div> <!-- Final do Div md-6 -->
+       <link href="{% static 'css/control_panel.css' %}" rel="stylesheet" />
 
-    <div class="col-md-9">
+      <div class="col-md-9">
+
       <div class="profile-content">
         
         <!-- Quantidade de Árvores Cadastradas -->
@@ -277,11 +291,21 @@
 
 </div> <!-- Final do Container -->
 
+
+
 <!-- JavaScript Mapa -->
   <script src="{% static 'openlayers/OpenLayers.js' %}"></script> 
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>  
 
-  <script>
-    
+
+
+  <script>     
+
+    //mantem opção do menu do usuário selecionado 
+    $( document ).ready(function() {
+      $("#control_panel").addClass('active');    
+    });   
+
     function jump(lat,lon, zoom) {
        
       var lonLat = new OpenLayers.LonLat( lon, lat ).transform(
@@ -366,4 +390,5 @@
 
 </script>          
 
+{% endblock content_logged %}
 {% endblock content %}

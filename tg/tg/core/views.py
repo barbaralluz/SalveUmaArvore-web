@@ -62,11 +62,18 @@ def control_panel(request):
         queryset = Tree.objects.filter(usuario=request.user),
         template_name='control_panel.html')(request)
 
-#Visualizar Mapa
+#Visualizar Mapa do Usuário
+@login_required
+def user_map(request):
+    return ListView.as_view(
+        queryset = Tree.objects.filter(usuario=request.user),
+        template_name='user_map.html')(request)
+
+#Visualizar Mapa com Todas as Árvores
 @login_required
 def map(request):
     return ListView.as_view(
-        queryset = Tree.objects.filter(usuario=request.user),
+        queryset = Tree.objects.all(),
         template_name='map.html')(request)
 
 #CRUD Árvores

@@ -1,95 +1,12 @@
-{% extends "base.html" %}
+{% extends "control_panel.html" %}
 
 {% load staticfiles %}
 
 {% block title %}Meu Perfil{% endblock %}
 
-{% block content %}
-	<link href="{% static 'css/change_password.css' %}" rel="stylesheet" />
-
-	<div class="container">
-
-    	<div class="row profile">
-    		<div class="col-md-3">
-
-        		<!-- Sidebar -->
-        		<div class="profile-sidebar">
-        
-          			<!-- Imagem -->
-          			<div class="profile-userpic">
-            			<img src="/static/img/user.png" class="img-responsive" alt="">
-          			</div>
-        
-          			<!-- Titulo -->
-          			<div class="profile-usertitle">
-            			<div class="profile-usertitle-name" font style="text-transform: uppercase;"> 
-             				{{user.username}} 
-            			</div>
-          			</div>
-        
-          			<!-- Menu -->
-          			<div class="profile-usermenu">
-            			<ul class="nav">
-              				<li>
-                				<a href="{% url 'control_panel' %}">
-                  					<i class="glyphicon glyphicon-list "></i>
-                  					PAINEL DE CONTROLE
-                				</a> 
-              				</li>
-                      
-                      <li class="active">
-                        <a href="{% url 'profile' %}">
-                            <i class="glyphicon glyphicon-user"></i>
-                            MEU PERFIL
-                        </a>
-                      </li>
-                      
-                      {% if not request.user.userprofile.google_id %}
-              				<li>
-                				<a href="{% url 'password_change' %}">
-                  					<i class="glyphicon glyphicon-cog"></i>
-                  					ALTERAR SENHA
-                				</a>
-              				</li>
-                      {% endif %}
-            
-              				<li>
-                				<a href="{% url 'map' %}">
-                  					<span class="glyphicon glyphicon-map-marker"></span>
-                    				VISUALIZAR MEU MAPA
-                				</a>
-              				</li>
-              
-              				<li>
-                				<a href="javascript:;" data-toggle="collapse" data-target="#demo">
-                  					<span class="glyphicon glyphicon-tree-deciduous"></span>
-                  					ÁRVORE 
-                  					<i class="fa fa-fw fa-caret-down"></i>
-                				</a>
-                				<ul id="demo" class="collapse nav">
-                 	 				<li>
-                    					<li>
-                      						<a href="{% url 'tree_form' %}">
-                        						<i class="glyphicon glyphicon-plus-sign"></i>
-                        						ADICIONAR
-                      						</a>
-                    					</li>
-                    
-                    					<li>
-                      						<a href="{% url 'tree_list' %}">
-                        						<i class="glyphicon glyphicon-list"></i>
-                        						LISTAR | EDITAR | EXCLUIR 
-                      						</a>
-                    					</li>
-                  					</li>
-                				</ul>
-            				</li>
-          				</ul>
-
-       				</div> <!-- Final do Menu -->
-      			</div> <!-- Final do Sidebar -->
-    		</div> <!-- Final do Div md-3 -->
-
+{% block content_logged %}
+	
+	<link href="{% static 'css/profile.css' %}" rel="stylesheet" />
     		<div class="col-md-9">
     			<div class="profile-content">
       			

@@ -18,7 +18,8 @@ body {
     color: #000;   
     margin-top: 40px;
     line-height:16px;
-     background-color: #EBEBEB;
+    background-color: #EBEBEB;
+    padding-top: 30px;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -57,7 +58,7 @@ h1 {
 }
 
 .main-top-margin {
-     margin-top: 75px;
+     margin-top: 40px;
      background-color: rgba(73, 151, 250, 0.11);
 }
 .main-low-margin {
@@ -415,6 +416,149 @@ color: #fff;
   -o-transition: none;
   transition: none;
 }
+
+/* Profile container */
+.profile {
+  margin: 20px 0;
+}
+
+/* Profile sidebar */
+.profile-sidebar {
+  padding: 20px 0 10px 0;
+  background: #fff;
+}
+
+.profile-userpic img {
+  float: none;
+  margin: 0 auto;
+  width: 65%;
+  height: 30%;
+  -webkit-border-radius: 50% !important;
+  -moz-border-radius: 50% !important;
+  border-radius: 50% !important;
+}
+
+.profile-usertitle {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.profile-usertitle-name {
+  color:  #476B00;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 7px;
+}
+
+.profile-usermenu {
+  margin-top: 30px;
+}
+
+.profile-usermenu ul li {
+  border-bottom: 1px solid #f0f4f7;
+}
+
+
+.profile-usermenu ul li:last-child {
+  border-bottom: none;
+}
+
+.profile-usermenu ul li a {
+  color: #93a3b5;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.profile-usermenu ul li ul li {
+  color: #93a3b5;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.profile-usermenu ul li a {
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+.profile-usermenu ul li ul li a {
+   margin-right: 8px;
+  font-size: 14px;
+}
+
+.profile-usermenu ul li a:hover {
+  background-color: #fafcfd;
+  color: #6C8933;
+}
+
+.profile-usermenu ul li ul li a:hover{
+background-color: #fafcfd;
+  color: #6C8933;
+}
+
+
+.profile-usermenu ul li.active {
+  border-bottom: none;
+}
+
+.profile-usermenu ul li ul li.active{
+  border-bottom: none;
+}
+
+.profile-usermenu ul li.active a {
+  color: #6C8933;
+  background-color: #fafcfd;
+  border-left: 2px solid #6C8933;
+  margin-left: -2px;
+}
+
+
+/* Profile Content */
+.profile-content {
+  padding: 20px;
+  background: #fff;
+  min-height: 650px;
+}
+
+.huge {
+    font-size: 40px;
+}
+
+.panel-green {
+    border-color: #5cb85c;
+}
+
+.panel-green > .panel-heading {
+    border-color: #5cb85c;
+    color: #fff;
+    background-color: #5cb85c;
+}
+
+.panel-green > a {
+    color: #5cb85c;
+}
+
+.panel-green > a:hover {
+    color: #3d8b3d;
+}
+
+.panel-yellow {
+    border-color: #f0ad4e;
+}
+
+.panel-yellow > .panel-heading {
+    border-color: #f0ad4e;
+    color: #fff;
+    background-color: #f0ad4e;
+}
+
+.panel-yellow > a {
+    color: #f0ad4e;
+}
+
+.panel-yellow > a:hover {
+    color: #df8a13;
+}
+
 
 /* ==========================================================================
    FOOTER SECTION

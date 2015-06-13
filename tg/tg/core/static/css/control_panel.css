@@ -8,100 +8,6 @@ body {
   padding-top: 35px;
 }
 
-form > p{
-  text-align: center;
-}
-
-@media (max-width: 1200px) {
-p >  label {
-  text-align: right; 
-  width: 150px;
-}
-
-p >  input {
-  width: 600px;
-  
-}
-
-p > textarea {
-  width: 300px;
-  
-}
-}
-
-@media (min-width: 1200px) {
-p >  label {
-  text-align: right; 
-  width: 150px;
-}
-
-p >  input {
-  width: 300px;
-  
-}
-
-p > textarea {
-  width: 300px;
-  
-}
-}
-
-@media (min-width: 768px) and (max-width: 979px){
-p >  label {
-  text-align: right; 
-  width: 150px;
-}
-
-p >  input {
-  width: 300px;
-  
-}
-
-p > textarea {
-  width: 300px;
-  
-}
-}
-
-@media (max-width: 767px){
-p >  label {
-  text-align: left; 
-  width: 150px;
-}
-
-p >  input {
-  width: 300px;
-  
-}
-
-p > textarea {
-  width: 300px;
-  
-}
-}
-
-
-
-@media (max-width: 480px) {
-  
-  p > label{
-    width: 100%;
-    float: none;
-    margin: 0 0 5px 0;
-  }
-  
-  p > input {
-    width: 100%;
-    float: none;
-  }
-
-  p > textarea {
-    width: 100%;
-    float: none;
-  }
-  
-}
-
 /* Profile container */
 .profile {
   margin: 20px 0;
@@ -196,19 +102,11 @@ background-color: #fafcfd;
   margin-left: -2px;
 }
 
-.profile-usermenu ul #profile a {
-  color: #6C8933;
-  background-color: #fafcfd;
-  border-left: 2px solid #6C8933;
-  margin-left: -2px;
-}
-
-
 /* Profile Content */
 .profile-content {
-  padding: 15px;
+  padding: 20px;
   background: #fff;
-  min-height: 408px;
+  min-height: 825px;
 }
 
 .huge {
@@ -251,10 +149,3 @@ background-color: #fafcfd;
     color: #df8a13;
 }
 
-#footer {    
-    margin-top: 43px;
-    background-color: #000; 
-    color: #fff; 
-    text-align: right; 
-    padding: 10px 30px 10px 31px;
-}

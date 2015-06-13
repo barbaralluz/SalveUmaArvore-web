@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "control_panel.html" %}
 
 {% load staticfiles %}
 
@@ -6,107 +6,10 @@
     Formulário de Árvores
 {% endblock %}
 
-{% block content %}
+{% block content_logged %}
 
   <link href="{% static 'css/tree_form.css' %}" rel="stylesheet" />
  
-   
-  <div class="container">
-
-    <div class="row profile">
-      <div class="col-md-3">
-
-        <!-- Sidebar -->
-        <div class="profile-sidebar">
-        
-          <!-- Imagem -->
-          <div class="profile-userpic">
-            <img src="/static/img/user.png" class="img-responsive" alt="">
-          </div>
-        
-          <!-- Titulo -->
-          <div class="profile-usertitle">
-            <div class="profile-usertitle-name" font style="text-transform: uppercase;"> 
-              {{user.username}} 
-            </div>
-          </div>
-        
-          <!-- Menu -->
-          <div class="profile-usermenu">
-            <ul class="nav">
-
-              <li>
-                <a href="{% url 'control_panel' %}">
-                  <i class="glyphicon glyphicon-th-list"></i>
-                  PAINEL DE CONTROLE
-                </a> 
-              </li>
-
-              <li>
-                <a href="{% url 'profile' %}">
-                  <i class="glyphicon glyphicon-user"></i>
-                  MEU PERFIL
-                </a> 
-              </li>
-              
-              {% if not request.user.userprofile.google_id %}
-
-              <li>
-                <a href="{% url 'password_change' %}">
-                  <i class="glyphicon glyphicon-cog"></i>
-                  ALTERAR SENHA
-                </a>
-              </li>
-              
-              {% endif %}
-              
-              <li>
-                <a href="{% url 'map' %}">
-                  <span class="glyphicon glyphicon-map-marker"></span>
-                    VISUALIZAR MEU MAPA
-                </a>
-              </li>
-              
-              <li>
-                <a href="javascript:;" data-toggle="collapse" data-target="#demo">
-                  <span class="glyphicon glyphicon-tree-deciduous"></span>
-                  ÁRVORE 
-                  <i class="fa fa-fw fa-caret-down"></i>
-                </a>
-                <ul id="demo" class="nav">
-                  <li>
-                    {% if not form.instance.id %}
-                    <li class="active">
-                    {% else %}
-                    <li>
-                    {% endif %}
-                      <a href="{% url 'tree_form' %}">
-                        <i class="glyphicon glyphicon-plus-sign"></i>
-                        ADICIONAR
-                      </a>
-                    </li>
-                    
-                    {% if form.instance.id %}
-                    <li class="active">
-                    {% else %}
-                    <li>
-                    {% endif %}
-                      <a href="{% url 'tree_list' %}">
-                        <i class="glyphicon glyphicon-list"></i>
-                        LISTAR | EDITAR | EXCLUIR 
-                      </a>
-                    </li>
-
-                  </li>
-                </ul>
-              </li>
-         
-          </ul>
-
-        </div> <!-- Final do Menu -->
-      </div> <!-- Final do Sidebar -->
-    </div> <!-- Final do Div md-6 -->
-
     <div class="col-md-9">
       <div class="profile-content">
 
@@ -248,11 +151,25 @@
   </style>
   
   <script src="{% static 'openlayers/OpenLayers.js' %}"></script> 
-  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>  
+
   <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>  
   
-  <script type="text/javascript">        
-  
+  <script type="text/javascript">     
+
+  //mantem opção do menu do usuário selecionado 
+    $( document ).ready(function() {
+    
+      $("#tree").collapse('show');
+
+      {% if not form.instance.id %}
+        $("#add_tree").addClass('active');
+      {% else %}
+        $("#list_edit_exclude_tree").addClass('active');
+      {% endif %}
+    
+    });   
+
   //função para limpar textfield de busca de endereço (Google e Nominatim)
   function limpa_textfield_id(nome_id){
     document.getElementById(nome_id).value = "";
@@ -508,6 +425,8 @@
       jQuery('#id_route').attr("readonly",true);
       jQuery('#id_postal_code').attr("readonly",true);
       jQuery('.input ul').attr("class","inputs-list");
+
+      //jQuery('.clear_features').hide();
     });
  
   //função para Preview de Foto
@@ -543,5 +462,5 @@
 
   </script>
 
-{% endblock content %}
+{% endblock content_logged %}
 

@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "control_panel.html" %}
 
 {% load staticfiles %}
 
@@ -6,87 +6,10 @@
     Deletar Árvore {{ object.id }}
 {% endblock %}
 
-{% block content %}
+{% block content_logged %}
   
   <link href="{% static 'css/delete_tree.css' %}" rel="stylesheet" />
  
-  <div class="container">
-
-    <div class="row profile">
-      <div class="col-md-3">
-
-        <!-- Sidebar -->
-        <div class="profile-sidebar">
-        
-          <!-- Imagem -->
-          <div class="profile-userpic">
-            <img src="/static/img/user.png" class="img-responsive" alt="">
-          </div>
-        
-          <!-- Titulo -->
-          <div class="profile-usertitle">
-            <div class="profile-usertitle-name" font style="text-transform: uppercase;"> 
-              {{user.username}} 
-            </div>
-          </div>
-        
-          <!-- Menu -->
-          <div class="profile-usermenu">
-            <ul class="nav">
-              <li>
-                <a href="{% url 'profile' %}">
-                  <i class="glyphicon glyphicon-user"></i>
-                  MEU PERFIL
-                </a> 
-              </li>
-              
-              <li>
-                <a href="{% url 'password_change' %}">
-                  <i class="glyphicon glyphicon-cog"></i>
-                  ALTERAR SENHA
-                </a>
-              </li>
-            
-              <li>
-                <a href="{% url 'map' %}">
-                  <span class="glyphicon glyphicon-map-marker"></span>
-                    VISUALIZAR MEU MAPA
-                </a>
-              </li>
-              
-              <li>
-                <a href="javascript:;" data-toggle="collapse" data-target="#demo">
-                  <span class="glyphicon glyphicon-tree-deciduous"></span>
-                  ÁRVORE 
-                  <i class="fa fa-fw fa-caret-down"></i>
-                </a>
-                <ul id="demo" class="nav">
-                  <li>
-                    
-                    <li>  
-                      <a href="{% url 'tree_form' %}">
-                        <i class="glyphicon glyphicon-plus-sign"></i>
-                        ADICIONAR
-                      </a>
-                    </li>
-                  
-                    <li class="active">
-                      <a href="{% url 'tree_list' %}">
-                        <i class="glyphicon glyphicon-list"></i>
-                        LISTAR | EDITAR | EXCLUIR 
-                      </a>
-                    </li>
-
-                  </li>
-                </ul>
-              </li>
-         
-            </ul>
-
-          </div> <!-- Final do Menu -->
-        </div> <!-- Final do Sidebar -->
-      </div> <!-- Final do Div md-6 -->
-       
       <div class="col-md-9">
         <div class="profile-content" style="font-family:sans-serif">
  
@@ -97,10 +20,6 @@
             <label style="font-weight: normal;">Id: {{ object.id }}</label>
             <br/> 
             <label style="font-weight: normal;">Espécie: {{ object.especie }}</label>
-            <br/> 
-            <label style="font-weight: normal;">Latitude: {{ object.latitude }}</label>
-            <br/> 
-            <label style="font-weight: normal;">Longitude: {{ object.longitude }}</label>
           </div>
         
           <div class="col-md-9" align= "right" >
@@ -134,8 +53,17 @@
   </div> <!-- Final do Container -->
   
   <script src="{% static 'openlayers/OpenLayers.js' %}"></script> 
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>  
   
     <script type="text/javascript">  
+      
+      //mantem opção do menu do usuário selecionado 
+      $( document ).ready(function() {
+    
+        $("#tree").collapse('show');
+        $("#list_edit_exclude_tree").addClass('active');
+      
+      });   
      
       var map = new OpenLayers.Map('mapdiv');
                 
@@ -164,4 +92,4 @@
       map.setCenter (lonlat, 16);
     </script>
 
-{% endblock content %}
+{% endblock content_logged %}
