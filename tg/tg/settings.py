@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'tg.core',
     'social_auth',
     'django.contrib.gis',
+    'municipios',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -46,6 +47,8 @@ AUTHENTICATION_BACKENDS = (
     'social_auth.backends.google.GoogleOAuth2Backend',
     'django.contrib.auth.backends.ModelBackend',
 )
+
+MUNICIPIOS_GEO = True
 
 FACEBOOK_APP_ID              = '816917028387261'
 FACEBOOK_API_SECRET          = '22cdeb8801ab73a78b686491a97aee17'

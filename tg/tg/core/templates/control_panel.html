@@ -6,389 +6,146 @@
 
 {% block content %}
   
+  
   <div class="container">       
         
     <div class="row profile">
       
-      <div class="col-md-3">
-
-        <!-- Sidebar -->
-        <div class="profile-sidebar">
-        
-          <!-- Imagem -->
-          <div class="profile-userpic">
-            <img src="/static/img/user.png" class="img-responsive" alt="">
-          </div>
-        
-          <!-- Titulo -->
-          <div class="profile-usertitle">
-            <div class="profile-usertitle-name" font style="text-transform: uppercase;"> 
-              {{user.username}} 
-            </div>
-          </div>
-
-          <!-- Menu -->
-          <div class="profile-usermenu">
-            <ul class="nav">
-
-              <!-- Opção Home -->
-              <li>
-                <a href="{% url 'index' %}">
-                  <i class="fa fa-home"></i>
-                  HOME
-                </a> 
-              </li>
-
-              <!-- Opção Painel de Controle -->
-              <li id="control_panel">
-                <a href="{% url 'control_panel' %}">
-                  <i class="fa fa-globe"></i>
-                  PAINEL DE CONTROLE
-                </a> 
-              </li>
-                        
-              <!-- Opção Meu Perfil -->
-              <li id="profile">
-                <a href="{% url 'profile' %}">
-                  <i class="glyphicon glyphicon-user"></i>
-                  MEU PERFIL
-                </a>
-              </li>
-
-              <!-- Opção Alterar Senha -->
-              <li id="password">
-                <a href="{% url 'password_change' %}" >
-                  <i class="glyphicon glyphicon-cog"></i>
-                  ALTERAR SENHA
-                </a>
-              </li>
-
-              <!-- Opção Visualizar Meu Mapa -->
-              <li id="mymap">
-                <a href="{% url 'user_map' %}">
-                  <span class="glyphicon glyphicon-map-marker"></span>
-                  VISUALIZAR MEU MAPA
-                </a>
-              </li>
-              
-              <li>
-                <a href="javascript:;" data-toggle="collapse" data-target="#tree">
-                  <span class="glyphicon glyphicon-tree-deciduous"></span>
-                  ÁRVORE 
-                  <i class="fa fa-fw fa-caret-down"></i>
-                </a>
-                            
-                <ul id="tree" class="collapse nav" >
-                  <li>
-                    <li id="add_tree">
-                      <a href="{% url 'tree_form' %}">
-                        <i class="glyphicon glyphicon-plus-sign"></i>
-                        ADICIONAR
-                      </a>
-                    </li>
-                    
-                    <li id="list_edit_exclude_tree">
-                      <a href="{% url 'tree_list' %}">
-                        <i class="glyphicon glyphicon-list"></i>
-                        LISTAR | EDITAR | EXCLUIR 
-                      </a>
-                    </li>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </div> <!-- Final do Menu -->
-        </div> <!-- Final do Sidebar -->
-      </div> <!-- Final do Div md-3 -->
-          
       {% block content_logged %}
 
        <link href="{% static 'css/control_panel.css' %}" rel="stylesheet" />
+       <script src="{% static 'js/Chart.min.js' %}"></script>
 
-      <div class="col-md-9">
+      <div class="col-md-12">
 
-      <div class="profile-content">
-        
-        <!-- Quantidade de Árvores Cadastradas -->
+        <div class="profile-content">
 
-        {% if object_list %}
-        
-        <div class="col-md-4">
-          <div class="panel panel-green">
-            <div class="panel-heading">
-              
-              <div class="row">
-                <div class="col-xs-3">
-                  <i class="fa fa-pagelines fa-5x"></i>
-                </div>
-                <div class="col-xs-9 text-right">
-                  <div>Parabéns! Você já localizou</div>
-                  <br/>
-                 
-                  <div class="huge">
+          <style type="text/css">
+            .box {
+                margin: 0px auto;
+                width: 70%;
+            }
+
+            .box-chart {
+                width: 100%;
+                margin: 0 auto;
+                padding: 10px;
+            }
+          </style>  
+          
+          <div class="col-md-6">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Árvores por Estados</h3>
+              </div>
+              <div class="panel-body">
+              <div class="box-chart">
+              <canvas id="GraficoBarraEstados" style="width:100%;"></canvas>
+            </div>
+              </div>
+            </div>
+            
+          </div>
+
+          <div class="col-md-6">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Árvores por Cidades</h3>
+              </div>
+              <div class="panel-body">
+              <div class="box-chart">
+              <canvas id="GraficoBarraCidades" style="width:100%;"></canvas>
+            </div>
+              </div>
+            </div>
+          </div>
+
+              <script type="text/javascript">     
+
+                function removeDuplicado(arr) {
+                  var a = [], b = [], prev;
+    
+                  arr.sort();
+                  for ( var i = 0; i < arr.length; i++ ) {
+                    if ( arr[i] !== prev ) {
+                      a.push(arr[i]);
+                      b.push(1);
+                    } else {
+                      b[b.length-1]++;
+                    }
+                    prev = arr[i];
+                  }
+    
+                  return [a, b];
+                }                                   
+
+                var options = {
+                    responsive:true
+                };
+
+                cidades = [];
+                estados = [];
+
+                {% for arvore in object_list %}
+                  cidades.push("{{arvore.locality}}");  
+                  estados.push("{{arvore.administrative_area_level_1}}");
+                {% endfor %}
+                
+                var totalCidades = removeDuplicado(cidades);
+
+                var data_cidades = {
                     
-                      {{ object_list|length }}
+                    labels: totalCidades[0],
+
+                    datasets: [
+                        {
+                            
+                            fillColor: "rgba(151,187,205,0.5)",
+                            strokeColor: "rgba(151,187,205,0.8)",
+                            highlightFill: "rgba(151,187,205,0.75)",
+                            highlightStroke: "rgba(151,187,205,1)",
+                            data: totalCidades[1]
+                        }
+                    ]
+                };    
+                
+                //gráfico por estados
+                
+                var totalEstados = removeDuplicado(estados);
+
+                var data_estados = {
                     
-                  </div>
-                  <br/>
-                  <div>Árvores</div>
-                </div>
-              </div>
-            
-            </div>
-            
-            <a href="{% url 'tree_list' %}">
-              <div class="panel-footer">
-                <span class="pull-left">Visualizar Lista</span>
-                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                <div class="clearfix"></div>
-              </div>
-            </a>
-          </div>
-        </div>
+                    labels: totalEstados[0],
 
-        <!-- Para cadastrar Árvore -->
-        <div class="col-md-4">
-          <div class="panel panel-primary">
-            <div class="panel-heading">
-              
-              <div class="row">
-                <div class="col-xs-3">
-                  <i class="fa fa-map-marker fa-5x"></i>
-                </div>
-                <div class="col-xs-9 text-right">
-                  <div>Continue a montar seu mapa !</div>
-                  <br/>
-                  <div>Clique em Cadastrar para adicionar nova árvore</div>
-                </div>
-              </div>
-            
-            </div>
-            
-            <a href="{% url 'tree_form' %}">
-              <div class="panel-footer">
-                <span class="pull-left">Cadastrar</span>
-                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                <div class="clearfix"></div>
-              </div>
-            </a>
-          </div>
-        </div>
+                    datasets: [
+                        {
+                            
+                            fillColor: "rgba(151,187,205,0.5)",
+                            strokeColor: "rgba(151,187,205,0.8)",
+                            highlightFill: "rgba(151,187,205,0.75)",
+                            highlightStroke: "rgba(151,187,205,1)",
+                            data: totalEstados[1]
+                        }
+                    ]
+                };    
+                
+                window.onload = function(){
+                  var ctx = document.getElementById("GraficoBarraCidades").getContext("2d");
+                  var BarChart = new Chart(ctx).Bar(data_cidades, options);
+                  
+                  var ctx2 = document.getElementById("GraficoBarraEstados").getContext("2d");
+                  var BarChart2 = new Chart(ctx2).Bar(data_estados, options);
+                }      
+
+            </script>
+
 
         
-        {% else %}
-        <!-- Se ñ tiver nenhuma árvore cadastrada -->
-        <div class="col-md-4">
-          <div class="panel panel-danger">
-            <div class="panel-heading">
-              
-              <div class="row">
-                <div class="col-xs-3">
-                  <i class="fa fa-pagelines fa-5x"></i>
-                </div>
-                <div class="col-xs-9 text-right">
-                  <div>Comece a montar seu mapa !</div>
-                  <br/>
-                  <div>Clique em Cadastrar para adicionar uma árvore</div>
-                </div>
-              </div>
-            
-            </div>
-            
-            <a href="{% url 'tree_form' %}">
-              <div class="panel-footer">
-                <span class="pull-left" style="color: #FF5F5F;">Cadastrar</span>
-                <span class="pull-right" style="color: #FF5F5F;"><i class="fa fa-arrow-circle-right"></i></span>
-                <div class="clearfix"></div>
-              </div>
-            </a>
-          </div>
-        </div>
-                      
-        {% endif %}
-        
-        <!-- Perfil do Usuário -->
-        <div class="col-md-4">
-          <div class="panel panel-info">
-            <div class="panel-heading">
-              
-              <div class="row">
-                <div class="col-xs-3">
-                  <i class="fa fa-user fa-5x"></i>
-                </div>
-                <div class="col-xs-9 text-right">
-                  <div>Acesse seu perfil</div>
-                  <br/>
-                  <br/>
-                  <div>Clique abaixo para incluir dados no seu Perfil</div>
-                </div>
-              </div>
-            
-            </div>
-            
-            <a href="{% url 'profile' %}">
-              <div class="panel-footer">
-                <span class="pull-left">Acessar Perfil</span>
-                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                <div class="clearfix"></div>
-              </div>
-            </a>
-          </div>
-        </div>
-
-        <!-- Alterar Senha do Usuário -->
-        <div class="col-md-4">
-          <div class="panel panel-yellow">
-            <div class="panel-heading">
-              
-              <div class="row">
-                <div class="col-xs-3">
-                  <i class="fa fa-cog fa-5x"></i>
-                </div>
-                <div class="col-xs-9 text-right">
-                  <br/>
-                  <div>Altere sua senha</div>
-                  <br/>
-                  <br/>
-                  <div>Clique abaixo para alterar sua senha</div>
-                </div>
-              </div>
-            
-            </div>
-            
-            <a href="{% url 'password_change' %}">
-              <div class="panel-footer">
-                <span class="pull-left">Alterar Senha</span>
-                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                <div class="clearfix"></div>
-              </div>
-            </a>
-          </div>
-        </div>
-        
-        <!-- Para visualizar Mapa -->
-         <div class="row-fluid">
-        <div class="col-md-12">   
-
-          <div class="panel panel-success" style="width: 100%; height: 100%;">
-            <div class="panel-heading">
-              <div id="mapa_tree_list" style="width: 100%; height: 370px;"></div> <!-- Mapa -->
-            </div>
-            <a href="{% url 'map' %}">
-              <div class="panel-footer">
-                <span class="pull-left">Clique para Expandir Mapa</span>
-                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                <div class="clearfix"></div>
-              </div>
-            </a>
-            </div>
-          </div>
-        </div>
-        </div>
       </div>
-    </div> <!-- Final do Div md-9 -->
+    </div> <!-- Final do Div md-12-->
   </div>
 
 </div> <!-- Final do Container -->
-
-
-
-<!-- JavaScript Mapa -->
-  <script src="{% static 'openlayers/OpenLayers.js' %}"></script> 
-  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>  
-
-
-
-  <script>     
-
-    //mantem opção do menu do usuário selecionado 
-    $( document ).ready(function() {
-      $("#control_panel").addClass('active');    
-    });   
-
-    function jump(lat,lon, zoom) {
-       
-      var lonLat = new OpenLayers.LonLat( lon, lat ).transform(
-        new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
-        map.getProjectionObject() // to Spherical Mercator Projection
-      );
-      map.setCenter (lonLat, zoom);
-    }
-
-    map = new OpenLayers.Map("mapa_tree_list");
-    map.addLayer(new OpenLayers.Layer.OSM());
-  
-    epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
-    projectTo = map.getProjectionObject(); //The map projection (Spherical Mercator)
-   
-    var lonLat = new OpenLayers.LonLat( -47.5356, -18.2246).transform(epsg4326, projectTo);
-          
-    var zoom=3;
-    
-    var markers = new Array();
-    map.setCenter (lonLat, zoom);
-
-    var vectorLayer = new OpenLayers.Layer.Vector("VectorPoints");
-
-    {% for arvore in object_list %}
-      var lat1 = String([{{ arvore.geometry.x }}]);
-      var lat = lat1.replace(",", ".")
-
-      var lon1 = String([{{ arvore.geometry.y }}]);
-      var lon = lon1.replace(",", ".")
-      
-      markers.push([{{arvore.id}}, lon, lat]);
-    {% endfor %}
-
-    for (var i=0; i<markers.length; i++) {
-      var lon = markers[i][1];
-      var lat = markers[i][2];
-       
-      var feature = new OpenLayers.Feature.Vector(
-        new OpenLayers.Geometry.Point( lon, lat ).transform(epsg4326, projectTo),
-          {description: "<div style='text-align:right'>" + 
-            "<a href='#' onClick='jump(" +markers[i][2]+", "+markers[i][1]+", 18); return false;'>Ampliar</a></div>" + 
-            "<div style='text-align:left'>Id: " + markers[i][0] + "<br/>Latitude: " + markers[i][2] + 
-            "<br/>Longitude: " + markers[i][1] + "</div>" + 
-            "<div style='text-align:right'><a href='#' onClick='jump(-18.2246, -47.5356, 3); return false;'>Voltar</a></div>"},
-          {externalGraphic: '/static/img/marker.png', graphicHeight: 36, graphicWidth: 32, graphicXOffset:-12, graphicYOffset:-26}
-      );             
-      
-      vectorLayer.addFeatures(feature);
-
-    } // fim do for   
-
-    map.addLayer(vectorLayer);
-
-    //Add popup
-    var controls = {
-      selector: new OpenLayers.Control.SelectFeature(vectorLayer, 
-        { onSelect: createPopup, onUnselect: destroyPopup })
-    };
-   
-    function createPopup(feature) {
-      feature.popup = new OpenLayers.Popup.FramedCloud("popup",
-        feature.geometry.getBounds().getCenterLonLat(),
-        null,
-        '<div class="markerContent">'+feature.attributes.description+'</div>',
-        null,
-        true,
-        function() { controls['selector'].unselectAll(); 
-    });
-  
-    //feature.popup.closeOnMove = true;
-    map.addPopup(feature.popup);
-    }
-
-    function destroyPopup(feature) {
-      feature.popup.destroy();
-      feature.popup = null;
-    }
-    
-    map.addControl(controls['selector']);
-    controls['selector'].activate();
-
-</script>          
 
 {% endblock content_logged %}
 {% endblock content %}

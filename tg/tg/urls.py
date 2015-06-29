@@ -5,22 +5,30 @@ from django.views.generic.base import RedirectView
 from django.contrib import admin
 from django.conf import settings
 
+
 admin.autodiscover()
 
 urlpatterns = patterns(
     '',
+    url(r'^municipios_app/', include('municipios.urls')),
+
     url(r'^$', 'tg.core.views.index', name="index"),
     url(r'^control_panel/$', 'tg.core.views.control_panel', name="control_panel"),
-    url(r'^profile/$', 'tg.core.views.profile', name="profile"),
+    url(r'^(?P<username>\w+)/profile/$', 'tg.core.views.profile', name="profile"),
 
-    #Mapa
+    #Mapa com Todas as Árvores
     url(r'^map/$', 'tg.core.views.map', name="map"),
 
     #Mapa do Usuário
-    url(r'^user_map/$', 'tg.core.views.user_map', name="user_map"),
+    url(r'^(?P<username>\w+)/map/$', 'tg.core.views.user_map', name="user_map"),
 
     # Árvores
+    
+    #Lista com Todas as Árvores
     url(r'^list/tree/$', 'tg.core.views.tree_list', name="tree_list"),
+
+    #Lista com Árvores do Usuário
+    url(r'^(?P<username>\w+)/list/tree/$', 'tg.core.views.user_tree_list', name="user_tree_list"),
     url(r'^create/tree/$', 'tg.core.views.tree_create', name="tree_form"),
     url(r'^update/tree/(?P<nr_tree>\d+)/$', 'tg.core.views.tree_update', name="tree_form"),
     url(r'^delete/tree/(?P<nr_tree>\d+)/$', 'tg.core.views.tree_delete', name="tree_delete"),

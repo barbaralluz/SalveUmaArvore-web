@@ -9,16 +9,13 @@
  
   <link href="{% static 'css/list_tree.css' %}" rel="stylesheet" />
 
-    <div class="col-md-12">
+    <div class="col-md-9">
       <div class="profile-content">
        <!-- <div id="mapa_tree_list" style="width: 100%; height: 400px;"></div> <!-- Mapa 
         <br/>
           <!-- Lista de Árvores -->
-
     
           {% for arvore in object_list %}
-
-
             <div class="well">
               <div class="media">
         
@@ -61,7 +58,7 @@
                     <li>
                       <a href="{% url 'tree_form' arvore.pk %}" class="btn btn-warning">
                         <span class="glyphicon glyphicon-pencil"></span> 
-                        Detalhes
+                        Editar
                       </a>
                       
                       &nbsp;
@@ -70,7 +67,7 @@
                       
                       <a href="{% url 'tree_delete' arvore.pk %}" class="btn btn-danger">
                         <span class="glyphicon glyphicon-trash"></span> 
-                        Comentários
+                        Excluir
                       </a>
                     </li>  
                   </ul>

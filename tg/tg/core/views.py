@@ -43,7 +43,7 @@ def log_in(request):
 
 #Perfil
 @login_required
-def profile(request):
+def profile(request, username):
     user = request.user
     if request.method == "POST":
         form = ProfileForm(request.POST, request.FILES, instance=user)
@@ -59,18 +59,17 @@ def profile(request):
 @login_required
 def control_panel(request):
     return ListView.as_view(
-        queryset = Tree.objects.filter(usuario=request.user),
+        queryset = Tree.objects.all(),
         template_name='control_panel.html')(request)
 
 #Visualizar Mapa do Usuário
 @login_required
-def user_map(request):
+def user_map(request, username):
     return ListView.as_view(
         queryset = Tree.objects.filter(usuario=request.user),
-        template_name='user_map.html')(request)
+        template_name='map.html')(request)
 
 #Visualizar Mapa com Todas as Árvores
-@login_required
 def map(request):
     return ListView.as_view(
         queryset = Tree.objects.all(),
@@ -91,12 +90,20 @@ def tree_create(request):
     return render_to_response("tree_form.html", {'form': form},
             context_instance=RequestContext(request))
 
+#Lista com Todas as Árvores
 @login_required
 def tree_list(request):
     return ListView.as_view(
+        queryset = Tree.objects.all(),
+        template_name='tree_list.html')(request)
+
+#Lista de Árvores do Usuário
+@login_required
+def user_tree_list(request, username):
+    return ListView.as_view(
         queryset = Tree.objects.filter(usuario=request.user),
         paginate_by=20,
-        template_name='tree_list.html')(request)
+        template_name='user_tree_list.html')(request)
 
 @login_required
 def tree_update(request, nr_tree):

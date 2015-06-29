@@ -10,7 +10,7 @@
 
   <link href="{% static 'css/tree_form.css' %}" rel="stylesheet" />
  
-    <div class="col-md-9">
+    <div class="col-md-12">
       <div class="profile-content">
 
         <!-- Tab para busca de endereço -->
@@ -30,51 +30,57 @@
             
             <div class="tab-content">
               <!-- TAB GOOGLE -->
-              <div class="tab-pane active" id="tab_default_1">
-                <br/>
                 <p>
-                  <input id="address_google" type="text" class="form-control" placeholder="Informe Logradouro, Bairro, Cidade, Estado, País" />
-                  <br/>
-                  <button class="btn btn-success" type="submit" onclick="searchAddress_Google();">
-                    <span class="glyphicon glyphicon-search"></span> 
-                      Pesquisar
-                  </button>
-
-                  <button class="btn btn-danger"  onclick="limpa_textfield_id('address_google');">
-                    <span class="glyphicon glyphicon-trash"></span> 
-                    Limpar
-                  </button>
+                  <div class="tab-pane active" id="tab_default_1">
+                    <div class="input-group custom-search-form">
+                      <input type="text" id="address_google" class="form-control" placeholder="Informe Logradouro, Bairro, Cidade, Estado, País" onkeypress="process_google(event, this)" />
+                      <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" onclick="limpa_textfield_id('address_google');" >
+                          <span class="glyphicon glyphicon-remove"></span>
+                        </button> 
+                        <button class="btn btn-default" type="button" onclick="searchAddress_Google();">
+                          <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                      </span>
+                    </div><!-- /input-group -->
+                    <br/>
+                   <div id="carregando_google" align="center"><img src="/static/img/green-loader.gif"  height="42" width="42"/></div>
+                  <div id="results_google"/> </div> 
                 </p>
               </div>
+        
               <!-- TAB NOMINATIM -->
               <div class="tab-pane" id="tab_default_2">
-                <br/>
+                
                 <p>
-                  <input id="address_nominatim" type="text" class="form-control" placeholder="Informe Logradouro, Bairro, Cidade, Estado, País" / >
-                  <br/> 
-                  <button class="btn btn-success" onclick="searchAddress_Nominatim();">
-                    <span class="glyphicon glyphicon-search"></span> 
-                    Pesquisar
-                  </button>
+                  <div class="input-group custom-search-form">
+                      <input type="text" id="address_nominatim" class="form-control" placeholder="Informe Logradouro, Bairro, Cidade, Estado, País" onkeypress="process_nominatim(event, this)"/>
+                      <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" onclick="limpa_textfield_id('address_nominatim');">
+                          <span class="glyphicon glyphicon-remove"></span>
+                        </button> 
 
-                  <button class="btn btn-danger" onclick="limpa_textfield_id('address_nominatim');">
-                    <span class="glyphicon glyphicon-trash"></span> 
-                    Limpar
-                  </button>
-
-                  <div id="results"/> </div> 
+                        <button class="btn btn-default" type="button" onclick="searchAddress_Nominatim();">
+                          <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                      </span>
+                    </div><!-- /input-group -->
+                    <br/>
+                    <div id="carregando_nominatim" align="center"><img src="/static/img/green-loader.gif"  height="42" width="42"/></div>
+                  <div id="results_nominatim"/> </div> 
                 </p>
               </div>
             </div>
           </div>
         </div> <!-- Fim do tab de busca de endereço -->
         
-        <p align="right" id="d">
+        <!-- <p align="right" id="d">
           <button class="btn btn-primary btn-success" onclick='getLocation()'>
             <span class="glyphicon glyphicon-map-marker"></span> 
             Me localize!
           </button>
-        </p>
+        </p> -->
+        
 
         <form method="POST"  enctype="multipart/form-data">
         {% csrf_token %}
@@ -148,10 +154,11 @@
     }
           
     .olImageLoadError { display: none; }
+
   </style>
   
   <script src="{% static 'openlayers/OpenLayers.js' %}"></script> 
-  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>  
+  <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>  
 
   <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>  
   
@@ -167,13 +174,39 @@
       {% else %}
         $("#list_edit_exclude_tree").addClass('active');
       {% endif %}
+
+      $("#carregando_google").hide();
+      $("#carregando_nominatim").hide();
+
+      getLocation();
     
     });   
+
+  function process_google(e) {
+    var code = (e.keyCode ? e.keyCode : e.which);
+    if (code == 13) { //Enter keycode
+        searchAddress_Google();
+    }
+  }
+
+  function process_nominatim(e) {
+    var code = (e.keyCode ? e.keyCode : e.which);
+    if (code == 13) { //Enter keycode
+        searchAddress_Nominatim();
+    }
+  }
 
   //função para limpar textfield de busca de endereço (Google e Nominatim)
   function limpa_textfield_id(nome_id){
     document.getElementById(nome_id).value = "";
     document.getElementById(nome_id).placeholder="Informe Logradouro, Bairro, Cidade, Estado, País";
+    
+    if (nome_id == "address_google"){
+       document.getElementById("results_google").innerHTML = " ";
+    } else {
+      document.getElementById("results_nominatim").innerHTML = " ";
+    }
+
   };
   //fim da função
 
@@ -192,8 +225,6 @@
 
   //função para add ícone
   function mark(lonlat){
-    markerslayer.clearMarkers();
-    markerslayer.addMarker(new OpenLayers.Marker(lonlat,icon));
     
     lonlat.transform(
       new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
@@ -201,6 +232,9 @@
     );
 
     map.setCenter (lonlat, 18);
+
+    markerslayer.clearMarkers();
+    markerslayer.addMarker(new OpenLayers.Marker(lonlat,icon));
     document.getElementById("id_geometry").value =  "POINT(" +  lonlat.lat + " " + lonlat.lon + ")"
   };
 
@@ -270,30 +304,109 @@
   //função busca Lat, long de endereço com o Google
   function searchAddress_Google(){
     var address = document.getElementById("address_google").value;
+    
+    $("#carregando_google").ajaxStart(function(){
+      $(this).show();
+      $("#results_google").hide();
+    });
+
+    $("#carregando_google").ajaxStop(function(){
+      $(this).hide();
+      $("#results_google").show();
+    });
+
+    var items = [];
     var geocoder = new google.maps.Geocoder();
+    
     geocoder.geocode( { 'address': address}, function(results, status){
     
       if (status == google.maps.GeocoderStatus.OK){
 
-        latLng = results[0].geometry.location;
-        search_LatLng_Address_Google(latLng.lat(), latLng.lng());
-            
-        var lonlat = new OpenLayers.LonLat(latLng.lng(), latLng.lat())
+        if(results.length==1) {
+          latLng = results[0].geometry.location;
+          items.push("<li><a href='#' onclick='mark_Google("+latLng.lng() + "," + latLng.lat()+");'>" + results[0].formatted_address + '</a></li><br/>');
 
-        mark(lonlat);
+          $('#results_google').empty();
+        if (items.length !== 0) {
+          $('<p>', {
+              html: "Resultado:"
+          }).appendTo('#results_google');
+          
+            $('<ul/>', {
+              'class': 'my-new-list',
+              html: items.join('')
+            }).appendTo('#results_google');
+        }
+
+        } else {
+
+          for(var i=0;i<results.length;++i){
+
+            latLng = results[i].geometry.location;
+            
+            items.push("<li><a href='#' onclick='mark_Google("+latLng.lng() + "," + latLng.lat()+");'>" + results[i].formatted_address + '</a></li><br/>');
+          }
+
+          $('#results_google').empty();
+        if (items.length !== 0) {
+          $('<p>', {
+              html: "Você quis dizer:"
+          }).appendTo('#results_google');
+          
+            $('<ul/>', {
+              'class': 'my-new-list',
+              html: items.join('')
+            }).appendTo('#results_google');
+
+        }
+
+      }
         
       } else {
-        alert("Geocode was not successful for the following reason: " + status);
-      }
+        //alert("Geocode was not successful for the following reason: " + status);
+        
+          $('#results_google').empty();
+          $('<p>', {
+            html:  "<div class='alert alert-danger' role='alert'> Não foi encontrado nenhum resultado. </div>"
+          }).appendTo('#results_google');
+        }
+        
     });
   };
   //fim da função
 
+    //função para add ícone
+  function mark_Google(lon, lat){
+    search_LatLng_Address_Google(lat, lon);
+    var lonlat = new OpenLayers.LonLat(lon, lat)
+    
+    lonlat.transform(
+      new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+      map.getProjectionObject() // to Spherical Mercator Projection
+    );
+
+    map.setCenter (lonlat, 18);
+
+    markerslayer.clearMarkers();
+    markerslayer.addMarker(new OpenLayers.Marker(lonlat,icon));
+    document.getElementById("id_geometry").value =  "POINT(" +  lonlat.lat + " " + lonlat.lon + ")"
+  };
+
   //busca de endereço com Nominatim
   function searchAddress_Nominatim() {
     var inp = document.getElementById("address_nominatim");
+    $("#carregando_nominatim").ajaxStart(function(){
+      $(this).show();
+      $("#results_nominatim").hide();
+    });
 
-    $.getJSON('http://nominatim.openstreetmap.org/search?format=json&limit=5&q=' + inp.value, function (data) {
+    $("#carregando_nominatim").ajaxStop(function(){
+      $(this).hide();
+      $("#results_nominatim").show();
+    });
+
+      
+      $.getJSON('http://nominatim.openstreetmap.org/search?format=json&limit=5&q=' + inp.value, function (data) {
         var items = [];
         $.each(data, function (key, val) {
             var str = JSON.stringify([val.lat, val.lon]);
@@ -301,22 +414,24 @@
 
         });
 
-        $('#results').empty();
+      
+        $('#results_nominatim').empty();
         if (items.length !== 0) {
           $('<p>', {
               html: "Resultado:"
-          }).appendTo('#results');
+          }).appendTo('#results_nominatim');
           
             $('<ul/>', {
               'class': 'my-new-list',
               html: items.join('')
-            }).appendTo('#results');
+            }).appendTo('#results_nominatim');
         
         } else {
           $('<p>', {
-            html:  "Resultado não encontrado"
-          }).appendTo('#results');
+            html:  "<div class='alert alert-danger' role='alert'> Não foi encontrado nenhum resultado. </div>"
+          }).appendTo('#results_nominatim');
         }
+
       });
   };
 
