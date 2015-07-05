@@ -7,7 +7,7 @@ from django.views.generic.list import ListView
 from django.core.urlresolvers import reverse_lazy, reverse
 
 from tg.core.models import Tree, User, Profile
-from tg.core.forms import TreeForm, UserForm, ProfileForm
+from tg.core.forms import TreeForm, UserForm, ProfileForm, SearchTreeForm
 
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
@@ -90,21 +90,6 @@ def tree_create(request):
     return render_to_response("tree_form.html", {'form': form},
             context_instance=RequestContext(request))
 
-#Lista com Todas as Árvores
-@login_required
-def tree_list(request):
-    return ListView.as_view(
-        queryset = Tree.objects.all(),
-        template_name='tree_list.html')(request)
-
-#Lista de Árvores do Usuário
-@login_required
-def user_tree_list(request, username):
-    return ListView.as_view(
-        queryset = Tree.objects.filter(usuario=request.user),
-        paginate_by=20,
-        template_name='user_tree_list.html')(request)
-
 @login_required
 def tree_update(request, nr_tree):
     tree = get_object_or_404(Tree, usuario=request.user, id=nr_tree)
@@ -127,3 +112,51 @@ def tree_delete(request, nr_tree):
         return redirect(tree_list)
     return render_to_response("confirm_delete_tree.html", {'object': tree},
                 context_instance=RequestContext(request))
+
+#Lista com Busca de Árvores
+class SearchTreeList(ListView):
+    form_class = None
+ 
+    def get_context_data(self, **kwargs):
+        context = super(SearchTreeList, self).get_context_data(**kwargs)
+        context['frm_srch'] = self.get_form()
+        qs_data = context['frm_srch'].data
+        context['query_string'] = ''
+        if qs_data:
+            qs_data.pop('page', '1')
+            context['query_string'] = qs_data.urlencode()
+ 
+        return context
+ 
+    def get_queryset(self):
+        if self.form_class is None:
+            return super(SearchTreeList, self).get_queryset()
+        return self.get_form().get_queryset()
+ 
+    def get_form(self):
+        #if not hasattr(self, '_inst_form'):
+        #   setattr(self, '_inst_form', Xself.form_class(self.request.GET.copy() or None))
+        #return self._inst_form
+        return self.form_class(self.request.GET.copy() or None)
+
+class TreeList(SearchTreeList):
+    form_class = SearchTreeForm
+    paginate_by = 20
+    template_name = "core/tree_list.html"
+ 
+
+tree_list = TreeList.as_view()
+
+#Lista de Árvores do Usuário
+class TreeListView(ListView):
+    model = Tree
+    template_name = 'core/user_tree_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(TreeListView, self).get_context_data(**kwargs)
+        return context
+
+    def get_queryset(self):
+        return super(TreeListView, self).get_queryset().filter(usuario=self.request.user)
+
+user_tree_list = TreeListView.as_view()

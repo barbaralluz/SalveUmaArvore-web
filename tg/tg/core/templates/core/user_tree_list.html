@@ -9,174 +9,42 @@
  
   <link href="{% static 'css/list_tree.css' %}" rel="stylesheet" />
 
-    <div class="col-md-9">
+    <div class="col-md-12">
       <div class="profile-content">
        <!-- <div id="mapa_tree_list" style="width: 100%; height: 400px;"></div> <!-- Mapa 
         <br/>
           <!-- Lista de Árvores -->
-    
-          {% for arvore in object_list %}
-            <div class="well">
-              <div class="media">
+
+          <h1> <i class="glyphicon glyphicon-tree-deciduous"></i> Árvores</h1>
         
-                <div class="media-body">
-                  <p class="pull-right">
-                    {% if arvore.foto %}
-                      <img class="thumbnail" src="{{arvore.foto.url}}" width="100%" height="200">
-                    {% else %}
-                      <img class="thumbnail" src="/static/img/thumb.jpg" width="100%" height="200">
-                    {% endif %}
-                  </p>
-                  <h4 class="media-heading"> <strong> {{ arvore.especie }}</strong></h4>
-                  <p style="text-align:justify; line-height: 1,1;">
-                    <strong>Identificação: </strong> {{ arvore.id}}
-                    <br/>
-                    <strong>Data de Cadastro: </strong> {{ arvore.data_cadastro }}
-                    <br/>
-                    <strong>Latitude: </strong> {{ arvore.geometry.x }}
-                    <br/>
-                    <strong>Longitude: </strong> {{ arvore.geometry.y }}
-                    <br/>
-                    <strong>Altura: </strong>{{ arvore.altura }}
-                    <br/>
-                    <strong>Diâmetro: </strong>{{ arvore.diametro }}
-                    <br/>
-                    <strong>Informações Adicionais: </strong>{{ arvore.informacoes_adicionais }}
-                  </p>
-                  <ul class="list-inline list-unstyled pull-right" >
-                    
-                    <li>
-                      <!-- <span>
-                        <a href="#">
-                          <i class="fa fa-map-marker fa-lg"></i>
-                          Visualizar no Mapa
-                        </a>
-                      </span> -->
-                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                    </li>
-                    
-                    <li>
-                      <a href="{% url 'tree_form' arvore.pk %}" class="btn btn-warning">
-                        <span class="glyphicon glyphicon-pencil"></span> 
-                        Editar
-                      </a>
-                      
-                      &nbsp;
-                      &nbsp;
-                      &nbsp;
-                      
-                      <a href="{% url 'tree_delete' arvore.pk %}" class="btn btn-danger">
-                        <span class="glyphicon glyphicon-trash"></span> 
-                        Excluir
-                      </a>
-                    </li>  
-                  </ul>
-                </div>
-              </div>
-            </div>
-          {% endfor %}
-        </div>
-      </div> <!-- Final do Div md-9 -->
-    </div>
-
-  </div> <!-- Final do Container -->
-
-<!-- JavaScript Mapa -->
-  <script src="{% static 'openlayers/OpenLayers.js' %}"></script> 
-  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script> 
-
-  <script>
-    //mantem opção do menu do usuário selecionado 
-    $( document ).ready(function() {
-    
-      $("#tree").collapse('show');
-      $("#list_edit_exclude_tree").addClass('active');
-
-    });   
-
-    function jump(lat,lon, zoom) {
-       
-      var lonLat = new OpenLayers.LonLat( lon, lat ).transform(
-        new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
-        map.getProjectionObject() // to Spherical Mercator Projection
-      );
-      map.setCenter (lonLat, zoom);
-    }
-
-    map = new OpenLayers.Map("mapa_tree_list");
-    map.addLayer(new OpenLayers.Layer.OSM());
-  
-    epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
-    projectTo = map.getProjectionObject(); //The map projection (Spherical Mercator)
-   
-    var lonLat = new OpenLayers.LonLat( -47.5356, -18.2246).transform(epsg4326, projectTo);
+          <hr>
+            
+          <div class="row">    
+        <div class="col-md-9">         
           
-    var zoom=3;
-    
-    var markers = new Array();
-    map.setCenter (lonLat, zoom);
+          <br/>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Espécie</th>
+                <th>Endereço</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for arvore in object_list %}
+              <tr>
+                <td>{{arvore.especie}}</td>
 
-    var vectorLayer = new OpenLayers.Layer.Vector("VectorPoints");
-
-    {% for arvore in object_list %}
-
-      var lat1 = String([{{ arvore.geometry.x }}]);
-      var lat = lat1.replace(",", ".")
-
-      var lon1 = String([{{ arvore.geometry.y }}]);
-      var lon = lon1.replace(",", ".")
-
-      markers.push([{{arvore.id}}, lon, lat]);
-    {% endfor %}
-
-    for (var i=0; i<markers.length; i++) {
-      var lon = markers[i][1].toPrecision(6);
-      var lat = markers[i][2];
-       
-      var feature = new OpenLayers.Feature.Vector(
-        new OpenLayers.Geometry.Point( lon, lat ).transform(epsg4326, projectTo),
-          {description: "<div style='text-align:right'>" + 
-            "<a href='#' onClick='jump(" +markers[i][2]+", "+markers[i][1]+", 18); return false;'>Ampliar</a></div>" + 
-            "<div style='text-align:left'>Id: " + markers[i][0] + "<br/>Latitude: " + markers[i][2] + 
-            "<br/>Longitude: " + markers[i][1] + "</div>" + 
-            "<div style='text-align:right'><a href='#' onClick='jump(-18.2246, -47.5356, 3); return false;'>Voltar</a></div>"},
-          {externalGraphic: '/static/img/marker.png', graphicHeight: 36, graphicWidth: 32, graphicXOffset:-12, graphicYOffset:-26}
-      );             
-      
-      vectorLayer.addFeatures(feature);
-
-    } // fim do for   
-
-    map.addLayer(vectorLayer);
-
-    //Add popup
-    var controls = {
-      selector: new OpenLayers.Control.SelectFeature(vectorLayer, 
-        { onSelect: createPopup, onUnselect: destroyPopup })
-    };
-   
-    function createPopup(feature) {
-      feature.popup = new OpenLayers.Popup.FramedCloud("popup",
-        feature.geometry.getBounds().getCenterLonLat(),
-        null,
-        '<div class="markerContent">'+feature.attributes.description+'</div>',
-        null,
-        true,
-        function() { controls['selector'].unselectAll(); 
-    });
-  
-    //feature.popup.closeOnMove = true;
-    map.addPopup(feature.popup);
-    }
-
-    function destroyPopup(feature) {
-      feature.popup.destroy();
-      feature.popup = null;
-    }
-    
-    map.addControl(controls['selector']);
-    controls['selector'].activate();
-
-</script>          
+                <td>{{arvore.country}}, {{arvore.administrative_area_level_1}}, {{arvore.locality}}, {{arvore.neighborhood}}, {{arvore.route}}, {{arvore.numero}}, {{arvore.postal_code}}
+                </td>
+              </tr>
+              {% endfor %} 
+          </tbody>
+          </table>  
+          </div>
+          </div>   
+           
+          </div>
+        </div>
 
 {% endblock content_logged %}

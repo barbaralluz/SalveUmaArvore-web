@@ -8,6 +8,11 @@ body {
 padding-top: 35px;
 }
 
+tbody > tr {
+    cursor: pointer;
+}
+
+
 /* Profile container */
 .profile {
   margin: 20px 0;

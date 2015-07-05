@@ -8,6 +8,15 @@ body {
   padding-top: 8px;
 }
 
+#localize{
+  position:absolute;
+  right:35px; 
+  top:70px;
+  z-index:9;
+  color: #000;
+}
+
+
 /* Profile container */
 .profile {
   margin: 20px 0;

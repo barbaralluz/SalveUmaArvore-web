@@ -136,7 +136,7 @@
         </p> 
         </form>
         </div>
-      </div> <!-- Final do Div md-9 -->
+      </div> <!-- Final do Div md-12 -->
     </div>
   </div> <!-- Final do Container -->
         
@@ -367,7 +367,7 @@
         
           $('#results_google').empty();
           $('<p>', {
-            html:  "<div class='alert alert-danger' role='alert'> Não foi encontrado nenhum resultado. </div>"
+            html:  "<div class='alert alert-danger' role='alert'> Não foi encontrado nenhum resultado. Informe logradouro, cidade, estado e país para realizar nova busca. </div>"
           }).appendTo('#results_google');
         }
         
@@ -428,7 +428,7 @@
         
         } else {
           $('<p>', {
-            html:  "<div class='alert alert-danger' role='alert'> Não foi encontrado nenhum resultado. </div>"
+            html:  "<div class='alert alert-danger' role='alert'> Não foi encontrado nenhum resultado. Informe logradouro, cidade, estado e país para realizar nova busca.</div>"
           }).appendTo('#results_nominatim');
         }
 

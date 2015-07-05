@@ -5,6 +5,7 @@ from django.contrib.gis.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
 from django.db.models.signals import post_save
+from municipios.models import UF, Municipio
 
 class Tree(models.Model):
     

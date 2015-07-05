@@ -19,9 +19,6 @@ urlpatterns = patterns(
     #Mapa com Todas as Árvores
     url(r'^map/$', 'tg.core.views.map', name="map"),
 
-    #Mapa do Usuário
-    url(r'^(?P<username>\w+)/map/$', 'tg.core.views.user_map', name="user_map"),
-
     # Árvores
     
     #Lista com Todas as Árvores
