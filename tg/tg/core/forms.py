@@ -1,18 +1,18 @@
 # coding: utf-8
 
 from django import forms
-from municipios.widgets import SelectMunicipioWidget
 from tg.core.models  import Tree, Profile
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from municipios.models import UF, Municipio
 
+from municipios.widgets import SelectMunicipioWidget
+
 # Busca por estado, cidade, bairro, endereço, espécie
 # deixar opção para marcar Minhas Árvores
 class SearchTreeForm(forms.Form):
 
-    estado = forms.ModelChoiceField(UF.objects.all(), label=u"Estado", required=False) 
-    cidade = forms.CharField(label=u"Município", required=False)
+    municipio = forms.IntegerField(label=u"UF - Município", widget=SelectMunicipioWidget,  required=False)
     bairro = forms.CharField(label=u"Bairro", required=False)
     endereco = forms.CharField(label=u"Endereço", required=False)
     especie = forms.CharField(label=u"Espécie", required=False)
@@ -31,12 +31,12 @@ class SearchTreeForm(forms.Form):
             user = self.cleaned_data.get('user', False)
             if minhas_arvores:
                 trees = trees.filter(usuario=user)
-            estado = self.cleaned_data.get('estado', False)
-            if estado:
-                trees = trees.filter(administrative_area_level_1=estado)
-            cidade = self.cleaned_data.get('cidade', False)
-            if cidade:
-                trees = trees.filter(locality=cidade)
+            municipio_uf = self.cleaned_data.get('municipio_uf', False)
+            if municipio_uf:
+                trees = trees.filter(administrative_area_level_1=municipio_uf)
+            municipio = self.cleaned_data.get('municipio', False)
+            if municipio:
+                trees = trees.filter(locality=municipio)
             bairro = self.cleaned_data.get('bairro', False)
             if bairro:
                 trees = trees.filter(neighborhood=bairro)
@@ -52,10 +52,11 @@ class SearchTreeForm(forms.Form):
 
 class TreeForm(forms.ModelForm):
     foto = forms.ImageField(label="Adicione uma foto", required=False)
-
+    administrative_area_level_1 = forms.ModelChoiceField(queryset=UF.objects.all(), label="Estado")
+    locality = forms.ModelChoiceField(queryset=Municipio.objects.all(), label="Municipio")
     class Meta:
         model = Tree
-        fields = ("geometry", "country", "administrative_area_level_1", 
+        fields = ("geometry", "country", "administrative_area_level_1",
                   "locality", "neighborhood", "route", 
                   "numero", "postal_code", "point_of_interest",
                   "especie", "altura", "diametro", "informacoes_adicionais", "foto")

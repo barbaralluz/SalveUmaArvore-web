@@ -1,12 +1,11 @@
 {% extends "control_panel.html" %}
 
-{% load staticfiles %}
+{% load staticfiles %}{% load user_agents %}
 
 {% block title %} Listar | Editar | Excluir Árvores {% endblock %}
 
 {% block content_logged %}
 
- 
   <link href="{% static 'css/list_tree.css' %}" rel="stylesheet" />
   <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>  
     <div class="col-md-12">
@@ -15,26 +14,35 @@
         <br/>
           <!-- Lista de Árvores -->
 
-          <h1> <i class="glyphicon glyphicon-tree-deciduous"></i> Árvores</h1>
+          <h1> <i class="glyphicon glyphicon-tree-deciduous"></i>Árvores</h1>
         
           <hr>
+
+         
+         
           <h3> Busca </h3>
           
-         
           <form id="myForm">
+            
             {{frm_srch.minhas_arvores}} Minhas Árvores 
             {{frm_srch.todas_arvores}} Todas as Árvores <br/><br/>
             {{frm_srch.user.as_hidden}}
-            Estado: {{frm_srch.estado}}
-            Cidade: {{frm_srch.cidade}}
+
+             {% if not request.user_agent.is_mobile %}
+            
+            {{frm_srch.municipio}}
             Bairro: {{frm_srch.bairro}}
             Endereço: {{frm_srch.endereco}}
             <br/>
             Espécie: {{frm_srch.especie}}
             <br/>
+
+            {% endif %}
+
             <button type="submit">Pesquisar</button>
 
           </form>
+
           <script type="text/javascript">
             $('#myForm input').on('change', function() {
                 if (document.getElementById('id_minhas_arvores').checked){
@@ -45,7 +53,8 @@
                 }
             });
           </script>
-          
+         
+
           <div class="row">    
         <div class="col-md-9">         
           
@@ -56,6 +65,7 @@
                 <th>Espécie</th>
                 <th>Endereço</th>
               </tr>
+              <tr></tr>
             </thead>
             <tbody>
               {% for arvore in object_list %}

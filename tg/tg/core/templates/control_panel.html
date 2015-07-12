@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load staticfiles %}
+{% load staticfiles %} {% load user_agents %}
 
 {% block title %} Painel de Controle {% endblock %}
 
@@ -33,6 +33,7 @@
             }
           </style>  
           
+          {% if not request.user_agent.is_mobile %}
           <div class="col-md-6">
             <div class="panel panel-default">
               <div class="panel-heading">
@@ -59,6 +60,17 @@
               </div>
             </div>
           </div>
+
+          {% else %}
+
+          <h5> Árvores por Cidades </h5>
+
+          <div id="cidades"></div>
+          
+          <h5> Árvores por Estados </h5>
+          <div id="estados"></div>
+
+          {% endif %}
 
               <script type="text/javascript">     
 
@@ -92,7 +104,7 @@
                 {% endfor %}
                 
                 var totalCidades = removeDuplicado(cidades);
-
+                
                 var data_cidades = {
                     
                     labels: totalCidades[0],

@@ -1,5 +1,4 @@
 {% extends "control_panel.html" %}
-
 {% load staticfiles %}
 
 {% block title %} Listar | Editar | Excluir Árvores {% endblock %}
@@ -15,8 +14,8 @@
         <br/>
           <!-- Lista de Árvores -->
 
-          <h1> <i class="glyphicon glyphicon-tree-deciduous"></i> Árvores</h1>
-        
+          <h1> <i class="glyphicon glyphicon-tree-deciduous"></i>Minhas Árvores</h1>
+         
           <hr>
             
           <div class="row">    
@@ -28,6 +27,8 @@
               <tr>
                 <th>Espécie</th>
                 <th>Endereço</th>
+                <th></th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -36,6 +37,20 @@
                 <td>{{arvore.especie}}</td>
 
                 <td>{{arvore.country}}, {{arvore.administrative_area_level_1}}, {{arvore.locality}}, {{arvore.neighborhood}}, {{arvore.route}}, {{arvore.numero}}, {{arvore.postal_code}}
+
+                </td>
+
+                <td>
+                  <a href="{% url 'tree_form' arvore.pk %}" class="btn btn-warning">
+                    <span class="glyphicon glyphicon-pencil"></span> 
+                    Editar
+                  </a>
+                </td>
+                <td>
+                  <a href="{% url 'tree_delete' arvore.pk %}" class="btn btn-danger">
+                    <span class="glyphicon glyphicon-trash"></span> 
+                    Excluir
+                  </a>
                 </td>
               </tr>
               {% endfor %} 

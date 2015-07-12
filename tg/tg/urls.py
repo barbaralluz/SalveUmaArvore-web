@@ -11,7 +11,6 @@ admin.autodiscover()
 urlpatterns = patterns(
     '',
     url(r'^municipios_app/', include('municipios.urls')),
-
     url(r'^$', 'tg.core.views.index', name="index"),
     url(r'^control_panel/$', 'tg.core.views.control_panel', name="control_panel"),
     url(r'^(?P<username>\w+)/profile/$', 'tg.core.views.profile', name="profile"),

@@ -8,11 +8,14 @@ from django.core.urlresolvers import reverse_lazy, reverse
 
 from tg.core.models import Tree, User, Profile
 from tg.core.forms import TreeForm, UserForm, ProfileForm, SearchTreeForm
+from municipios.models import Municipio, UF
 
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+
+from django_user_agents.utils import get_user_agent
 
 from django.shortcuts import render, render_to_response, get_object_or_404, redirect
 
@@ -58,6 +61,7 @@ def profile(request, username):
 #Painel de Controle
 @login_required
 def control_panel(request):
+
     return ListView.as_view(
         queryset = Tree.objects.all(),
         template_name='control_panel.html')(request)
@@ -143,14 +147,18 @@ class TreeList(SearchTreeList):
     form_class = SearchTreeForm
     paginate_by = 20
     template_name = "core/tree_list.html"
- 
-
+    
 tree_list = TreeList.as_view()
 
-#Lista de Árvores do Usuário
+#Lista de Árvores do Usuário - teste 1 - User Agent
 class TreeListView(ListView):
     model = Tree
-    template_name = 'core/user_tree_list.html'
+    
+    def get_template_names(self):
+        if get_user_agent(self.request).is_mobile: #| get_user_agent(self.request).is_tablet:
+            return "core/user_tree_list_mob.html"
+        else:  
+            return 'core/user_tree_list.html'
 
     def get_context_data(self, **kwargs):
         context = super(TreeListView, self).get_context_data(**kwargs)

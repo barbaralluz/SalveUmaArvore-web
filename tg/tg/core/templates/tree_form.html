@@ -9,7 +9,8 @@
 {% block content_logged %}
 
   <link href="{% static 'css/tree_form.css' %}" rel="stylesheet" />
- 
+    <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>  
+
     <div class="col-md-12">
       <div class="profile-content">
 
@@ -84,7 +85,7 @@
 
         <form method="POST"  enctype="multipart/form-data">
         {% csrf_token %}
-        
+
         {{ form.as_p }}
 
         <div id="dvPreview" align="center"></div> <!-- Para o preview da foto -->
@@ -129,7 +130,7 @@
             &nbsp;
             &nbsp;
 
-            <button type="submit" onclick="{% url 'tree_list' %}" class="btn btn-danger" id="cancelar">
+            <button type="submit" onclick="{% url 'user_tree_list' user.username %}" class="btn btn-danger" id="cancelar">
               <span class="glyphicon glyphicon-remove"></span> 
                 Cancelar
             </button>
@@ -170,16 +171,13 @@
       $("#tree").collapse('show');
 
       {% if not form.instance.id %}
-        $("#add_tree").addClass('active');
-      {% else %}
-        $("#list_edit_exclude_tree").addClass('active');
+       getLocation();
       {% endif %}
 
       $("#carregando_google").hide();
       $("#carregando_nominatim").hide();
+      $("#id_geometry").hide();
 
-      getLocation();
-    
     });   
 
   function process_google(e) {
@@ -260,8 +258,8 @@
   //função busca dados do endereço de Lat, Long com o Google
   function search_LatLng_Address_Google(lat,lng) {
     document.getElementById('id_country').value = " ";
-    document.getElementById('id_administrative_area_level_1').value = " ";
-    document.getElementById('id_locality').value = " ";
+    document.getElementById('id_administrative_area_level_1').value = "";
+    document.getElementById('id_locality').value = "";
     document.getElementById('id_neighborhood').value = " ";
     document.getElementById('id_route').value = " ";
     document.getElementById('id_postal_code').value = " ";  
@@ -286,13 +284,37 @@
             if (document.getElementById("id_"+type)){
               document.getElementById("id_"+type).value = long_name;
             };
+            
+            $('#id_administrative_area_level_1 option')
+              .filter(function() { return $.trim( $(this).text() ) == components[5].long_name; })
+              .attr('selected',true);
+
+            $("#id_administrative_area_level_1 :selected").each(function(){
+              $(this).parent().data("default", this);
+            });
+
+            $("#id_administrative_area_level_1").change(function(e) {
+              $($(this).data("default")).prop("selected", true);
+            });
+
+            $('#id_locality option')
+              .filter(function() { return $.trim( $(this).text() ) == components[3].long_name; })
+              .attr('selected',true);
+
+            $("#id_locality :selected").each(function(){
+              $(this).parent().data("default", this);
+            });
+
+            $("#id_locality").change(function(e) {
+              $($(this).data("default")).prop("selected", true);
+            });
           };
         }
       } else {
         //alert("Geocoder failed: " + status);
         document.getElementById('id_country').value = " ";
-        document.getElementById('id_administrative_area_level_1').value = " ";
-        document.getElementById('id_locality').value = " ";
+        document.getElementById('id_administrative_area_level_1').value = "";
+        document.getElementById('id_locality').value = "";
         document.getElementById('id_neighborhood').value = " ";
         document.getElementById('id_route').value = " ";
         document.getElementById('id_postal_code').value = " ";
@@ -318,7 +340,8 @@
     var items = [];
     var geocoder = new google.maps.Geocoder();
     
-    geocoder.geocode( { 'address': address}, function(results, status){
+    geocoder.geocode( { 'address': address, 'componentRestrictions': {
+            'country': 'BR'}}, function(results, status){
     
       if (status == google.maps.GeocoderStatus.OK){
 
@@ -406,7 +429,7 @@
     });
 
       
-      $.getJSON('http://nominatim.openstreetmap.org/search?format=json&limit=5&q=' + inp.value, function (data) {
+      $.getJSON('http://nominatim.openstreetmap.org/search?format=json&limit=5&q=' + inp.value + '?&countrycodes=BR', function (data) {
         var items = [];
         $.each(data, function (key, val) {
             var str = JSON.stringify([val.lat, val.lon]);
@@ -453,8 +476,27 @@
   //função para receber informação de endereço nominatim no formulário
   function cb(json) {    
     document.getElementById('id_country').value = json.address.country;
-    document.getElementById('id_administrative_area_level_1').value = json.address.state;
-    document.getElementById('id_locality').value = json.address.city;
+    $('#id_administrative_area_level_1 option')
+              .filter(function() { return $.trim( $(this).text() ) == json.address.state; })
+              .attr('selected',true);
+    $("#id_administrative_area_level_1 :selected").each(function(){
+              $(this).parent().data("default", this);
+            });
+
+    $("#id_administrative_area_level_1").change(function(e) {
+              $($(this).data("default")).prop("selected", true);
+            });
+
+    $('#id_locality option')
+              .filter(function() { return $.trim( $(this).text() ) == json.address.city;})
+              .attr('selected',true);
+    $("#id_locality :selected").each(function(){
+              $(this).parent().data("default", this);
+            });
+
+    $("#id_locality").change(function(e) {
+              $($(this).data("default")).prop("selected", true);
+            });
     document.getElementById('id_neighborhood').value = json.address.suburb;
     document.getElementById('id_route').value = json.address.road;
     document.getElementById('id_postal_code').value = json.address.postcode;
@@ -513,6 +555,7 @@
       
     map.addControl(click);
     click.activate();
+    map.maxExtent(new OpenLayers.Bounds(-130, 30, -80, 55));
 
     //se árvore já cadastrada aparece icone em local já cadastrado
     {% if form.instance.id%}
@@ -533,15 +576,17 @@
     jQuery(document).ready(function(){
       jQuery('#id_country').width(100);
       jQuery('#id_country').attr("readonly", true);
-      jQuery('#id_administrative_area_level_1').width(100);
+      jQuery('#id_administrative_area_level_1').width(200);
       jQuery('#id_administrative_area_level_1').attr("readonly", true);
+      //$('#id_administrative_area_level_1').attr('disabled', 'disabled');
       jQuery('#id_locality').attr("readonly",true);
+      //jQuery('#id_locality').attr('disabled', true);
       jQuery('#id_neighborhood').attr("readonly",true);
       jQuery('#id_route').attr("readonly",true);
       jQuery('#id_postal_code').attr("readonly",true);
       jQuery('.input ul').attr("class","inputs-list");
 
-      //jQuery('.clear_features').hide();
+      jQuery('.clear_features').hide();
     });
  
   //função para Preview de Foto

@@ -10,8 +10,8 @@ from municipios.models import UF, Municipio
 class Tree(models.Model):
     
     country = models.CharField(verbose_name=u'País', max_length=100)
-    administrative_area_level_1 = models.CharField(verbose_name=u'Estado', max_length=100)
-    locality = models.CharField(verbose_name=u'Cidade', max_length=100)
+    administrative_area_level_1 = models.ForeignKey(UF)
+    locality = models.ForeignKey(Municipio)
     neighborhood = models.CharField(verbose_name=u'Bairro', max_length=100)
     route = models.CharField(verbose_name=u'Endereço', max_length=100)
     numero = models.CharField(verbose_name=u'Número', max_length=100)
@@ -64,5 +64,4 @@ def create_user(sender, instance, created, **kwargs):
 #ao detectar, executa a funcao acima (create_user) para termos o
 # "perfil" ligado ao usuario
 post_save.connect(create_user, sender=User)
-
 
