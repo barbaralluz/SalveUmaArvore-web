@@ -12,7 +12,7 @@ urlpatterns = patterns(
     '',
     url(r'^municipios_app/', include('municipios.urls')),
     url(r'^$', 'tg.core.views.index', name="index"),
-    url(r'^control_panel/$', 'tg.core.views.control_panel', name="control_panel"),
+    url(r'^statistics/$', 'tg.core.views.statistics', name="statistics"),
     url(r'^(?P<username>\w+)/profile/$', 'tg.core.views.profile', name="profile"),
 
     #Mapa com Todas as Árvores
@@ -27,6 +27,7 @@ urlpatterns = patterns(
     url(r'^(?P<username>\w+)/list/tree/$', 'tg.core.views.user_tree_list', name="user_tree_list"),
     url(r'^create/tree/$', 'tg.core.views.tree_create', name="tree_form"),
     url(r'^update/tree/(?P<nr_tree>\d+)/$', 'tg.core.views.tree_update', name="tree_form"),
+    url(r'^detail/tree/(?P<pk>\d+)/$', 'tg.core.views.tree_detail', name="tree_detail"),
     url(r'^delete/tree/(?P<nr_tree>\d+)/$', 'tg.core.views.tree_delete', name="tree_delete"),
 	
     # Autenticação e Login
@@ -47,6 +48,9 @@ urlpatterns = patterns(
 
     # Admin	
     url(r'^admin/', include(admin.site.urls)),
+     
+    url(r'^comments/', include('django_comments.urls')),
+
 
     
 )

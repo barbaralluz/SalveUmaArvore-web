@@ -1,13 +1,14 @@
 {% extends "control_panel.html" %}
-
-{% load staticfiles %}{% load user_agents %}
+{% load user_agents %}
+{% load staticfiles %}
 
 {% block title %} Listar | Editar | Excluir Árvores {% endblock %}
 
 {% block content_logged %}
 
   <link href="{% static 'css/list_tree.css' %}" rel="stylesheet" />
-  <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>  
+  <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script> 
+  
     <div class="col-md-12">
       <div class="profile-content">
        <!-- <div id="mapa_tree_list" style="width: 100%; height: 400px;"></div> <!-- Mapa 
@@ -17,16 +18,17 @@
           <h1> <i class="glyphicon glyphicon-tree-deciduous"></i>Árvores</h1>
         
           <hr>
-
-         
          
           <h3> Busca </h3>
           
           <form id="myForm">
+            {{ frm_srch.media }}
             
+            {% if user.is_authenticated %}
             {{frm_srch.minhas_arvores}} Minhas Árvores 
             {{frm_srch.todas_arvores}} Todas as Árvores <br/><br/>
             {{frm_srch.user.as_hidden}}
+            {% endif %}
 
              {% if not request.user_agent.is_mobile %}
             
@@ -74,6 +76,7 @@
 
                 <td>{{arvore.country}}, {{arvore.administrative_area_level_1}}, {{arvore.locality}}, {{arvore.neighborhood}}, {{arvore.route}}, {{arvore.numero}}, {{arvore.postal_code}}
                 </td>
+                <td><a href="{% url 'tree_detail' arvore.pk %}">Detalhes</a></td>
               </tr>
               {% endfor %} 
           </tbody>

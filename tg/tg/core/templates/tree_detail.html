@@ -1,0 +1,102 @@
+{% extends "control_panel.html" %}
+
+{% load staticfiles %} {% load threadedcomments_tags %}
+
+{% block title %}
+    Deletar Árvore {{ object.id }}
+{% endblock %}
+
+{% block content_logged %}
+  
+  <link href="{% static 'css/delete_tree.css' %}" rel="stylesheet" />
+ 
+      <div class="col-md-9">
+        <div class="profile-content" style="font-family:sans-serif">
+ 
+          <br/>
+    
+          <div class="col-md-3">
+            <p align="center"><h4>DADOS DA ÁRVORE</h4></p>
+            <label style="font-weight: normal;">Id: {{ object.id }}</label>
+            <br/> 
+            <label style="font-weight: normal;">Espécie: {{ object.especie }}</label>
+          </div>
+        
+          <div class="col-md-9" align= "right" >
+            <div id="mapdiv" style="width: 100%; height: 300px;"></div> <!-- Mapa -->
+          </div>
+
+          <div class="col-md-12" align= "right">
+            <p>
+            </p>
+          </div>
+        </div>
+        
+
+        {% get_comment_list for object as comentarios %}
+        
+        {% if comentarios %}
+          <h2>Comments for {{ object.id }}:</h2>
+         {%endif%}
+
+        {% for comentario in comentarios %}
+          
+
+          <div class="comentario">
+            Nome: {{ comentario.name }}<br/>
+            {% if comentario.url %}URL: {{ comentario.url }}{% endif %}<br/>
+            {{ comentario.comment|linebreaks }}
+          
+            <hr/>
+          </div>
+         
+        {% endfor %}
+        <h2>Adicione comentário a árvore {{ object.id }}:</h2>
+        
+        {% render_comment_form for object %}
+      </div> <!-- Final do Div md-9 -->
+    </div>
+
+  </div> <!-- Final do Container -->
+
+  <script src="{% static 'openlayers/OpenLayers.js' %}"></script> 
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>  
+  
+    <script type="text/javascript">  
+      
+      //mantem opção do menu do usuário selecionado 
+      $( document ).ready(function() {
+    
+        $("#tree").collapse('show');
+        $("#list_edit_exclude_tree").addClass('active');
+      
+      });   
+     
+      var map = new OpenLayers.Map('mapdiv');
+                
+      map.addLayer(new OpenLayers.Layer.OSM());
+      map.zoomToMaxExtent();
+
+      //aparece icone em local já cadastrado
+      var lonlat = new OpenLayers.LonLat( {{object.longitude}}, {{object.latitude}} )
+        
+      markers = new OpenLayers.Layer.Markers( "Markers" );
+      markers.id = "Markers";
+      map.addLayer(markers);
+          
+      var size = new OpenLayers.Size(32,36);
+      var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+      var icon = new OpenLayers.Icon('/static/img/marker.png', size, offset);   
+      var markerslayer = map.getLayer('Markers');
+
+      markerslayer.addMarker(new OpenLayers.Marker(lonlat,icon));
+
+      lonlat.transform(
+        new OpenLayers.Projection("EPSG:4326"), 
+        map.getProjectionObject() 
+      );
+
+      map.setCenter (lonlat, 16);
+    </script>
+
+{% endblock content_logged %}

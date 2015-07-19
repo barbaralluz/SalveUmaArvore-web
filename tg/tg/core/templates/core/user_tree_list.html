@@ -39,6 +39,11 @@
                 <td>{{arvore.country}}, {{arvore.administrative_area_level_1}}, {{arvore.locality}}, {{arvore.neighborhood}}, {{arvore.route}}, {{arvore.numero}}, {{arvore.postal_code}}
 
                 </td>
+                <td>
+                  <a href="{% url 'tree_detail' arvore.pk %}" class="btn">
+                    Detalhes
+                  </a>
+                </td>
 
                 <td>
                   <a href="{% url 'tree_form' arvore.pk %}" class="btn btn-warning">

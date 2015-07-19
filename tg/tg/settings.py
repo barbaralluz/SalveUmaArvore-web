@@ -41,7 +41,15 @@ INSTALLED_APPS = (
     'social_auth',
     'django.contrib.gis',
     'django_user_agents',
+    'threadedcomments',
+    'django.contrib.sites',
+    'django_comments',
+
 )
+
+SITE_ID = 1
+
+COMMENTS_APP = 'threadedcomments'
 
 # Name of cache backend to cache user agents. If it not specified default
 # cache alias will be used. Set to `None` to disable caching.
@@ -72,8 +80,8 @@ AUTHENTICATION_BACKENDS = (
 
 MUNICIPIOS_GEO = True
 
-FACEBOOK_APP_ID              = '816917028387261'
-FACEBOOK_API_SECRET          = '22cdeb8801ab73a78b686491a97aee17'
+FACEBOOK_APP_ID              = '748657411909785'
+FACEBOOK_API_SECRET          = '7b2c5ae08276a49bc26d52a943a4f9d4'
 
 GOOGLE_OAUTH2_CLIENT_ID  = '184120370259-06c93doeviuph4nvlu1jj4fglhd4s7rb.apps.googleusercontent.com'
 GOOGLE_OAUTH2_CLIENT_SECRET = 'LCzMnVkHWnl3GtJ1wcvAuZsr'
@@ -143,7 +151,7 @@ STATIC_URL = '/static/'
 
 LOGIN_URL = "/login/"
 LOGOUT_URL = "/logout/"
-LOGIN_REDIRECT_URL = "/control_panel/"
+LOGIN_REDIRECT_URL = "/list/tree/"
 
 # configurando o usuario do django para ser
 # o usuario definido pelo projeto e nao o usuario

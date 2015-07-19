@@ -13,7 +13,6 @@
 
     <div class="col-md-12">
       <div class="profile-content">
-
         <!-- Tab para busca de endereço -->
         <div class="tabbable-panel">
           
@@ -75,12 +74,12 @@
           </div>
         </div> <!-- Fim do tab de busca de endereço -->
         
-        <!-- <p align="right" id="d">
+        <p align="left" id="d">
           <button class="btn btn-primary btn-success" onclick='getLocation()'>
             <span class="glyphicon glyphicon-map-marker"></span> 
             Me localize!
           </button>
-        </p> -->
+        </p>
         
 
         <form method="POST"  enctype="multipart/form-data">
@@ -170,10 +169,34 @@
     
       $("#tree").collapse('show');
 
-      {% if not form.instance.id %}
-       getLocation();
-      {% endif %}
+          //se árvore já cadastrada aparece icone em local já cadastrado
+    {% if form.instance.id%}
+        
+      var lat1 = String([{{ form.instance.geometry.x }}]);
+      var lat = lat1.replace(",", ".")
 
+      var lon1 = String([{{ form.instance.geometry.y }}]);
+      var lon = lon1.replace(",", ".")
+
+      var lonlat = new OpenLayers.LonLat( lon, lat )
+      
+      lonlat.transform(
+        new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+        map.getProjectionObject() // to Spherical Mercator Projection
+      );
+      console.log(lonlat);
+      console.log("Lat ", lat);
+      console.log("Lon ", lon);
+      map.setCenter (lonlat, 18);
+
+      markerslayer.clearMarkers();
+      markerslayer.addMarker(new OpenLayers.Marker(lonlat,icon));
+    {% else %}
+        getLocation();
+    {%endif%}
+    //fim da função   
+
+      
       $("#carregando_google").hide();
       $("#carregando_nominatim").hide();
       $("#id_geometry").hide();
@@ -233,7 +256,7 @@
 
     markerslayer.clearMarkers();
     markerslayer.addMarker(new OpenLayers.Marker(lonlat,icon));
-    document.getElementById("id_geometry").value =  "POINT(" +  lonlat.lat + " " + lonlat.lon + ")"
+    //document.getElementById("id_geometry").value =  "POINT(" +  lonlat.lat + " " + lonlat.lon + ")"
   };
 
   //função para encontrar localização do usuário (shared location - Google)
@@ -275,39 +298,39 @@
       if (status == google.maps.GeocoderStatus.OK) {
         if (results[0]) {
           //console.log(results[0].formatted_address);
+
           components = results[0].address_components;
           for (var i = 0; i < components.length; i++) {
             short_name =  components[i].short_name ;
             type =  components[i].types[0];
             long_name =  components[i].long_name;
-          
-            if (document.getElementById("id_"+type)){
-              document.getElementById("id_"+type).value = long_name;
-            };
+
+            if (type == "country"){
+              document.getElementById('id_country').value  = long_name;
+            }
             
-            $('#id_administrative_area_level_1 option')
-              .filter(function() { return $.trim( $(this).text() ) == components[5].long_name; })
+            if (type == "administrative_area_level_1"){
+              $('#id_administrative_area_level_1 option')
+              .filter(function() { return $.trim( $(this).text() ) == long_name; })
               .attr('selected',true);
-
-            $("#id_administrative_area_level_1 :selected").each(function(){
-              $(this).parent().data("default", this);
-            });
-
-            $("#id_administrative_area_level_1").change(function(e) {
-              $($(this).data("default")).prop("selected", true);
-            });
-
-            $('#id_locality option')
-              .filter(function() { return $.trim( $(this).text() ) == components[3].long_name; })
+            }
+            
+            if (type == "locality"){
+              $('#id_locality option')
+              .filter(function() { return $.trim( $(this).text() ) == long_name; })
               .attr('selected',true);
+            }
 
-            $("#id_locality :selected").each(function(){
-              $(this).parent().data("default", this);
-            });
+            if (type == "neighborhood"){
+              document.getElementById('id_neighborhood').value = long_name;
+            }
+            if (type == "route"){
+              document.getElementById('id_route').value = long_name;
+            }
+            if (type == "postal_code"){
+               document.getElementById('id_postal_code').value = long_name;
+            }
 
-            $("#id_locality").change(function(e) {
-              $($(this).data("default")).prop("selected", true);
-            });
           };
         }
       } else {
@@ -412,7 +435,8 @@
 
     markerslayer.clearMarkers();
     markerslayer.addMarker(new OpenLayers.Marker(lonlat,icon));
-    document.getElementById("id_geometry").value =  "POINT(" +  lonlat.lat + " " + lonlat.lon + ")"
+    document.getElementById("id_geometry").value =  "POINT(" +  lat + " " + lon + ")"
+    console.log(id_geometry.value);
   };
 
   //busca de endereço com Nominatim
@@ -470,7 +494,7 @@
     markerslayer.addMarker(new OpenLayers.Marker(lonlat,icon));
     map.setCenter (lonlat, zoom);
 
-    id_geometry.value = 'POINT('+ lonlat.lat +' ' + lonlat.lon +')';
+    id_geometry.value = 'POINT('+ lat +' ' + lon +')';
   };
 
   //função para receber informação de endereço nominatim no formulário
@@ -554,24 +578,7 @@
     var click = new OpenLayers.Control.Click();
       
     map.addControl(click);
-    click.activate();
-    map.maxExtent(new OpenLayers.Bounds(-130, 30, -80, 55));
-
-    //se árvore já cadastrada aparece icone em local já cadastrado
-    {% if form.instance.id%}
-        
-      var lat1 = String([{{ form.instance.geometry.x }}]);
-      var lat = lat1.replace(",", ".")
-
-      var lon1 = String([{{ form.instance.geometry.y }}]);
-      var lon = lon1.replace(",", ".")
-
-      var lonlat = new OpenLayers.LonLat( lon, lat )
-        
-      mark(lonlat);
-    
-    {%endif%}
-    //fim da função      
+    click.activate();   
 
     jQuery(document).ready(function(){
       jQuery('#id_country').width(100);

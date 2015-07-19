@@ -65,14 +65,6 @@
                 <ul class="nav navbar-nav navbar-right">
                     
                     {% if user.is_authenticated %}
-                    
-                        <li>
-                          
-                            <a href="{% url 'control_panel' %}">
-                                <i class="icon-bar-chart"></i>
-                                GRÁFICOS
-                            </a>
-                        </li>
                         <li>
                           
                             <a href="{% url 'tree_list' %}">
@@ -80,6 +72,14 @@
                                 ÁRVORES
                             </a>
                         </li>
+                        <li>
+                          
+                            <a href="{% url 'statistics' %}">
+                                <i class="icon-bar-chart"></i>
+                                ESTATÍSTICAS
+                            </a>
+                        </li>
+                        
                         
                         <li>
                             <a href="{% url 'tree_form' %}">

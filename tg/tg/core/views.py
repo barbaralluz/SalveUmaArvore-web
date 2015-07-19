@@ -4,6 +4,7 @@ from django.template import RequestContext
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 from django.core.urlresolvers import reverse_lazy, reverse
 
 from tg.core.models import Tree, User, Profile
@@ -39,12 +40,12 @@ def log_in(request):
         form = AuthenticationForm(data=request.POST) 
         if form.is_valid():
            login(request, form.get_user())
-           return redirect(control_panel) 
+           return redirect(tree_list)
         else:
             return render(request, "login.html", {"form": form})
     return render(request, "login.html", {"form": AuthenticationForm()})
 
-#Perfil
+#Perfil 
 @login_required
 def profile(request, username):
     user = request.user
@@ -60,8 +61,7 @@ def profile(request, username):
 
 #Painel de Controle
 @login_required
-def control_panel(request):
-
+def statistics(request):
     return ListView.as_view(
         queryset = Tree.objects.all(),
         template_name='control_panel.html')(request)
@@ -88,7 +88,7 @@ def tree_create(request):
             tree = form.save(commit=False)
             tree.usuario = request.user
             tree.save()
-            return redirect(tree_list)
+            return redirect('user_tree_list', username=request.user.username)
     else:
         form = TreeForm()
     return render_to_response("tree_form.html", {'form': form},
@@ -101,7 +101,7 @@ def tree_update(request, nr_tree):
         form = TreeForm(request.POST, request.FILES, instance=tree)
         if form.is_valid():
             form.save()
-            return redirect(tree_list)
+            return redirect('user_tree_list', username=request.user.username)
     else:
         form = TreeForm(instance=tree)
     return render_to_response("tree_form.html", {'form':form},
@@ -113,7 +113,7 @@ def tree_delete(request, nr_tree):
     if request.method == "POST":
         
         tree.delete()
-        return redirect(tree_list)
+        return redirect('user_tree_list', username=request.user.username)
     return render_to_response("confirm_delete_tree.html", {'object': tree},
                 context_instance=RequestContext(request))
 
@@ -129,7 +129,6 @@ class SearchTreeList(ListView):
         if qs_data:
             qs_data.pop('page', '1')
             context['query_string'] = qs_data.urlencode()
- 
         return context
  
     def get_queryset(self):
@@ -138,9 +137,6 @@ class SearchTreeList(ListView):
         return self.get_form().get_queryset()
  
     def get_form(self):
-        #if not hasattr(self, '_inst_form'):
-        #   setattr(self, '_inst_form', Xself.form_class(self.request.GET.copy() or None))
-        #return self._inst_form
         return self.form_class(self.request.GET.copy() or None)
 
 class TreeList(SearchTreeList):
@@ -168,3 +164,10 @@ class TreeListView(ListView):
         return super(TreeListView, self).get_queryset().filter(usuario=self.request.user)
 
 user_tree_list = TreeListView.as_view()
+
+class TreeDetailView(DetailView):
+    template_name = "tree_detail.html"
+    queryset = Tree.objects
+
+tree_detail = TreeDetailView.as_view()
+

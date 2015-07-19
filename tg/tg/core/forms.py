@@ -7,7 +7,7 @@ from django.contrib.auth.forms import UserCreationForm
 from municipios.models import UF, Municipio
 
 from municipios.widgets import SelectMunicipioWidget
-
+    
 # Busca por estado, cidade, bairro, endereço, espécie
 # deixar opção para marcar Minhas Árvores
 class SearchTreeForm(forms.Form):
