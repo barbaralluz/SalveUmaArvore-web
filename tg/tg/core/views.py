@@ -16,10 +16,11 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 
+from django.contrib.comments import Comment
+
 from django_user_agents.utils import get_user_agent
-
+   
 from django.shortcuts import render, render_to_response, get_object_or_404, redirect
-
 
 index = TemplateView.as_view(template_name='index.html')
 

@@ -5,7 +5,6 @@ from django.views.generic.base import RedirectView
 from django.contrib import admin
 from django.conf import settings
 
-
 admin.autodiscover()
 
 urlpatterns = patterns(
@@ -48,11 +47,9 @@ urlpatterns = patterns(
 
     # Admin	
     url(r'^admin/', include(admin.site.urls)),
-     
-    url(r'^comments/', include('django_comments.urls')),
 
-
-    
+    url(r'^comments/', include('fluent_comments.urls')),
+   
 )
 
 if settings.DEBUG:

@@ -63,12 +63,17 @@
 
           {% else %}
 
-          <h5> Árvores por Cidades </h5>
-
-          <div id="cidades"></div>
+          <h3> Árvores por Cidades </h3>
+          <div id="cidades"></div>  
           
-          <h5> Árvores por Estados </h5>
+          <h3> Árvores por Estados </h3>
           <div id="estados"></div>
+          
+          {% if object_list %}
+
+            <h3> Total de Árvores {{ object_list|length }} </h3>
+
+          {% endif %}
 
           {% endif %}
 
@@ -148,6 +153,29 @@
                   var ctx2 = document.getElementById("GraficoBarraEstados").getContext("2d");
                   var BarChart2 = new Chart(ctx2).Bar(data_estados, options);
                 }      
+
+                {% if request.user_agent.is_mobile %}
+
+                for (i = 0; i < totalCidades.length; i++) { 
+                 
+                  var c = document.createElement('div');
+                  c.innerHTML = totalCidades[0][i] + "      " + totalCidades[1][i] ;
+                  document.getElementById('cidades').appendChild(c);
+      
+                  //console.log(totalCidades[0][i] + "      " + totalCidades[1][i])
+                }
+
+                for (i = 0; i < totalEstados.length; i++) { 
+
+                  var e = document.createElement('div');
+                  e.innerHTML = totalEstados[0][i] + "      " + totalEstados[1][i] ;
+                  document.getElementById('estados').appendChild(e);
+                  
+                  //console.log(totalEstados[0][i] + "      " + totalEstados[1][i])
+                
+                }
+
+                {% endif %}
 
             </script>
 

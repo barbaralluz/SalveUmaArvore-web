@@ -41,15 +41,18 @@ INSTALLED_APPS = (
     'social_auth',
     'django.contrib.gis',
     'django_user_agents',
-    'threadedcomments',
     'django.contrib.sites',
+    'fluent_comments',
+    'crispy_forms',
     'django_comments',
 
 )
 
-SITE_ID = 1
+COMMENTS_APP = 'fluent_comments'
+FLUENT_COMMENTS_EXCLUDE_FIELDS = ('name', 'email', 'url')
+FLUENT_COMMENTS_AKISMET_ACTION = 'delete' 
 
-COMMENTS_APP = 'threadedcomments'
+SITE_ID = 1
 
 # Name of cache backend to cache user agents. If it not specified default
 # cache alias will be used. Set to `None` to disable caching.
@@ -78,10 +81,12 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
+
 MUNICIPIOS_GEO = True
 
 FACEBOOK_APP_ID              = '748657411909785'
 FACEBOOK_API_SECRET          = '7b2c5ae08276a49bc26d52a943a4f9d4'
+FACEBOOK_EXTENDED_PERMISSIONS = ['email']
 
 GOOGLE_OAUTH2_CLIENT_ID  = '184120370259-06c93doeviuph4nvlu1jj4fglhd4s7rb.apps.googleusercontent.com'
 GOOGLE_OAUTH2_CLIENT_SECRET = 'LCzMnVkHWnl3GtJ1wcvAuZsr'

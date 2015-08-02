@@ -1,7 +1,7 @@
 {% extends "control_panel.html" %}
 
-{% load staticfiles %} {% load threadedcomments_tags %}
-
+{% load staticfiles %} {% load comments %}
+{% load i18n %}
 {% block title %}
     Deletar Árvore {{ object.id }}
 {% endblock %}
@@ -10,93 +10,125 @@
   
   <link href="{% static 'css/delete_tree.css' %}" rel="stylesheet" />
  
-      <div class="col-md-9">
+      
         <div class="profile-content" style="font-family:sans-serif">
  
           <br/>
     
-          <div class="col-md-3">
-            <p align="center"><h4>DADOS DA ÁRVORE</h4></p>
-            <label style="font-weight: normal;">Id: {{ object.id }}</label>
-            <br/> 
+          <div class="col-md-6">
+            <p align="center"><h4>DADOS DA ÁRVORE {{ object.id }} </h4></p>
             <label style="font-weight: normal;">Espécie: {{ object.especie }}</label>
+            <br/> <br/>
+            <label style="font-weight: normal;">Endereço </label>
+            <label style="font-weight: normal;">{{object.administrative_area_level_1}}, {{object.locality}}, {{object.neighborhood}}, {{object.route}}, {{object.numero}}, {{object.postal_code}}</label>
+            <label style="font-weight: normal;">Ponto de Referência: {{ object.point_of_interest }}</label>
+            <br/> <br/>
+            <label style="font-weight: normal;">Altura: {{ object.altura }}</label>
+            <br/> 
+            <label style="font-weight: normal;">Diâmetro: {{ object.diametro }}</label>
+            <br/> 
+            <label style="font-weight: normal;">Informações: {{ object.informacoes_adicionais }}</label>
+            
           </div>
         
-          <div class="col-md-9" align= "right" >
+          <div class="col-md-6" align= "right" >
             <div id="mapdiv" style="width: 100%; height: 300px;"></div> <!-- Mapa -->
-          </div>
 
-          <div class="col-md-12" align= "right">
+            {% if object.usuario.username == user.username %}
+            <br/>
             <p>
+                  <a href="{% url 'tree_form' object.pk %}" class="btn btn-warning">
+                    <span class="glyphicon glyphicon-pencil"></span> 
+                    Editar
+                  </a>
+                
+                  <a href="{% url 'tree_delete' object.pk %}" class="btn btn-danger">
+                    <span class="glyphicon glyphicon-trash"></span> 
+                    Excluir
+                  </a>
+               
+
+            </p>
+            
+            {% endif %}
+          
+
+          </div>
+          <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}fluent_comments/css/ajaxcomments.css" />
+        <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script> 
+        <script type="text/javascript" src="{{ STATIC_URL }}fluent_comments/js/ajaxcomments.js"></script>
+      <div class="col-md-8">
+
+        <h2 class="page-header">Comentários </h2>
+        <section class="comment-list">
+
+        {% render_comment_list for object %}
+
+        <h2> Deixe seu Comentário </h2>
+        <hr/>
+        {% if user.is_authenticated %}
+
+          {% render_comment_form for object %}
+        {% else %}
+          
+        {% endif %}
             </p>
           </div>
-        </div>
         
-
-        {% get_comment_list for object as comentarios %}
-        
-        {% if comentarios %}
-          <h2>Comments for {{ object.id }}:</h2>
-         {%endif%}
-
-        {% for comentario in comentarios %}
-          
-
-          <div class="comentario">
-            Nome: {{ comentario.name }}<br/>
-            {% if comentario.url %}URL: {{ comentario.url }}{% endif %}<br/>
-            {{ comentario.comment|linebreaks }}
-          
-            <hr/>
-          </div>
-         
-        {% endfor %}
-        <h2>Adicione comentário a árvore {{ object.id }}:</h2>
-        
-        {% render_comment_form for object %}
-      </div> <!-- Final do Div md-9 -->
-    </div>
-
   </div> <!-- Final do Container -->
+  <style type="text/css">
+
+    #mapdiv{
+      width: 100%; height: 430px;
+    }
+
+    html, body {
+      width:100%; height:100%; margin:0;
+    }
+          
+    .olImageLoadError { display: none; }
+
+  </style>
+  
 
   <script src="{% static 'openlayers/OpenLayers.js' %}"></script> 
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>  
   
     <script type="text/javascript">  
-      
-      //mantem opção do menu do usuário selecionado 
-      $( document ).ready(function() {
+
+    var map = new OpenLayers.Map('mapdiv');
     
-        $("#tree").collapse('show');
-        $("#list_edit_exclude_tree").addClass('active');
-      
-      });   
-     
-      var map = new OpenLayers.Map('mapdiv');
+    map.addLayer(new OpenLayers.Layer.OSM());
+    map.zoomToMaxExtent();
                 
-      map.addLayer(new OpenLayers.Layer.OSM());
-      map.zoomToMaxExtent();
+    var markers = new OpenLayers.Layer.Markers( "Markers" );
+    markers.id = "Markers";
+    map.addLayer(markers);
 
-      //aparece icone em local já cadastrado
-      var lonlat = new OpenLayers.LonLat( {{object.longitude}}, {{object.latitude}} )
-        
-      markers = new OpenLayers.Layer.Markers( "Markers" );
-      markers.id = "Markers";
-      map.addLayer(markers);
-          
-      var size = new OpenLayers.Size(32,36);
-      var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-      var icon = new OpenLayers.Icon('/static/img/marker.png', size, offset);   
-      var markerslayer = map.getLayer('Markers');
+    var size = new OpenLayers.Size(40,42);
+    var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+    var icon = new OpenLayers.Icon('/static/img/marker.png', size, offset);   
+    var markerslayer = map.getLayer('Markers');
+    
+     var lat1 = String([{{ object.geometry.x }}]);
+      var lat = lat1.replace(",", ".")
 
-      markerslayer.addMarker(new OpenLayers.Marker(lonlat,icon));
+      var lon1 = String([{{ object.geometry.y }}]);
+      var lon = lon1.replace(",", ".")
 
+      var lonlat = new OpenLayers.LonLat( lon, lat )
+      
       lonlat.transform(
-        new OpenLayers.Projection("EPSG:4326"), 
-        map.getProjectionObject() 
+        new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+        map.getProjectionObject() // to Spherical Mercator Projection
       );
-
+      console.log(lonlat);
+      console.log("Lat ", lat);
+      console.log("Lon ", lon);
       map.setCenter (lonlat, 16);
+
+      markerslayer.clearMarkers();
+      markerslayer.addMarker(new OpenLayers.Marker(lonlat,icon));
     </script>
 
 {% endblock content_logged %}

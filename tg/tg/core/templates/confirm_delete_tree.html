@@ -10,19 +10,27 @@
   
   <link href="{% static 'css/delete_tree.css' %}" rel="stylesheet" />
  
-      <div class="col-md-9">
-        <div class="profile-content" style="font-family:sans-serif">
+              <div class="profile-content" style="font-family:sans-serif">
  
           <br/>
     
-          <div class="col-md-3">
-            <p align="center"><h4>DADOS DA ÁRVORE</h4></p>
-            <label style="font-weight: normal;">Id: {{ object.id }}</label>
-            <br/> 
+          <div class="col-md-6">
+            <p align="center"><h4>DADOS DA ÁRVORE {{ object.id }} </h4></p>
             <label style="font-weight: normal;">Espécie: {{ object.especie }}</label>
+            <br/> <br/>
+            <label style="font-weight: normal;">Endereço </label>
+            <label style="font-weight: normal;">{{object.administrative_area_level_1}}, {{object.locality}}, {{object.neighborhood}}, {{object.route}}, {{object.numero}}, {{object.postal_code}}</label>
+            <label style="font-weight: normal;">Ponto de Referência: {{ object.point_of_interest }}</label>
+            <br/> <br/>
+            <label style="font-weight: normal;">Altura: {{ object.altura }}</label>
+            <br/> 
+            <label style="font-weight: normal;">Diâmetro: {{ object.diametro }}</label>
+            <br/> 
+            <label style="font-weight: normal;">Informações: {{ object.informacoes_adicionais }}</label>
+            
           </div>
         
-          <div class="col-md-9" align= "right" >
+          <div class="col-md-6" align= "right" >
             <div id="mapdiv" style="width: 100%; height: 300px;"></div> <!-- Mapa -->
           </div>
 
@@ -37,59 +45,68 @@
                   <span class="glyphicon glyphicon-trash"></span> 
                   Confirmar
                 </button>
-           	  
+              
                 &nbsp;
                 &nbsp;
                 &nbsp; 
 
-                <a href="{% url 'user_tree_list' user.username %}" class="btn btn-primary btn-warning">Cancelar</a>
+                <a href="{% url 'tree_list' %}" class="btn btn-primary btn-warning">Cancelar</a>
               </form>
             </p>
           </div>
-        </div>
-      </div> <!-- Final do Div md-9 -->
-    </div>
+  <style type="text/css">
 
-  </div> <!-- Final do Container -->
+    #mapdiv{
+      width: 100%; height: 430px;
+    }
+
+    html, body {
+      width:100%; height:100%; margin:0;
+    }
+          
+    .olImageLoadError { display: none; }
+
+  </style>
   
+
   <script src="{% static 'openlayers/OpenLayers.js' %}"></script> 
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>  
   
     <script type="text/javascript">  
-      
-      //mantem opção do menu do usuário selecionado 
-      $( document ).ready(function() {
+
+    var map = new OpenLayers.Map('mapdiv');
     
-        $("#tree").collapse('show');
-        $("#list_edit_exclude_tree").addClass('active');
-      
-      });   
-     
-      var map = new OpenLayers.Map('mapdiv');
+    map.addLayer(new OpenLayers.Layer.OSM());
+    map.zoomToMaxExtent();
                 
-      map.addLayer(new OpenLayers.Layer.OSM());
-      map.zoomToMaxExtent();
+    var markers = new OpenLayers.Layer.Markers( "Markers" );
+    markers.id = "Markers";
+    map.addLayer(markers);
 
-      //aparece icone em local já cadastrado
-      var lonlat = new OpenLayers.LonLat( {{object.longitude}}, {{object.latitude}} )
-        
-      markers = new OpenLayers.Layer.Markers( "Markers" );
-      markers.id = "Markers";
-      map.addLayer(markers);
-          
-      var size = new OpenLayers.Size(32,36);
-      var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-      var icon = new OpenLayers.Icon('/static/img/marker.png', size, offset);   
-      var markerslayer = map.getLayer('Markers');
+    var size = new OpenLayers.Size(40,42);
+    var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+    var icon = new OpenLayers.Icon('/static/img/marker.png', size, offset);   
+    var markerslayer = map.getLayer('Markers');
+    
+     var lat1 = String([{{ object.geometry.x }}]);
+      var lat = lat1.replace(",", ".")
 
-      markerslayer.addMarker(new OpenLayers.Marker(lonlat,icon));
+      var lon1 = String([{{ object.geometry.y }}]);
+      var lon = lon1.replace(",", ".")
 
+      var lonlat = new OpenLayers.LonLat( lon, lat )
+      
       lonlat.transform(
-        new OpenLayers.Projection("EPSG:4326"), 
-        map.getProjectionObject() 
+        new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+        map.getProjectionObject() // to Spherical Mercator Projection
       );
-
+      console.log(lonlat);
+      console.log("Lat ", lat);
+      console.log("Lon ", lon);
       map.setCenter (lonlat, 16);
+
+      markerslayer.clearMarkers();
+      markerslayer.addMarker(new OpenLayers.Marker(lonlat,icon));
     </script>
 
 {% endblock content_logged %}
