@@ -1,10 +1,10 @@
-{% extends "control_panel.html" %}
+{% extends "base.html" %}
 
 {% load staticfiles %}
 
 {% block title %} Listar | Editar | Excluir Árvores {% endblock %}
 
-{% block content_logged %}
+{% block content %}
 
  
   <link href="{% static 'css/list_tree.css' %}" rel="stylesheet" />
@@ -58,4 +58,4 @@
           </div>
         </div>
 
-{% endblock content_logged %}
+{% endblock content %}

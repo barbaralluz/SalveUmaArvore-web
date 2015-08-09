@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Django settings for tg project.
 
@@ -74,6 +75,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'social_auth.context_processors.social_auth_by_type_backends',
 )
 
+TEMPLATE_LOADERS = ('django.template.loaders.filesystem.Loader',
+ 'django.template.loaders.app_directories.Loader')
 
 AUTHENTICATION_BACKENDS = (
     'social_auth.backends.facebook.FacebookBackend',

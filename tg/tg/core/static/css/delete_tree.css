@@ -8,6 +8,10 @@ Licensed under MIT
     display: none;
 }
 
+.textarea {
+  width: 100%;
+}
+
 
 p >  label {
   text-align: right; 

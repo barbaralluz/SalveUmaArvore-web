@@ -2,7 +2,7 @@
 
 {% load staticfiles %}
 
-{% block title %} Listar | Editar | Excluir Árvores {% endblock %}
+{% block title %} | Mapa {% endblock %}
 
 {% block content %}
 
@@ -59,7 +59,8 @@
 
     map = new OpenLayers.Map("mapa_tree_list");
     map.addLayer(new OpenLayers.Layer.OSM());
-  
+    
+
     epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
     projectTo = map.getProjectionObject(); //The map projection (Spherical Mercator)
    
@@ -133,12 +134,9 @@
     map.addControl(controls['selector']);
     controls['selector'].activate();
 
-    Event.observe(window, "resize", function() {
-    var dim = document.viewport.getDimensions(); // get the viewport dimensions
-    map.div.setStyle({width:dim.width+'px', height:dim.height+'px'}); // change OpenLayers map *container* size
-    map.size(dim.width, dim.height); // adjust the map's size
-    map.updateSize(); // tell the map to adjust itself
-});
+
+
+
 </script>          
 
 {% endblock content %}

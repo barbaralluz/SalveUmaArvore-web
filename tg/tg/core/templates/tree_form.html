@@ -1,15 +1,18 @@
-{% extends "control_panel.html" %}
+{% extends "base.html" %}
 
 {% load staticfiles %}
+{% load user_agents %}
 
 {% block title %}
-    Formulário de Árvores
+    | Formulário de Árvores
 {% endblock %}
 
-{% block content_logged %}
+{% block content %}
 
   <link href="{% static 'css/tree_form.css' %}" rel="stylesheet" />
     <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>  
+
+    {% if not request.user_agent.is_mobile %}
 
     <div class="col-md-12">
       <div class="profile-content">
@@ -74,7 +77,13 @@
           </div>
         </div> <!-- Fim do tab de busca de endereço -->
         
+        {% endif %}
+
+        {% if not request.user_agent.is_mobile %}    
         <p align="left" id="d">
+        {% else %}
+        <p align="right" id="d">
+        {% endif %}
           <button class="btn btn-primary btn-success" onclick='getLocation()'>
             <span class="glyphicon glyphicon-map-marker"></span> 
             Me localize!
@@ -629,5 +638,5 @@
 
   </script>
 
-{% endblock content_logged %}
+{% endblock content %}
 

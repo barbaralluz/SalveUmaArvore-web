@@ -1,0 +1,245 @@
+
+{% extends "base.html" %}
+
+{% load staticfiles %} {% load user_agents %}
+
+{% block title %} | Estatísticas {% endblock %}
+
+{% block content %}
+  
+  
+  <div class="container">       
+        
+    <div class="row profile">
+      
+      {% block content_logged %}
+
+       <link href="{% static 'css/control_panel.css' %}" rel="stylesheet" />
+       <script src="{% static 'js/Chart.min.js' %}"></script>
+
+      <div class="col-md-12">
+
+        <div class="profile-content">
+
+          <style type="text/css">
+            .box {
+                margin: 0px auto;
+                width: 70%;
+            }
+
+            .box-chart {
+                width: 100%;
+                margin: 0 auto;
+                padding: 10px;
+            }
+
+            .chart-legend li span{
+                display: inline-block;
+                width: 12px;
+                height: 12px;
+                margin-right: 5px;
+                list-style-type: none;
+
+            }  
+            .chart-legend li {
+              list-style-type: none;
+            }         
+          </style>  
+
+          
+          {% if not request.user_agent.is_mobile %}
+
+          <h3> Minhas Arvores </h3>
+          <div id="mytrees"></div>  
+
+          <h4> Total de Árvores ---- %</h4>
+          <h4> {{ object_list|length }} ---- 100%</h4>
+          <hr/>
+          
+          <div class="col-md-6">
+            <div class="panel panel-default" style="width: 500px; height: 100%;">
+              <div class="panel-heading">
+                <h3 class="panel-title"> Árvores por Estados</h3>
+              </div>
+              <div class="panel-body">
+                  <canvas id="chartEstados" style="width: 100%"></canvas>
+                  <br/><br/>
+                  <div id="js-legend-estados" class="chart-legend"></div>      
+              </div>
+            </div>
+          </div>
+            
+          <div class="col-md-6">
+            <div class="panel panel-default" style="width: 500px; height: 100%;">
+              <div class="panel-heading">
+                <h3 class="panel-title"> Árvores por Cidades</h3>
+              </div>
+              <div class="panel-body">
+                  <canvas id="chartCidades" style="width: 100%"></canvas>
+                  <br/><br/>
+                  <div id="js-legend-cidades" class="chart-legend"></div>      
+              </div>
+            </div>
+          </div>
+          
+          {% else %}
+
+          <h3> Árvores por Cidades </h3>
+          <div id="cidades"></div>  
+          
+          <h3> Árvores por Estados </h3>
+          <div id="estados"></div>
+
+          <h3> Minhas Arvores </h3>
+          <div id="mytrees"></div>  
+
+
+          <h4> Total de Árvores ---- %</h4>
+          <h4> {{ object_list|length }} ---- 100%</h4> 
+
+          {% endif %}
+
+              <script type="text/javascript">     
+
+              var trees_user = 0;
+
+              {% for tree in object_list %}
+                {% if tree.usuario == user %}
+                  trees_user = trees_user + 1;
+                {% endif %}
+              {% endfor %}
+              console.log(trees_user);
+              
+
+              var t = document.createElement('div');
+                  t.innerHTML = trees_user;
+                  document.getElementById('mytrees').appendChild(t);
+                  
+                function removeDuplicado(arr) {
+                  var a = [], b = [], c=[], prev;
+    
+                  arr.sort();
+                  for ( var i = 0; i < arr.length; i++ ) {
+                    if ( arr[i] !== prev ) {
+                      a.push(arr[i]);
+                      b.push(1);
+                    } else {
+                      b[b.length-1]++;
+                    }
+                    prev = arr[i];
+                  }
+                
+                  for ( var i = 0; i < b.length; i++ ) {
+                      c.push(Math.round((b[i] * 100)/{{object_list|length}}));
+                  }
+                  
+                  return [a, b, c];
+                }                                   
+
+                var options = {
+                    responsive:true
+                };
+
+                cidades = [];
+                estados = [];
+
+                {% for arvore in object_list %}
+                  cidades.push("{{arvore.locality}}");  
+                  estados.push("{{arvore.administrative_area_level_1}}");
+                {% endfor %}
+                
+                var totalCidades = removeDuplicado(cidades);
+                
+                var totalEstados = removeDuplicado(estados);
+
+                
+                
+                
+
+                {% if request.user_agent.is_mobile %}
+
+                for (i = 0; i < totalCidades.length-1; i++) { 
+                 
+                  var c = document.createElement('div');
+                  c.innerHTML = totalCidades[0][i] + " ---- " + totalCidades[1][i] + " ---- " +  totalCidades[2][i] + " %";
+                  document.getElementById('cidades').appendChild(c);
+      
+                  //console.log(totalCidades[0][i] + "      " + totalCidades[1][i])
+                }
+
+                for (i = 0; i < totalEstados.length-1; i++) { 
+
+                  var e = document.createElement('div');
+                  e.innerHTML = totalEstados[0][i] + " ---- " + totalEstados[1][i] + " ---- " + totalEstados[2][i] + " %";
+                  document.getElementById('estados').appendChild(e);
+                  
+                  //console.log(totalEstados[0][i] + "      " + totalEstados[1][i])
+                
+                }
+
+                {% endif %}
+                
+                function getRandomColor() {
+                  var letters = '0123456789ABCDEF'.split('');
+                  var color = '#';
+                  for (var i = 0; i < 6; i++ ) {
+                    color += letters[Math.floor(Math.random() * 16)];
+                  }
+                  return color;
+                }
+                //Pie Chart Estados
+                var dataProvider = [];
+
+                for (i = 0; i < totalEstados.length-1; i++) {
+                  dataProvider.push({
+                    value: totalEstados[2][i],
+                    color: getRandomColor(),
+                    label: totalEstados[0][i] + " ("+ totalEstados[1][i] + ") : " + totalEstados[2][i] + " %"
+                  });
+                }
+
+                var data = dataProvider;
+                var options = {
+                  segmentShowStroke: false,
+                  animateRotate: true,
+                  animateScale: false,
+                  tooltipTemplate: "<%= label %>"
+                }
+
+                var ctx = document.getElementById("chartEstados").getContext("2d");
+                var chartEstados = new Chart(ctx).Pie(data, options);
+                document.getElementById('js-legend-estados').innerHTML = chartEstados.generateLegend();
+
+                //Pie Chart Cidades
+                var dataProviderCidades = [];
+
+                for (i = 0; i < totalCidades.length-1; i++) {
+                  dataProviderCidades.push({
+                    value: totalEstados[2][i],
+                    color: getRandomColor(),
+                    label: totalCidades[0][i] + " ("+ totalCidades[1][i] + ") : " + totalCidades[2][i] + " %"
+                  });
+                }
+
+                var data = dataProviderCidades;
+                var options = {
+                  segmentShowStroke: false,
+                  animateRotate: true,
+                  animateScale: false,
+                  tooltipTemplate: "<%= label %>"
+                }
+
+                var ctx = document.getElementById("chartCidades").getContext("2d");
+                var chartCidades = new Chart(ctx).Pie(data, options);
+                document.getElementById('js-legend-cidades').innerHTML = chartCidades.generateLegend();
+
+            </script>
+        
+      </div>
+    </div> <!-- Final do Div md-12-->
+  </div>
+
+</div> <!-- Final do Container -->
+
+{% endblock content_logged %}
+{% endblock content %}

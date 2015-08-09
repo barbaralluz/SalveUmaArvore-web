@@ -1,12 +1,12 @@
-{% extends "control_panel.html" %}
+{% extends "base.html" %}
 
 {% load staticfiles %}
 
 {% block title %}
-    Deletar Árvore {{ object.id }}
+    | Deletar Árvore {{ object.id }}
 {% endblock %}
 
-{% block content_logged %}
+{% block content %}
   
   <link href="{% static 'css/delete_tree.css' %}" rel="stylesheet" />
  
@@ -109,4 +109,4 @@
       markerslayer.addMarker(new OpenLayers.Marker(lonlat,icon));
     </script>
 
-{% endblock content_logged %}
+{% endblock content %}

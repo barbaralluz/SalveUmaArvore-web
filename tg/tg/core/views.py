@@ -65,7 +65,7 @@ def profile(request, username):
 def statistics(request):
     return ListView.as_view(
         queryset = Tree.objects.all(),
-        template_name='control_panel.html')(request)
+        template_name='statistics.html')(request)
 
 #Visualizar Mapa do Usuário
 @login_required

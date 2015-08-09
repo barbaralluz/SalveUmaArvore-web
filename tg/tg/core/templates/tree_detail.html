@@ -1,33 +1,33 @@
-{% extends "control_panel.html" %}
+{% extends "base.html" %}
 
 {% load staticfiles %} {% load comments %}
-{% load i18n %}
 {% block title %}
-    Deletar Árvore {{ object.id }}
+    | Informações da Árvore {{ object.id }}
 {% endblock %}
 
-{% block content_logged %}
+{% block content %}
   
   <link href="{% static 'css/delete_tree.css' %}" rel="stylesheet" />
- 
+  
       
         <div class="profile-content" style="font-family:sans-serif">
- 
           <br/>
-    
+      
           <div class="col-md-6">
             <p align="center"><h4>DADOS DA ÁRVORE {{ object.id }} </h4></p>
             <label style="font-weight: normal;">Espécie: {{ object.especie }}</label>
             <br/> <br/>
             <label style="font-weight: normal;">Endereço </label>
-            <label style="font-weight: normal;">{{object.administrative_area_level_1}}, {{object.locality}}, {{object.neighborhood}}, {{object.route}}, {{object.numero}}, {{object.postal_code}}</label>
-            <label style="font-weight: normal;">Ponto de Referência: {{ object.point_of_interest }}</label>
+            <label style="font-weight: normal;">{{object.administrative_area_level_1}}, {{object.locality}}{% if not object.neighborhood or object.neighborhood == ' ' %}{% else %}, {{object.neighborhood}}{% endif %}{% if not object.route or object.route == ' '%}{% else %}, {{object.route}}{% endif %}, {{object.numero}}{% if not object.postal_code or object.postal_code == ' ' %}{% else %}, {{object.postal_code}} {% endif %} </label>
+            <label style="font-weight: normal;">Ponto de Referência: {% if not object.point_of_interest or object.point_of_interest == ' ' %} Sem ponto de referência {% else %} {{ object.point_of_interest }} {% endif %} </label>
             <br/> <br/>
             <label style="font-weight: normal;">Altura: {{ object.altura }}</label>
             <br/> 
             <label style="font-weight: normal;">Diâmetro: {{ object.diametro }}</label>
             <br/> 
-            <label style="font-weight: normal;">Informações: {{ object.informacoes_adicionais }}</label>
+            <label style="font-weight: normal;">Informações: {% if not object.informacoes_adicionais %} Nao foram adicionados detalhes sobre a árvore {% else %} {{ object.informacoes_adicionais }} {% endif %} </label>
+            <br/> <br/>
+            <label style="font-weight: normal;">Usuário : {{ object.usuario.email }} </label>
             
           </div>
         
@@ -131,4 +131,4 @@
       markerslayer.addMarker(new OpenLayers.Marker(lonlat,icon));
     </script>
 
-{% endblock content_logged %}
+{% endblock content %}
