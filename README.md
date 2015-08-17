@@ -15,12 +15,17 @@ Construir um inventário ["crowdsourcing"](http://pt.wikipedia.org/wiki/Crowdsou
       * Endereço (Rua, Número, Bairro, Cidade, Estado, País e CEP, Ponto de Referencia).  
 
       **_Observação: É necessário realizar busca de endereço ou clicar sobre o botão "Me localize" para que as informações de rua, bairro, cidade, estado e país sejam adicionados)._**
-
+      
+      * Condição da Árvore
       * Espécie
       * Altura
-      * Diâmetro
-      * Informações adicionais
-      * Foto
+      * Condição das Raizes
+      * Presença de rede elétrica
+      * Necessidade de Manutenção
+      * Descrição
+      * Fotos (3 fotos)
+      
+      _Alterado em 16/08/2015_
 
 
 ## Contribuidores
