@@ -7,15 +7,15 @@
 
 {% block content %}
   
-  <link href="{% static 'css/delete_tree.css' %}" rel="stylesheet" />
+  <link href="{% static 'css/deletess_tree.css' %}" rel="stylesheet" />
   
       
         <div class="profile-content" style="font-family:sans-serif">
           <br/>
-      
+          <br/>
           <div class="col-md-6">
             <p align="center"><h4>DADOS DA ÁRVORE {{ object.id }} </h4></p>
-            <label style="font-weight: normal;">Espécie: {{ object.especie }}</label>
+            <label style="font-weight: normal;">Espécie: {% if not object.especie or object.especie == ' ' %}Espécie não informada{% else %}{{ object.especie }}{%endif%}</label>
             <br/> <br/>
             <label style="font-weight: normal;">Endereço </label>
             <label style="font-weight: normal;">{{object.administrative_area_level_1}}, {{object.locality}}{% if not object.neighborhood or object.neighborhood == ' ' %}{% else %}, {{object.neighborhood}}{% endif %}{% if not object.route or object.route == ' '%}{% else %}, {{object.route}}{% endif %}, {{object.numero}}{% if not object.postal_code or object.postal_code == ' ' %}{% else %}, {{object.postal_code}} {% endif %} </label>
@@ -23,12 +23,13 @@
             <br/> <br/>
             <label style="font-weight: normal;">Altura: {{ object.altura }}</label>
             <br/> 
-            <label style="font-weight: normal;">Diâmetro: {{ object.diametro }}</label>
+            <label style="font-weight: normal;">Condição da Árvore: {{ object.condicao_arvore }}</label>
             <br/> 
-            <label style="font-weight: normal;">Informações: {% if not object.informacoes_adicionais %} Nao foram adicionados detalhes sobre a árvore {% else %} {{ object.informacoes_adicionais }} {% endif %} </label>
+            <label style="font-weight: normal;">Informações: {% if not object.descricao %} Nao foram adicionados detalhes sobre a árvore {% else %} {{ object.descricao }} {% endif %} </label>
             <br/> <br/>
-            <label style="font-weight: normal;">Usuário : {{ object.usuario.email }} </label>
-            
+             {% if not object.usuario == user %}
+            <label style="font-weight: normal;">Usuário: {{ object.usuario.username }} </label>
+              {% endif %}
           </div>
         
           <div class="col-md-6" align= "right" >

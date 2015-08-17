@@ -45,13 +45,15 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'fluent_comments',
     'crispy_forms',
-    'django_comments',
+    'bootstrapform',
+    'django_comments',  
 
 )
 
 COMMENTS_APP = 'fluent_comments'
 FLUENT_COMMENTS_EXCLUDE_FIELDS = ('name', 'email', 'url')
 FLUENT_COMMENTS_AKISMET_ACTION = 'delete' 
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 SITE_ID = 1
 

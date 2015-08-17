@@ -59,7 +59,8 @@ class TreeForm(forms.ModelForm):
         fields = ("geometry", "country", "administrative_area_level_1",
                   "locality", "neighborhood", "route", 
                   "numero", "postal_code", "point_of_interest",
-                  "especie", "altura", "diametro", "informacoes_adicionais", "foto")
+                  "condicao_arvore", "especie", "altura", "condicao_raiz", 
+                  "condicao_luz", "condicao_man", "descricao", "foto1", "foto2", "foto3")
 
 class UserForm(UserCreationForm):
     email = forms.EmailField(required=True)

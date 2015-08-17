@@ -8,7 +8,7 @@
 
   <link href="{% static 'css/map.css' %}" rel="stylesheet" />
   
-  <div id="mapa_tree_list" style="width: 100%; height: 555px;position:absolute;"> <!-- Mapa -->
+  <div id="mapa_tree_list" style="width: 100%; height: 590px;position:fixed;"> <!-- Mapa -->
     
   </div>
   <div>
@@ -97,7 +97,18 @@
             "<a href='{% url 'tree_detail' arvore.pk %}'>Detalhes</a></div>" + 
             "<div style='text-align:left'>Id: " + markers[i][0] + "<br/>Espécie: " + markers[i][3] + 
             "</div>"},
-          {externalGraphic: '/static/img/marker.png', graphicHeight: 36, graphicWidth: 32, graphicXOffset:-12, graphicYOffset:-26}
+
+            {% if arvore.condicao_arvore == 'Boa' %}
+
+            {externalGraphic: '/static/img/icons/tree_good.png', graphicHeight: 40, graphicWidth: 36, graphicXOffset:-22, graphicYOffset:-36}
+
+            {% elif arvore.condicao_arvore == 'Regular' %}
+             {externalGraphic: '/static/img/icons/tree_regular.png', graphicHeight: 40, graphicWidth: 36,  graphicXOffset:-12, graphicYOffset:-26}
+             {% elif arvore.condicao_arvore == 'Ruim' %}
+             {externalGraphic: '/static/img/icons/tree_bad.png', graphicHeight: 36, graphicWidth: 32, graphicXOffset:-22, graphicYOffset:-36}
+             {% elif arvore.condicao_arvore == 'Caída' %}
+             {externalGraphic: '/static/img/icons/down.png', graphicHeight: 36, graphicWidth: 32, graphicXOffset:-12, graphicYOffset:-26}
+           {% endif %}
       );             
 
       vectorLayer.addFeatures(feature);

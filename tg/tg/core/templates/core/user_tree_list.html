@@ -34,9 +34,9 @@
             <tbody>
               {% for arvore in object_list %}
               <tr>
-                <td>{{arvore.especie}}</td>
+                <td>{% if not arvore.especie or arvore.especie == ' ' %}Espécie não informada{% else %}{{ arvore.especie }}{%endif%}</td>
 
-                <td>{{arvore.country}}, {{arvore.administrative_area_level_1}}, {{arvore.locality}}, {{arvore.neighborhood}}, {{arvore.route}}, {{arvore.numero}}, {{arvore.postal_code}}
+                <td>{{arvore.administrative_area_level_1}}, {{arvore.locality}}{% if not arvore.neighborhood or arvore.neighborhood == ' ' %}{% else %}, {{arvore.neighborhood}}{% endif %}{% if not arvore.route or arvore.route == ' '%}{% else %}, {{arvore.route}}{% endif %}, {{arvore.numero}}{% if not arvore.postal_code or arvore.postal_code == ' ' %}{% else %}, {{arvore.postal_code}}{%endif%}
 
                 </td>
                 <td>

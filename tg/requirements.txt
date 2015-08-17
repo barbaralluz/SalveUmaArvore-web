@@ -1,5 +1,6 @@
 akismet==0.2.0
 Django==1.7
+django-bootstrap-form==3.2
 django-contrib-comments==1.6.1
 django-crispy-forms==1.4.0
 django-fluent-comments==1.0.2
