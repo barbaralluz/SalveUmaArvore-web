@@ -14,9 +14,6 @@ urlpatterns = patterns(
     url(r'^statistics/$', 'tg.core.views.statistics', name="statistics"),
     url(r'^(?P<username>\w+)/profile/$', 'tg.core.views.profile', name="profile"),
 
-    #Mapa com Todas as Árvores
-    url(r'^map/$', 'tg.core.views.map', name="map"),
-
     # Árvores
     
     #Lista com Todas as Árvores
@@ -35,7 +32,7 @@ urlpatterns = patterns(
     url(r'^login/$', 'tg.core.views.log_in', name='login'),
     
     url(r'^logout/$', 'django.contrib.auth.views.logout_then_login',
-                    {'login_url': 'login'}),
+                    {'login_url': '/'}),
     
     url(r'^password_change/$', 'django.contrib.auth.views.password_change', 
                     {'template_name': 'change_password.html'}, name='password_change'),

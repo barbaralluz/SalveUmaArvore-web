@@ -9,53 +9,41 @@
  
   <link href="{% static 'css/list_tree.css' %}" rel="stylesheet" />
 
-    <div class="col-md-12">
-      <div class="profile-content">
+    
        <!-- <div id="mapa_tree_list" style="width: 100%; height: 400px;"></div> <!-- Mapa 
         <br/>
           <!-- Lista de Árvores -->
+                 
+          <ul class="list-group">
+            <h2 align="center"> <i class="glyphicon glyphicon-tree-deciduous"></i> Minhas Árvores </h2>
+                
+                {% for object in object_list %}
+                  <a href="{% url 'tree_detail' object.pk %}" class="list-group-item">
+                    <div class="square-box pull-left" style="margin-right: 5px">
 
-          <h1> <i class="glyphicon glyphicon-tree-deciduous"></i> Minhas Árvores </h1>
-        
-          <hr>
-            
-          <div class="row">    
-        <div class="col-md-9">         
+                      {% if object.foto1 %}
+                        <img class="media-object dp img-thumb" src="{{object.foto1.url}}" style="width: 100px;">
+                      {% elif object.foto2 and not object.foto1 %}
+                          <img class="media-object dp img-thumb" src="{{object.foto2.url}}" style="width: 100px;">
+                      {% elif object.foto3 and not object.foto1 and not object.foto2 %}
+                          <img class="media-object dp img-thumb" src="{{object.foto3.url}}" style="width: 100px;">
+                      {% else %}
+                        <img class="media-object dp img-thumb" src="/static/img/sem_foto.png" style="width: 100px;">
+                      {% endif %}
+                    </div>
+                    <span class="badge"> > </span>
+                    
+                    <address>
+                      <strong>{% if not object.especie or object.especie == ' ' %}Espécie não informada{% else %}{{ object.especie }}{%endif%}</strong><br>
+                      {% if not object.route or object.route == ' '%}{% else %}{{object.route}}{% endif %}, {{object.numero}}{% if not object.neighborhood or object.neighborhood == ' ' %}{% else %}, {{object.neighborhood}}{% endif %}{% if not object.postal_code or object.postal_code == ' ' %}{% else %}, {{object.postal_code}} {% endif %} <br>{{object.locality}}, {{object.administrative_area_level_1}}
+                    </address>
+
+
+                  </a>
+                {% endfor %} 
           
-          <br/>
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th>Espécie</th>
-                <th>Endereço</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for arvore in object_list %}
-              <tr>
-                <td>{{arvore.especie}}</td>
+          </ul>
 
-                <td>{{arvore.country}}, {{arvore.administrative_area_level_1}}, {{arvore.locality}}</td>
-                <td>
-                  <a href="{% url 'tree_form' arvore.pk %}" class="btn btn-warning">
-                    <span class="glyphicon glyphicon-pencil"></span> 
-                    Editar
-                  </a>
-                </td>
-                <td>
-                  <a href="{% url 'tree_delete' arvore.pk %}" class="btn btn-danger">
-                    <span class="glyphicon glyphicon-trash"></span> 
-                    Excluir
-                  </a>
-                </td>
-              </tr>
-              {% endfor %} 
-          </tbody>
-          </table>  
-          </div>
-          </div>   
-           
-          </div>
-        </div>
+
 
 {% endblock content %}

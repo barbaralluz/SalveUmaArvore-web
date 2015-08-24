@@ -21,12 +21,14 @@ class Tree(models.Model):
     geometry = models.PointField(verbose_name=u'Localização da Árvore no Mapa')
     objects = models.GeoManager()
 
-    COND_CHOICES = (
+    COND_CHOICES = [
         ('Boa', 'Boa - Sem sinal de praga, danos ou doenças'),
         ('Regular', 'Regular - Pequenos sinais de praga, danos ou doenças'),
         ('Ruim', 'Ruim - Risco de queda, sinal de forte ataque de pragas, doenças e danos'),
         ('Caída', 'Caída - Árvore caída'),
-    )
+    ]
+    
+    COND_CHOICES_AND_EMPTY = [('','----------')] + COND_CHOICES
     
     condicao_arvore = models.CharField(u'Condição', max_length=100, choices=COND_CHOICES)
     
@@ -41,30 +43,36 @@ class Tree(models.Model):
 
     altura = models.CharField(u'Altura', max_length=100, choices=HEIGHT_CHOICES)
 
-    RAIZ_CHOICES = (
+    RAIZ_CHOICES = [
         ('Não apresenta problemas', 'Raízes profundas e sem danos a edificações e pisos próximos'),
         ('Aponta', 'Raízes superficiais, sem rachaduras, elevação ou desníveis'),
         ('Quebra', 'Raízes  expostas, presença de algumas rachaduras'),
         ('Destrói', 'Raízes expostas, destruição da calçada'),
-    )
+    ]
+
+    RAIZ_CHOICES_AND_EMPTY = [('','----------')] + RAIZ_CHOICES
     
     condicao_raiz = models.CharField(u'Raízes', max_length=100, choices=RAIZ_CHOICES)
 
-    LUZ_CHOICES = (
+    LUZ_CHOICES = [
         ('Presente sem conflito', 'Presente sem conflito'),
         ('Presente com conflito', 'Presente com conflito'),
         ('Ausente', 'Ausente')
-    )
+    ]
     
+    LUZ_CHOICES_AND_EMPTY = [('','----------')] + LUZ_CHOICES
+
     condicao_luz = models.CharField(u'Rede elétrica', max_length=100, choices=LUZ_CHOICES)
 
-    MAN_CHOICES = (
-        ('Ausente', 'Ausente'),
-        ('Afastamento de construção', 'Afastamento de construção'),
-        ('Liberação da rede elétrica', 'Liberação da rede elétrica'),
+    MAN_CHOICES = [
+        ('Sem necessidade', 'Sem necessidade'),
+        ('Afastar de construções', 'Afastar de construções'),
+        ('Liberar Rede Elétrica', 'Liberar Rede Elétrica'),
         ('Levantamento de copa', 'Remover ramos que atrapalham trânsito de pedestres ou veículos')
-    )
+    ]
     
+    MAN_CHOICES_AND_EMPTY = [('','----------')] + MAN_CHOICES
+
     condicao_man = models.CharField(u'Manutenção', max_length=100, choices=MAN_CHOICES)
 
     descricao = models.TextField(u'Descrição', null=True, blank=True)

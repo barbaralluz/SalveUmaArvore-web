@@ -1,59 +1,57 @@
 {% extends "base.html" %}
 
 {% load staticfiles %}
+{% load bootstrap %}
+
+{% block title %} | Acessar{% endblock %}
 
 {% block content %}
-  
+  <link href="http://fonts.googleapis.com/css?family=Lato:100italic,100,300italic,300,400italic,400,700italic,700,900italic,900" rel="stylesheet" type="text/css">
+
   <link href="{% static 'css/login.css' %}" rel="stylesheet" />
 
-  <div class="container">
-  
-    <div class="col-xs-12 .col-sm-6 .col-lg-8">
-      
-      <div class="panel panel-default">
-       
-        <div class="panel-body">  
-          <div class="col-md-6">
-            <h2 align="center">
-              <img class="img" src="/static/img/lock-login.png" />
-              <br/>
-              <small> Acesse com suas credenciais <br> ou clique em <a href="{% url 'signin' %}"> Registrar </a> para criar nova conta</small>
-            </h2>
-          
-          </div><!-- div col-md-6: Divide panel em dois -->
-          
-          <div class="col-md-6">
-            <form class="form-login" method="POST">
-              {% csrf_token %}
-              
-              {{ form.as_p }}
-            
-              <button class="btn btn-primary btn-block" type="submit">Acessar</button>
-            
-            </form>
-          
-            <hr/>
-            
-            <h2 align="center"><small> Ou </small></h2>
-            <br/>
-            <p align="center">
+  <section class="container login-form">
+    <section>
 
-              <a class="btn btn-social btn-google" href="{% url 'socialauth_begin' 'google-oauth2' %}">
+      <form method="POST" action="" role="login">
+         {% csrf_token %}
+        <img src="/static/img/logo.png" alt="" style="width:60%;" class="img-responsive" />
+        {% for key, value in form.errors.items %}
+        {{ value }}
+        {% endfor %}
+        <div class="form-group">
+          {{ form.username.errors }}
+          {{ form.username }}
+        </div>
+        
+        <div class="form-group">
+          {{ form.password.errors }}
+          {{ form.password }}
+        </div>
+        
+        <button type="submit" name="go" class="btn btn-primary btn-block">Acessar</button>
+        <a class="btn btn-social btn-google" id="google" href="{% url 'socialauth_begin' 'google-oauth2' %}">
                 <i class="fa fa-google-plus-square"></i> 
                 Acesse com o Google
-              </a>
+        </a>
               
-              <br/><br/>
-              <a class="btn btn-social btn-facebook" href="{% url 'socialauth_begin' 'facebook' %}">
-                <i class="fa fa-facebook-square"></i> 
-                Acesse com o Facebook
-              </a>
-            </p>
+        &nbsp;&nbsp;&nbsp;   
+        <a class="btn btn-social btn-facebook" id="facebook" href="{% url 'socialauth_begin' 'facebook' %}">
+          <i class="fa fa-facebook-square"></i> 
+            Acesse com o Facebook
+        </a><br><br>
+        Acesse com suas credenciais <br> ou clique em <a href="{% url 'signin' %}"> Registrar </a> para criar nova conta
+      </form>
 
-          </div> <!-- div col-md-6: Divide panel em dois -->
-        </div>
-      </div> <!-- panel -->
-    </div> 
-  </div> <!-- /container -->
+    </section>
+  </section>
 
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  
+<script type="text/javascript" >
+    $(document).ready(function(){
+        $("#id_username").attr('placeholder', '  {{form.username.label}} ');
+        $("#id_password").attr('placeholder', '  {{form.password.label}} ');
+    });
+</script>
 {% endblock content %}

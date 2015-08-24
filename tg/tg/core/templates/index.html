@@ -1,1 +1,236 @@
 {% extends "base.html" %}
+
+{% load staticfiles %}
+{% load bootstrap %}
+{% load user_agents %}
+
+{% block title %} {% endblock %}
+
+{% block content %}
+
+  <link href="{% static 'css/map.css' %}" rel="stylesheet" />
+
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  
+  <div id="mapa_tree_list"> <!-- Mapa -->
+    
+  </div>
+  <div id="scale-line" class="scale-line"></div>
+
+  <div>
+    {% if not request.user_agent.is_mobile %}
+    <a id="localize" href="" onclick="getLocation()"><i class="fa fa-crosshairs fa-4x"></i></a>
+
+    <!-- Trigger the modal FILTRAR with a button -->
+     <button type="button" id="filtro" class="btn btn-primary" data-toggle="modal" data-target="#fModal"><span class="glyphicon glyphicon-map-marker"></span> FILTRAR </button>
+    {% endif %}
+
+     <!-- Trigger the modal LEGENDA with a button -->
+    <button type="button" id="legenda" class="btn btn-primary" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-map-marker"></span> LEGENDA</button>
+
+  </div>
+
+    <!-- Modal do Filtro -->
+  <div class="modal fade" id="fModal" align="center" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">FILTRAR<br><small>Selecione as opções para filtrar visualização</small></h4>
+        </div>
+        <div class="modal-body" align="left">
+          <form method="POST">
+            {% csrf_token %}
+          
+            {{ search_form.condicao | bootstrap }}
+            {{ search_form.man | bootstrap }}
+            {{ search_form.luz | bootstrap }}
+            {{ search_form.raiz | bootstrap }}
+          <div align="center">
+          <button type="submit"  class="btn btn-default">
+            <span class="glyphicon glyphicon-search"></span> Pesquisar </button>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+          <button class="btn btn-default" type="button" onclick="limpa_pesquisa();" >
+                            <span class="glyphicon glyphicon-remove"></span>
+                            &nbsp; Limpar  &nbsp;
+                          </button>
+          </div>
+          </form>
+        </div>
+        
+      </div>
+      
+    </div>
+  </div>
+
+  <!-- Modal da Legenda -->
+  <div class="modal fade" id="myModal"  align="center" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content responsive">
+        
+        <div class="modal-body" align="left">
+          <h4 class="modal-title">LEGENDA <br><small>As árvores são mostradas no mapa de acordo com sua condição</small></h4><br>
+          <img src="/static/img/icons/tree_good.png"> Boa - Sem sinal de praga, danos ou doenças 
+          <br>
+          <img src="/static/img/icons/tree_regular.png"> Regular - Pequenos sinais de praga, danos ou doenças 
+          <br>
+          <img src="/static/img/icons/tree_bad.png"> Ruim - Risco de queda, sinal de forte ataque de pragas, doenças e danos 
+         <br>
+         <img src="/static/img/icons/down.png"> Caída - Árvore caída 
+        </div>
+        <div align="center">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+        </div>
+        <br>
+      </div>
+      
+    </div>
+
+<!-- JavaScript Mapa -->
+  <script src="{% static 'openlayers/OpenLayers.js' %}"></script> 
+  <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>  
+
+
+  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>  
+
+  <script type="text/javascript">
+    
+  //função para limpar selects do filtro
+  function limpa_pesquisa(){
+    $("#id_condicao").val("");
+    $("#id_man").val("");
+    $("#id_luz").val("");
+    $("#id_raiz").val("");
+  };
+  //fim da função
+
+    $( document ).ready(function() {
+      getLocation();
+    
+    });   
+
+      //função para encontrar localização do usuário (shared location - Google)
+  function getLocation() {
+    var geolocation_support = document.getElementById("d");
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
+    } else { 
+      geolocation_support.innerHTML = "Geolocation is not supported by this browser.";
+    }
+  };
+
+  //função para marcar (add ícone) posição no mapa e chama função para buscar endereço com as coordenadas (getLocation - Google)
+  function showPosition(position) {
+    var lonlat = new OpenLayers.LonLat(position.coords.longitude, position.coords.latitude)
+    lonlat.transform(
+      new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+      map.getProjectionObject() // to Spherical Mercator Projection
+    );
+
+    map.setCenter (lonlat, 15);
+  };
+  //fim das funções
+
+    map = new OpenLayers.Map("mapa_tree_list");
+    map.addLayer(new OpenLayers.Layer.OSM());
+    
+    var scaleline = new OpenLayers.Control.ScaleLine();
+    map.addControl(scaleline);
+
+
+    epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
+    projectTo = map.getProjectionObject(); //The map projection (Spherical Mercator)
+   
+    var lonLat = new OpenLayers.LonLat( -47.5356, -18.2246).transform(epsg4326, projectTo);
+          
+    var zoom=5;
+    
+    var markers = new Array();
+    map.setCenter (lonLat, zoom);
+
+    var vectorLayer = new OpenLayers.Layer.Vector("VectorPoints");
+
+    {% for arvore in arvores %}
+
+      var lat1 = String([{{ arvore.geometry.x }}]);
+      var lat = lat1.replace(",", ".")
+
+      var lon1 = String([{{ arvore.geometry.y }}]);
+      var lon = lon1.replace(",", ".")
+      var endereco = "{{arvore.administrative_area_level_1}}, {{arvore.locality}}{% if not arvore.neighborhood or arvore.neighborhood == ' ' %}{% else %},<br/>{{arvore.neighborhood}}{% endif %}{% if not arvore.route or arvore.route == ' '%}{% else %}, {{arvore.route}}{% endif %}, {{arvore.numero}}{% if not arvore.postal_code or arvore.postal_code == ' ' %}{% else %}, {{arvore.postal_code}} {% endif %}";
+      var especie = "{% if not arvore.especie or arvore.especie == ' ' %}Espécie não informada{% else %}{{arvore.especie}}{% endif %}";
+      markers.push([especie, lon, lat, endereco]);
+    
+    {% endfor %}
+    
+    var i = 0;
+    {% for arvore in arvores %}
+
+      var lon = markers[i][1];
+      var lat = markers[i][2];      
+
+      var feature = new OpenLayers.Feature.Vector(
+        new OpenLayers.Geometry.Point( lon, lat ).transform(epsg4326, projectTo),
+          {description: "<div style='text-align:right'>" +  
+            "<div style='text-align:left'><b>Espécie: </b>" + markers[i][0] + "<br/><br/><b>Endereço: </b>" + markers[i][3] + 
+            "</div>" + 
+          "<div align='right'><br><a id='detail' class='btn btn-success' href='{% url 'tree_detail' arvore.pk %}'><span class='glyphicon glyphicon-plus'></span> Detalhes</a></div>"},
+
+            {% if arvore.condicao_arvore == 'Boa' %}
+
+            {externalGraphic: '/static/img/icons/tree_good.png', graphicHeight: 36, graphicWidth: 32, graphicXOffset:-22, graphicYOffset:-36}
+
+            {% elif arvore.condicao_arvore == 'Regular' %}
+             {externalGraphic: '/static/img/icons/tree_regular.png', graphicHeight: 36, graphicWidth: 32,  graphicXOffset:-12, graphicYOffset:-26}
+             {% elif arvore.condicao_arvore == 'Ruim' %}
+             {externalGraphic: '/static/img/icons/tree_bad.png', graphicHeight: 36, graphicWidth: 32, graphicXOffset:-22, graphicYOffset:-36}
+             {% elif arvore.condicao_arvore == 'Caída' %}
+             {externalGraphic: '/static/img/icons/down.png', graphicHeight: 36, graphicWidth: 32, graphicXOffset:-12, graphicYOffset:-26}
+           {% endif %}
+      );             
+
+      vectorLayer.addFeatures(feature);
+      i+= 1;
+    {% endfor %} // fim do for   
+
+    map.addLayer(vectorLayer);
+
+    //Add popup
+    var controls = {
+      selector: new OpenLayers.Control.SelectFeature(vectorLayer, 
+        { onSelect: createPopup, onUnselect: destroyPopup })
+    };
+   
+    function createPopup(feature) {
+      feature.popup = new OpenLayers.Popup.FramedCloud("popup",
+        feature.geometry.getBounds().getCenterLonLat(),
+        null,
+        '<div class="markerContent">'+feature.attributes.description+'</div>',
+        null,
+        true,
+        function() { controls['selector'].unselectAll(); 
+    });
+  
+    //feature.popup.closeOnMove = true;
+    map.addPopup(feature.popup);
+    }
+
+    function destroyPopup(feature) {
+      feature.popup.destroy();
+      feature.popup = null;
+    }
+    
+    map.addControl(controls['selector']);
+    controls['selector'].activate();
+
+
+
+
+</script>          
+  </div>
+{% endblock content %}

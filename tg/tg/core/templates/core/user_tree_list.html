@@ -19,7 +19,7 @@
           <hr>
             
           <div class="row">    
-        <div class="col-md-9">         
+        <div class="col-md-12">         
           
           <br/>
           <table class="table table-hover">
@@ -34,9 +34,9 @@
             <tbody>
               {% for arvore in object_list %}
               <tr>
-                <td>{% if not arvore.especie or arvore.especie == ' ' %}Espécie não informada{% else %}{{ arvore.especie }}{%endif%}</td>
+                <td data-title="Espécie">{% if not arvore.especie or arvore.especie == ' ' %}Espécie não informada{% else %}{{ arvore.especie }}{%endif%}</td>
 
-                <td>{{arvore.administrative_area_level_1}}, {{arvore.locality}}{% if not arvore.neighborhood or arvore.neighborhood == ' ' %}{% else %}, {{arvore.neighborhood}}{% endif %}{% if not arvore.route or arvore.route == ' '%}{% else %}, {{arvore.route}}{% endif %}, {{arvore.numero}}{% if not arvore.postal_code or arvore.postal_code == ' ' %}{% else %}, {{arvore.postal_code}}{%endif%}
+                <td data-title="Endereço">{{arvore.administrative_area_level_1}}, {{arvore.locality}}{% if not arvore.neighborhood or arvore.neighborhood == ' ' %}{% else %}, {{arvore.neighborhood}}{% endif %}{% if not arvore.route or arvore.route == ' '%}{% else %}, {{arvore.route}}{% endif %}, {{arvore.numero}}{% if not arvore.postal_code or arvore.postal_code == ' ' %}{% else %}, {{arvore.postal_code}}{%endif%}
 
                 </td>
                 <td>

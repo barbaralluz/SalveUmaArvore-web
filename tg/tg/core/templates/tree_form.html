@@ -43,7 +43,7 @@
           
               <div class="tabbable-panel">
                 <div class="tabbable-line">
-                  
+                
                   <ul class="nav nav-tabs">
                     <li class="active">
                       <a href="#tab_default_1" data-toggle="tab"> Busque endereço com Google </a>
@@ -53,10 +53,10 @@
                     </li>
                   </ul>
             
-                  <div class="tab-content">
+                <div class="tab-content">
                   <!-- TAB GOOGLE -->
                   <p>
-                    <div class="tab-pane active" id="tab_default_1">
+                    <div class="tab-pane fade in active" id="tab_default_1">
                       <div class="input-group custom-search-form">
                         <input type="text" id="address_google" class="form-control" placeholder="Informe Logradouro, Bairro, Cidade, Estado, País" onkeypress="process_google(event, this)" />
                         <span class="input-group-btn">
@@ -73,52 +73,53 @@
                       <br/>
                       
                       <div id="carregando_google" align="center"><img src="/static/img/green-loader.gif"  height="42" width="42"/></div>
-                      <div id="results_google"/></div> 
-                    </p>
-
-                    </div> <!-- /tab-content -->
+                      <div id="results_google"></div> 
+                    </div> <!-- /TAB GOOGLE -->
+                  </p>
                     
-                    <!-- TAB NOMINATIM -->
-                    <div class="tab-pane" id="tab_default_2">
+                  <!-- TAB NOMINATIM -->
+                  <div class="tab-pane" id="tab_default_2">
                 
-                      <p>
-                        <div class="input-group custom-search-form">
-                          <input type="text" id="address_nominatim" class="form-control" placeholder="Informe Logradouro, Bairro, Cidade, Estado, País" onkeypress="process_nominatim(event, this)"/>
+                    <p>
+                      <div class="input-group custom-search-form">
+                        <input type="text" id="address_nominatim" class="form-control" placeholder="Informe Logradouro, Bairro, Cidade, Estado, País" onkeypress="process_nominatim(event, this)"/>
                           
-                          <span class="input-group-btn">
-                            <button class="btn btn-default" type="button" onclick="limpa_textfield_id('address_nominatim');">
+                        <span class="input-group-btn">
+                          <button class="btn btn-default" type="button" onclick="limpa_textfield_id('address_nominatim');">
                               <span class="glyphicon glyphicon-remove"></span>
-                            </button> 
+                          </button> 
 
-                            <button class="btn btn-default" type="button" onclick="searchAddress_Nominatim();">
-                              <span class="glyphicon glyphicon-search"></span>
-                            </button>
-                          </span>
-                        </div><!-- /input-group -->
-                        <br/>
-                        <div id="carregando_nominatim" align="center"><img src="/static/img/green-loader.gif"  height="42" width="42"/></div>
-                        <div id="results_nominatim"/></div> 
+                          <button class="btn btn-default" type="button" onclick="searchAddress_Nominatim();">
+                            <span class="glyphicon glyphicon-search"></span>
+                          </button>
+                        </span>
+                      </div><!-- /input-group -->
+                      <br/>
+                      <div id="carregando_nominatim" align="center"><img src="/static/img/green-loader.gif"  height="42" width="42"/></div>
+                      <div id="results_nominatim"></div> 
                       </p>
-                    </div>
-                  </div>
-                </div>
+                    </div> <!-- /tab-nominatim -->
+                  </div> <!-- /tab-content -->
+                </div> <!-- /tabbable line -->
+              </div> <!-- /tabbable panel -->
                
-              </div> <!-- /modal-body -->
+            </div> <!-- /modal-body -->
 
-            </div> <!-- Fim do Modal Content -->
-        
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
             </div>
-          </div>
-        </div>
-      </div>
+          </div> <!-- Fim do Modal Content -->
+        </div><!-- /modal-dialog -->
+      </div> <!-- /modal- fade -->
+
       <br/><br/>
       
       <form method="POST"  enctype="multipart/form-data" >
+
         {% csrf_token %}
+
           {{ form.geometry }}
-        </div>   
+        </div>  <!-- /col-md-5 --> 
 
         <div class="col-md-7">
         
@@ -130,108 +131,95 @@
           
           <div class="tab-content">
             <div class="tab-pane active" id="step1">
-
-                   <br/>  <br/>
-                
-                    {{ form.country | bootstrap_horizontal}}
-            <br/>  <br/>
-                   
-                    {{ form.administrative_area_level_1 | bootstrap_horizontal}}
-                  <br/>  <br/>
-                   
-                    {{ form.locality | bootstrap_horizontal}}
-                  
-                   <br/>  <br/>
-                    {{ form.neighborhood | bootstrap_horizontal }}
-                  <br/>  <br/>
-                    {{ form.route | bootstrap_horizontal }}
-                 <br/>  <br/>
-                    {{ form.numero | bootstrap_horizontal}}
-                  <br/>  <br/>
-                    {{ form.postal_code| bootstrap_horizontal}}
-                  <br/>  <br/>
-                    {{ form.point_of_interest | bootstrap_horizontal}}
-                 
-                  <br/>  <br/>
-                  <p align="center">
-                  <a class="btn btn-default cont" href="#">Continuar</a>
-                 </p>
-              </div>
-            <div class="tab-pane" id="step2">
-                    <br/>  <br/>
-                    {{ form.condicao_arvore | bootstrap_horizontal }}
-                    <br/> <br/>
-                    {{ form.especie | bootstrap_horizontal }}
-                 <br/>  <br/> 
-                    {{ form.altura | bootstrap_horizontal }}
-                  <br/>  <br/> 
-                    {{ form.condicao_raiz | bootstrap_horizontal }}
-                    <br/>  <br/> 
-                    {{ form.condicao_luz | bootstrap_horizontal }}
-                    <br/>  <br/> 
-                    {{ form.condicao_man | bootstrap_horizontal }}
-                  <br/>  <br/> 
-                    {{ form.descricao | bootstrap_horizontal }}
-                 <br/>  <br/> <br/> <br/>
-
-                    
-
-                  <p align="center">
-                  <a class="btn btn-default cont" href="#">Continuar</a>
-                  &nbsp;
-                  &nbsp;
-                  &nbsp;
-                  <a class="btn btn-default ant" href="#">Anterior</a>
-                 </p>
-
+              <br/><br/>  
+              {{ form.country | bootstrap_horizontal}}
+              <br/><br/>
+              {{ form.administrative_area_level_1 | bootstrap_horizontal}}
+              <br/><br/>     
+              {{ form.locality | bootstrap_horizontal}}    
+              <br/><br/>
+              {{ form.neighborhood | bootstrap_horizontal }}
+              <br/><br/>
+              {{ form.route | bootstrap_horizontal }}
+              <br/><br/>
+              {{ form.numero | bootstrap_horizontal}}
+              <br/><br/>
+              {{ form.postal_code| bootstrap_horizontal}}
+              <br/><br/>
+              {{ form.point_of_interest | bootstrap_horizontal}}   
+              <br/><br/>
+              
+              <p align="right">
+                <br/>
+                <a id="continuar" class="btn btn-default cont" href="#">Continuar</a>
+              </p>
             </div>
+            
+            <div class="tab-pane" id="step2">
+              <br/><br/>
+              {{ form.condicao_arvore | bootstrap_horizontal }}
+              <br/><br/>
+              {{ form.especie | bootstrap_horizontal }}
+              <br/><br/> 
+              {{ form.altura | bootstrap_horizontal }}
+              <br/><br/> 
+              {{ form.condicao_raiz | bootstrap_horizontal }}
+              <br/><br/> 
+              {{ form.condicao_luz | bootstrap_horizontal }}
+              <br/><br/> 
+              {{ form.condicao_man | bootstrap_horizontal }}
+              <br/><br/> 
+              {{ form.descricao | bootstrap_horizontal }}
+              <br/><br/><br/><br/> 
+              
+              <p id="button">
+                <a id="anterior" class="btn btn-default ant" href="#">Anterior</a>
+                <a id="continuar"class="btn btn-default cont" href="#" >Continuar</a>
+              </p>
+            </div>
+            
             <div class="tab-pane" id="step3">
               {{ form.foto1 | bootstrap_horizontal }}
-                    <br/>  <br/>
-                    {{ form.foto2 | bootstrap_horizontal }}
-                    <br/>  <br/>
-                    {{ form.foto3 | bootstrap_horizontal }}
-                 <br/>  <br/>
+              <br/>
+              <div id="dvPreview1" align="center"></div> <!-- Para o preview da foto1 -->
+              <br/> 
+              {{ form.foto2 | bootstrap_horizontal }}
+              <br/>  
+              <div id="dvPreview2" align="center"></div> <!-- Para o preview da foto2 -->
+              {{ form.foto3 | bootstrap_horizontal }}
+              <br/>  
+              <div id="dvPreview3" align="center"></div> <!-- Para o preview da foto3 -->
               <br/><br/>
-              <a class="btn btn-default ant" href="#">Anterior</a>
-              <br/><br/><br/><br/>
-                      <p align="center">
-
-          {% if not form.instance.id %}
-
-            <button type="submit" class="btn btn-success">
-              <span class="glyphicon glyphicon-plus-sign"></span> 
-                Cadastrar
-          
-          {% else %}
-
-            <br>       
-            
-            <button type="submit" class="btn btn-warning">
-                <span class="glyphicon glyphicon-pencil"></span> 
-                Alterar
-          {% endif %}
-            </button>
-            
-            &nbsp;
-            &nbsp;
-            &nbsp;
-
-            <button type="submit" onclick="{% url 'user_tree_list' user.username %}" class="btn btn-danger" id="cancelar">
-              <span class="glyphicon glyphicon-remove"></span> 
-                Cancelar
-            </button>
-        </p> 
+              <a id="ultima" class="btn btn-default ant" href="#">Anterior</a>
+              <br/><br/><br/><br/><br/><br/><br/><br/>
               
+              <p align="center">
+
+                {% if not form.instance.id %}
+
+                <button type="submit" class="btn btn-success">
+                  <span class="glyphicon glyphicon-plus-sign"></span> 
+                    Cadastrar
+          
+                {% else %}
+
+                <button type="submit" class="btn btn-warning">
+                  <span class="glyphicon glyphicon-pencil"></span> 
+                    Alterar
+                
+                {% endif %}
+                </button>
+                &nbsp;&nbsp;&nbsp;
+                <a href="{% url 'user_tree_list' user.username %}" class="btn btn-danger" id="cancelar">
+                  <span class="glyphicon glyphicon-remove"></span> 
+                    Cancelar
+                </a>
+              </p> 
             </div>
-          </div>
-
-        </div>  
-
+          </div> <!-- /tab content -->
+        </div> <!-- /col-md-7 -->
       </form>
-
-    </div>
-  </div>
+ 
   <style type="text/css">
 
     #id_geometry_map{
@@ -248,8 +236,6 @@
       align: center; 
     }
 
-
-
   </style>
   
   <script src="{% static 'openlayers/OpenLayers.js' %}"></script> 
@@ -258,8 +244,6 @@
   <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>  
   
   <script type="text/javascript">     
-
-
 
   $('.cont').click(function(){
 
@@ -279,6 +263,22 @@
 
   //mantem opção do menu do usuário selecionado 
     $( document ).ready(function() {
+
+       $("#id_locality :selected").each(function(){
+              $(this).parent().data("default", this);
+            });
+
+    $("#id_locality").change(function(e) {
+              $($(this).data("default")).prop("selected", true);
+            });
+
+     $("#id_administrative_area_level_1 :selected").each(function(){
+              $(this).parent().data("default", this);
+            });
+
+    $("#id_administrative_area_level_1").change(function(e) {
+              $($(this).data("default")).prop("selected", true);
+            });
     
       $("#tree").collapse('show');
 
@@ -426,12 +426,28 @@
               $('#id_administrative_area_level_1 option')
               .filter(function() { return $.trim( $(this).text() ) == long_name; })
               .attr('selected',true);
+
+              $("#id_administrative_area_level_1 :selected").each(function(){
+              $(this).parent().data("default", this);
+            });
+
+    $("#id_administrative_area_level_1").change(function(e) {
+              $($(this).data("default")).prop("selected", true);
+            });
             }
             
             if (type == "locality"){
               $('#id_locality option')
               .filter(function() { return $.trim( $(this).text() ) == long_name; })
               .attr('selected',true);
+
+               $("#id_locality :selected").each(function(){
+              $(this).parent().data("default", this);
+            });
+
+    $("#id_locality").change(function(e) {
+              $($(this).data("default")).prop("selected", true);
+            });
             }
 
             if (type == "neighborhood"){
@@ -616,6 +632,7 @@
     $('#id_administrative_area_level_1 option')
               .filter(function() { return $.trim( $(this).text() ) == json.address.state; })
               .attr('selected',true);
+    
     $("#id_administrative_area_level_1 :selected").each(function(){
               $(this).parent().data("default", this);
             });
@@ -634,24 +651,6 @@
     $("#id_locality").change(function(e) {
               $($(this).data("default")).prop("selected", true);
             });
-
-    if (json.address.suburb == "undefined"){  
-      document.getElementById('id_neighborhood').value = "Indefinido";
-    } else {
-      document.getElementById('id_neighborhood').value = json.address.suburb;
-    }
-    
-    if (json.address.road == "undefined") {
-      document.getElementById('id_route').value = "Indefinido";
-    } else {
-      document.getElementById('id_route').value = json.address.road;
-    }
-    
-    if (json.address.postcode == "undefined"){
-      document.getElementById('id_postal_code').value = "Indefinido";
-    } else {
-      document.getElementById('id_postal_code').value = json.address.postcode;
-    }
     
   };
 
@@ -698,6 +697,8 @@
     var markers = new OpenLayers.Layer.Markers( "Markers" );
     markers.id = "Markers";
     map.addLayer(markers);
+    var scaleline = new OpenLayers.Control.ScaleLine();
+    map.addControl(scaleline);
 
     var size = new OpenLayers.Size(40,46);
     var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
@@ -727,9 +728,9 @@
  
   //função para Preview de Foto
     $(function () {
-      $("#id_foto").change(function () {
+      $("#id_foto1").change(function () {
         if (typeof (FileReader) != "undefined") {
-          var dvPreview = $("#dvPreview");
+          var dvPreview = $("#dvPreview1");
           dvPreview.html("");
           var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
           $($(this)[0].files).each(function () {
@@ -738,7 +739,67 @@
               var reader = new FileReader();
               reader.onload = function (e) {
                 var img = $("<img />");
-                img.attr("style", "height:25%;width: 25%");
+                img.attr("style", "height:10%;width:10%");
+                img.attr("class", "img-thumbnail");
+                img.attr("src", e.target.result);
+                dvPreview.append(img);
+              }
+              reader.readAsDataURL(file[0]);
+            } else {
+              alert(file[0].name + " is not a valid image file.");
+              dvPreview.html("");
+              return false;
+            }
+          });
+        } else {
+          alert("This browser does not support HTML5 FileReader.");
+        }
+      });
+    });
+
+  $(function () {
+      $("#id_foto2").change(function () {
+        if (typeof (FileReader) != "undefined") {
+          var dvPreview = $("#dvPreview2");
+          dvPreview.html("");
+          var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
+          $($(this)[0].files).each(function () {
+            var file = $(this);
+            if (regex.test(file[0].name.toLowerCase())) {
+              var reader = new FileReader();
+              reader.onload = function (e) {
+                var img = $("<img />");
+                img.attr("style", "height:10%;width:10%");
+                img.attr("class", "img-thumbnail");
+                img.attr("src", e.target.result);
+                dvPreview.append(img);
+              }
+              reader.readAsDataURL(file[0]);
+            } else {
+              alert(file[0].name + " is not a valid image file.");
+              dvPreview.html("");
+              return false;
+            }
+          });
+        } else {
+          alert("This browser does not support HTML5 FileReader.");
+        }
+      });
+    });
+  
+  $(function () {
+      $("#id_foto3").change(function () {
+        if (typeof (FileReader) != "undefined") {
+          var dvPreview = $("#dvPreview3");
+          dvPreview.html("");
+          var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
+          $($(this)[0].files).each(function () {
+            var file = $(this);
+            if (regex.test(file[0].name.toLowerCase())) {
+              var reader = new FileReader();
+              reader.onload = function (e) {
+                var img = $("<img />");
+                img.attr("style", "height:10%;width:10%");
                 img.attr("class", "img-thumbnail");
                 img.attr("src", e.target.result);
                 dvPreview.append(img);
@@ -757,6 +818,8 @@
     });
 
   </script>
+
+  </div>
 
 {% endblock content %}
 

@@ -10,7 +10,7 @@
 <!-- HEAD SECTION -->
 <head>
     <meta charset="utf-8">
-   
+
     <meta name="viewport" content="user-scalable=no, width=device-width" />
     <meta name="description" content="">
     <meta name="author" content="">
@@ -65,18 +65,20 @@
                 <ul class="nav navbar-nav navbar-right">
                     
                     {% if user.is_authenticated %}
+                    {% if not request.user_agent.is_mobile %}
                         <li>
                           
                             <a href="{% url 'tree_list' %}">
-                                <i class="icon-bar-chart"></i>
-                                ÁRVORES
+                                <i class="glyphicon glyphicon-search"></i>
+                                 BUSCA
                             </a>
                         </li>
+                    {% endif %}
                         <li>
                           
                             <a href="{% url 'statistics' %}">
-                                <i class="icon-bar-chart"></i>
-                                ESTATÍSTICAS
+                                <i class="glyphicon glyphicon-stats"></i>
+                                 ESTATÍSTICAS
                             </a>
                         </li>
                         
@@ -84,17 +86,11 @@
                         <li>
                             <a href="{% url 'tree_form' %}">
                                 <span class="glyphicon glyphicon-plus-sign"></span>
-                                CADASTRAR ÁRVORE
+                                 CADASTRAR ÁRVORE
                             </a>
                         </li>
 
-                        <li>
-                            <a href="{% url 'map' %}">
-                                <span class="fa fa-globe"></span>
-                                MAPA
-                            </a>
-                        </li>
-
+                        {% if not request.user_agent.is_mobile %}
                         <li>
                             <a href="#" class="dropdown-toggle-inverse" data-toggle="dropdown" role="button" aria-expanded="false" font style="text-transform: uppercase;"> 
                                 {{user.username}} 
@@ -102,7 +98,7 @@
                             </a>
                                     
                             <ul class="dropdown-menu inverse " role="menu">
-                                
+                            {% endif %}
                                 <li>
                                     <a href="{% url 'user_tree_list' user.username %}">
                                         <i class="glyphicon glyphicon-user"></i> 

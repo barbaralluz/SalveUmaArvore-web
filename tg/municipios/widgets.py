@@ -54,7 +54,7 @@ class SelectMunicipioWidget(Widget):
         output.append(template_uf.render(context_uf))
 
         munic_attrs = self.attrs.copy()
-        munic_attrs['style'] = "width:250px;"
+        munic_attrs['style'] = "width:100%;"
         select_html = municipio_select.render(name, value, munic_attrs)
         #output.append(u'<div class="field"><label%s>Município</label><br />%s</div>' % (required and ' class="required"' or '', select_html))
         template_mun = get_template('municipios/municipio_field.html')

@@ -12,11 +12,6 @@ body {
     display: none;
 }
 
-.textarea {
-  width: 100%;
-}
-
-
 p >  label {
   text-align: right; 
   width: 150px;

@@ -7,36 +7,142 @@
 
 {% block content %}
   
-  <link href="{% static 'css/deletess_tree.css' %}" rel="stylesheet" />
+  <link href="{% static 'css/delete_tree.css' %}" rel="stylesheet" />
   
       
         <div class="profile-content" style="font-family:sans-serif">
           <br/>
-          <br/>
+          
           <div class="col-md-6">
-            <p align="center"><h4>DADOS DA ÁRVORE {{ object.id }} </h4></p>
-            <label style="font-weight: normal;">Espécie: {% if not object.especie or object.especie == ' ' %}Espécie não informada{% else %}{{ object.especie }}{%endif%}</label>
+            <h4>DADOS DA ÁRVORE <b>{{ object.id }}</b> </h4><br>
+            <label style="font-weight: normal;"><b>Espécie: </b>{% if not object.especie or object.especie == ' ' %}Espécie não informada{% else %}{{ object.especie }}{%endif%}</label>
             <br/> <br/>
-            <label style="font-weight: normal;">Endereço </label>
-            <label style="font-weight: normal;">{{object.administrative_area_level_1}}, {{object.locality}}{% if not object.neighborhood or object.neighborhood == ' ' %}{% else %}, {{object.neighborhood}}{% endif %}{% if not object.route or object.route == ' '%}{% else %}, {{object.route}}{% endif %}, {{object.numero}}{% if not object.postal_code or object.postal_code == ' ' %}{% else %}, {{object.postal_code}} {% endif %} </label>
-            <label style="font-weight: normal;">Ponto de Referência: {% if not object.point_of_interest or object.point_of_interest == ' ' %} Sem ponto de referência {% else %} {{ object.point_of_interest }} {% endif %} </label>
+            <label style="font-weight: normal;"><b>Endereço: </b>
+            {{object.administrative_area_level_1}}, {{object.locality}}{% if not object.neighborhood or object.neighborhood == ' ' %}{% else %}, {{object.neighborhood}}{% endif %}{% if not object.route or object.route == ' '%}{% else %}, {{object.route}}{% endif %}, {{object.numero}}{% if not object.postal_code or object.postal_code == ' ' %}{% else %}, {{object.postal_code}} {% endif %} </label>
+            <label style="font-weight: normal;"><b>Ponto de Referência: </b>{% if not object.point_of_interest or object.point_of_interest == ' ' %} Sem ponto de referência {% else %} {{ object.point_of_interest }} {% endif %} </label>
             <br/> <br/>
-            <label style="font-weight: normal;">Altura: {{ object.altura }}</label>
+            <label style="font-weight: normal;"><b>Altura: </b>{{ object.altura }}</label>
+            <br/> <br/>
+            <label style="font-weight: normal;"><b>Condição da Árvore: </b>{{ object.condicao_arvore }}</label>
             <br/> 
-            <label style="font-weight: normal;">Condição da Árvore: {{ object.condicao_arvore }}</label>
+            <label style="font-weight: normal;"><b>Condição das Raízes: </b>{{ object.condicao_raiz }}</label>
             <br/> 
-            <label style="font-weight: normal;">Informações: {% if not object.descricao %} Nao foram adicionados detalhes sobre a árvore {% else %} {{ object.descricao }} {% endif %} </label>
+            <label style="font-weight: normal;"><b>Proximidade com Rede Elétrica: </b>{{ object.condicao_luz }}</label>
+            <br/> 
+            <label style="font-weight: normal;"><b>Necessidade de Manutenção: </b>{{ object.condicao_man }}</label>
+
+            <br/><br/>
+            <label style="font-weight: normal;"><b>Informações: </b>{% if not object.descricao %} Nao foram adicionados detalhes sobre a árvore {% else %} {{ object.descricao }} {% endif %} </label>
             <br/> <br/>
              {% if not object.usuario == user %}
-            <label style="font-weight: normal;">Usuário: {{ object.usuario.username }} </label>
+            <label style="font-weight: normal;"><b>Usuário: </b>{{ object.usuario.username }} </label><br/><br/>
               {% endif %}
-          </div>
-        
+
+            <label style="font-weight: normal;"><b>Fotos:</b></label><br/> <br/>
+            
+
+              {% if object.foto1 %}
+              <div class="col-md-3">               
+              <a href="#" data-toggle="modal" data-target=".pop-up-1">
+                <img align="left" src="{{ object.foto1.url }}" width="100" class="img-responsive img-rounded center-block" alt="">
+              </a>
+            </div>
+
+             <!--  Modal content for the mixer image example -->
+  <div class="modal fade pop-up-1" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+
+       
+        <div class="modal-body" style="width=80%;">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <br/>
+        <img src="{{ object.foto1.url }}" width="80%" class="img-responsive img-rounded center-block" alt="">
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal mixer image --> 
+{% endif %}
+        {% if not object.foto1 %}
+            <div class="col-md-3">               
+                
+              <img align="left" src="/static/img/sem_foto.png" width="100" class="img-responsive img-rounded center-block" alt="">
+          
+            </div>
+          {% endif %}
+            
+            {% if object.foto2 %}
+            <div class="col-md-3">
+            <a href="#" data-toggle="modal" data-target=".pop-up-2">
+              <img align="left" src="{{ object.foto2.url }}" width="100" class="img-responsive img-rounded center-block" alt="">
+            </a>
+            </div> 
+
+            <!--  Modal content for the mixer image example -->
+  <div class="modal fade pop-up-2" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel-2" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+
+       
+        <div class="modal-body" style="width=80%;">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <br/>
+        <img src="{{ object.foto2.url }}" width="80%" class="img-responsive img-rounded center-block" alt="">
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal mixer image --> 
+
+  {% else %}
+            <div class="col-md-3">               
+                
+              <img align="left" src="/static/img/sem_foto.png" width="100" class="img-responsive img-rounded center-block" alt="">
+          
+            </div>
+             {% endif %}
+
+            {% if object.foto3 %}
+            <div class="col-md-3">
+            <a href="#" data-toggle="modal" data-target=".pop-up-3">
+              <img align="left" src="{{ object.foto3.url }}" width="100" class="img-responsive img-rounded center-block" alt="">
+            </a>
+            </div> 
+
+            <!--  Modal content for the mixer image example -->
+  <div class="modal fade pop-up-3" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel-3" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+
+       
+        <div class="modal-body" style="width=80%;">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <br/>
+        <img src="{{ object.foto3.url }}" width="80%" class="img-responsive img-rounded center-block" alt="">
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal mixer image --> 
+  {% else %}
+            <div class="col-md-3">               
+                
+              <img align="left" src="/static/img/sem_foto.png" width="100" class="img-responsive img-rounded center-block" alt="">
+          
+            </div>
+
+            {% endif %}
+
+            </div>       
+            
+           
+            
+          <br/>
           <div class="col-md-6" align= "right" >
             <div id="mapdiv" style="width: 100%; height: 300px;"></div> <!-- Mapa -->
-
-            {% if object.usuario.username == user.username %}
+           
+           {% if object.usuario.username == user.username %}
+          
             <br/>
+             
             <p>
                   <a href="{% url 'tree_form' object.pk %}" class="btn btn-warning">
                     <span class="glyphicon glyphicon-pencil"></span> 
@@ -55,22 +161,26 @@
           
 
           </div>
+
           <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}fluent_comments/css/ajaxcomments.css" />
         <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script> 
         <script type="text/javascript" src="{{ STATIC_URL }}fluent_comments/js/ajaxcomments.js"></script>
       <div class="col-md-8">
 
-        <h2 class="page-header">Comentários </h2>
+        <h3 class="page-header">Comentários </h3>
         <section class="comment-list">
 
         {% render_comment_list for object %}
 
-        <h2> Deixe seu Comentário </h2>
-        <hr/>
+        
         {% if user.is_authenticated %}
+        <h3> Deixe seu Comentário </h3>
+        <hr/>
 
           {% render_comment_form for object %}
         {% else %}
+
+        <h3>É necessário <a href="/login/">acessar</a> para comentar.</h3>
           
         {% endif %}
             </p>
@@ -97,6 +207,11 @@
   
     <script type="text/javascript">  
 
+    
+    {% if user.username %}
+    $(".requiredField").text("");
+    document.getElementsByName("preview")[0].style.visibility="hidden";
+    {% endif %}
     var map = new OpenLayers.Map('mapdiv');
     
     map.addLayer(new OpenLayers.Layer.OSM());
@@ -106,9 +221,19 @@
     markers.id = "Markers";
     map.addLayer(markers);
 
-    var size = new OpenLayers.Size(40,42);
+    var size = new OpenLayers.Size(34,38);
     var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-    var icon = new OpenLayers.Icon('/static/img/marker.png', size, offset);   
+
+    {% if object.condicao_arvore == 'Boa' %}
+      var icon = new OpenLayers.Icon('/static/img/icons/tree_good.png', size, offset);     
+    {% elif object.condicao_arvore == 'Regular' %}
+      var icon = new OpenLayers.Icon('/static/img/icons/tree_regular.png', size, offset);          
+    {% elif object.condicao_arvore == 'Ruim' %}
+      var icon = new OpenLayers.Icon('/static/img/icons/tree_bad.png', size, offset);   
+    {% elif object.condicao_arvore == 'Caída' %}
+      var icon = new OpenLayers.Icon('/static/img/icons/down.png', size, offset);          
+    {% endif %}
+     
     var markerslayer = map.getLayer('Markers');
     
      var lat1 = String([{{ object.geometry.x }}]);

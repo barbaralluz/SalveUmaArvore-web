@@ -10,37 +10,147 @@
   
   <link href="{% static 'css/delete_tree.css' %}" rel="stylesheet" />
  
-              <div class="profile-content" style="font-family:sans-serif">
- 
+      
+        <div class="profile-content" style="font-family:sans-serif">
           <br/>
-    
+          
           <div class="col-md-6">
-            <p align="center"><h4>DADOS DA ÁRVORE {{ object.id }} </h4></p>
-            <label style="font-weight: normal;">Espécie: {{ object.especie }}</label>
+            <h4>DADOS DA ÁRVORE <b>{{ object.id }}</b> </h4><br>
+            <label style="font-weight: normal;"><b>Espécie: </b>{% if not object.especie or object.especie == ' ' %}Espécie não informada{% else %}{{ object.especie }}{%endif%}</label>
             <br/> <br/>
-            <label style="font-weight: normal;">Endereço </label>
-            <label style="font-weight: normal;">{{object.administrative_area_level_1}}, {{object.locality}}, {{object.neighborhood}}, {{object.route}}, {{object.numero}}, {{object.postal_code}}</label>
-            <label style="font-weight: normal;">Ponto de Referência: {{ object.point_of_interest }}</label>
+            <label style="font-weight: normal;"><b>Endereço: </b>
+            {{object.administrative_area_level_1}}, {{object.locality}}{% if not object.neighborhood or object.neighborhood == ' ' %}{% else %}, {{object.neighborhood}}{% endif %}{% if not object.route or object.route == ' '%}{% else %}, {{object.route}}{% endif %}, {{object.numero}}{% if not object.postal_code or object.postal_code == ' ' %}{% else %}, {{object.postal_code}} {% endif %} </label>
+            <label style="font-weight: normal;"><b>Ponto de Referência: </b>{% if not object.point_of_interest or object.point_of_interest == ' ' %} Sem ponto de referência {% else %} {{ object.point_of_interest }} {% endif %} </label>
             <br/> <br/>
-            <label style="font-weight: normal;">Altura: {{ object.altura }}</label>
+            <label style="font-weight: normal;"><b>Altura: </b>{{ object.altura }}</label>
+            <br/> <br/>
+            <label style="font-weight: normal;"><b>Condição da Árvore: </b>{{ object.condicao_arvore }}</label>
             <br/> 
-            <label style="font-weight: normal;">Diâmetro: {{ object }}</label>
+            <label style="font-weight: normal;"><b>Condição das Raízes: </b>{{ object.condicao_raiz }}</label>
             <br/> 
-            <label style="font-weight: normal;">Informações: {{ object.descricao }}</label>
+            <label style="font-weight: normal;"><b>Proximidade com Rede Elétrica: </b>{{ object.condicao_luz }}</label>
+            <br/> 
+            <label style="font-weight: normal;"><b>Necessidade de Manutenção: </b>{{ object.condicao_man }}</label>
+
+            <br/><br/>
+            <label style="font-weight: normal;"><b>Informações: </b>{% if not object.descricao %} Nao foram adicionados detalhes sobre a árvore {% else %} {{ object.descricao }} {% endif %} </label>
+            <br/> <br/>
+             {% if not object.usuario == user %}
+            <label style="font-weight: normal;"><b>Usuário: </b>{{ object.usuario.username }} </label><br/><br/>
+              {% endif %}
+
+            <label style="font-weight: normal;"><b>Fotos:</b></label><br/> <br/>
             
-          </div>
-        
+
+              {% if object.foto1 %}
+              <div class="col-md-3">               
+              <a href="#" data-toggle="modal" data-target=".pop-up-1">
+                <img align="left" src="{{ object.foto1.url }}" width="100" class="img-responsive img-rounded center-block" alt="">
+              </a>
+            </div>
+
+             <!--  Modal content for the mixer image example -->
+  <div class="modal fade pop-up-1" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+
+       
+        <div class="modal-body" style="width=80%;">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <br/>
+        <img src="{{ object.foto1.url }}" width="80%" class="img-responsive img-rounded center-block" alt="">
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal mixer image --> 
+{% endif %}
+        {% if not object.foto1 %}
+            <div class="col-md-3">               
+                
+              <img align="left" src="/static/img/sem_foto.png" width="100" class="img-responsive img-rounded center-block" alt="">
+          
+            </div>
+          {% endif %}
+            
+            {% if object.foto2 %}
+            <div class="col-md-3">
+            <a href="#" data-toggle="modal" data-target=".pop-up-2">
+              <img align="left" src="{{ object.foto2.url }}" width="100" class="img-responsive img-rounded center-block" alt="">
+            </a>
+            </div> 
+
+            <!--  Modal content for the mixer image example -->
+  <div class="modal fade pop-up-2" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel-2" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+
+       
+        <div class="modal-body" style="width=80%;">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <br/>
+        <img src="{{ object.foto2.url }}" width="80%" class="img-responsive img-rounded center-block" alt="">
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal mixer image --> 
+
+  {% else %}
+            <div class="col-md-3">               
+                
+              <img align="left" src="/static/img/sem_foto.png" width="100" class="img-responsive img-rounded center-block" alt="">
+          
+            </div>
+             {% endif %}
+
+            {% if object.foto3 %}
+            <div class="col-md-3">
+            <a href="#" data-toggle="modal" data-target=".pop-up-3">
+              <img align="left" src="{{ object.foto3.url }}" width="100" class="img-responsive img-rounded center-block" alt="">
+            </a>
+            </div> 
+
+            <!--  Modal content for the mixer image example -->
+  <div class="modal fade pop-up-3" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel-3" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+
+       
+        <div class="modal-body" style="width=80%;">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <br/>
+        <img src="{{ object.foto3.url }}" width="80%" class="img-responsive img-rounded center-block" alt="">
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal mixer image --> 
+  {% else %}
+            <div class="col-md-3">               
+                
+              <img align="left" src="/static/img/sem_foto.png" width="100" class="img-responsive img-rounded center-block" alt="">
+          
+            </div>
+
+            {% endif %}
+
+            </div>       
+            
+           
+            
+          <br/>
           <div class="col-md-6" align= "right" >
             <div id="mapdiv" style="width: 100%; height: 300px;"></div> <!-- Mapa -->
           </div>
 
-          <div class="col-md-12" align= "right">
+          <div class="col-md-6" align= "right">
             <p>
+              <br>
+              
               <form method="post">
                 {% csrf_token %}
                 <label style="font-weight: normal;">Confirma deleção da árvore "{{object.id}}"?</label>
                 <br/>
                 <br/>
+
                 <button type="submit" class="btn btn-danger">
                   <span class="glyphicon glyphicon-trash"></span> 
                   Confirmar

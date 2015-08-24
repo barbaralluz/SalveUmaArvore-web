@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block title %} | Registrar {% endblock %}
+
+{% block content %}
+<link href="http://fonts.googleapis.com/css?family=Lato:100italic,100,300italic,300,400italic,400,700italic,700,900italic,900" rel="stylesheet" type="text/css">
+  <link href="{% static 'css/login_mob.css' %}" rel="stylesheet" />
+<section id="logo">
+    <img class="displayed" src="/static/img/logo.png" style="width:240px"alt="" />
+  </section>
+  
+  <section class="container">
+
+      <form method="POST" action="" role="login">
+        {% csrf_token %}
+        
+
+        {% for field in form %}
+        
+
+          {% if field.html_name == 'password1' or field.html_name == 'password2' %}
+            <div>
+          
+          <input type="password" name="{{ field.html_name }}" placeholder="{{ field.label }}" class="form-control" />
+          <span class="glyphicon glyphicon-lock"></span>
+
+          {{ field.errors }}
+        </div>
+          {% else %}
+          <div>
+             
+          <input type="text" name="{{ field.html_name }}" placeholder="{{ field.label }}" class="form-control" />
+          <span class="glyphicon glyphicon-user"></span>
+          {{ field.errors }}
+          </div>
+          {% endif %}
+        
+        {% endfor %}
+      
+        <button type="submit" name="go" class="btn btn-block btn-primary">Registrar</button>
+        <br>
+        
+          
+        <a class="btn btn-social btn-google" id="google" href="{% url 'socialauth_begin' 'google-oauth2' %}">
+                <i class="fa fa-google-plus-square"></i> 
+                Acesse com o Google
+        </a> &nbsp;&nbsp;&nbsp;&nbsp; 
+      
+        <a class="btn btn-social btn-facebook" id="facebook" href="{% url 'socialauth_begin' 'facebook' %}">
+          <i class="fa fa-facebook-square"></i> 
+            Acesse com o Facebook
+        </a>
+        
+        
+        
+      </form>
+
+  </section>
+  
+
+{% endblock content %}

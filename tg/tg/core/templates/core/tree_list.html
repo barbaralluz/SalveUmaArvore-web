@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load user_agents %}
 {% load staticfiles %}
+{% load bootstrap %}
 
 {% block title %} | Pesquisar Árvores {% endblock %}
 
@@ -14,37 +15,41 @@
        <!-- <div id="mapa_tree_list" style="width: 100%; height: 400px;"></div> <!-- Mapa 
         <br/>
           <!-- Lista de Árvores -->
-
-          <h1> <i class="glyphicon glyphicon-tree-deciduous"></i>Árvores</h1>
-        
-          <hr>
+          <h1> <i class="glyphicon glyphicon-search"></i> Busca de Árvores</h1>
          
-          <h3> Busca </h3>
-          
+          <hr>
+          <div class="panel panel-default">
+
+            <div class="panel-body">
           <form id="myForm">
             {{ frm_srch.media }}
+            {{ frm_srch.condicao | bootstrap}}
+            {{frm_srch.especie | bootstrap}}
+
             
+            
+            {{frm_srch.municipio }}
+            <br>
+            {{frm_srch.bairro | bootstrap}}
+            {{frm_srch.endereco | bootstrap}}
+           
             {% if user.is_authenticated %}
-            {{frm_srch.minhas_arvores}} Minhas Árvores 
-            <br/> <br/>
-            {{frm_srch.todas_arvores}} Todas as Árvores <br/><br/>
+             
+            {{frm_srch.minhas_arvores | bootstrap}}  {{frm_srch.todas_arvores | bootstrap}}  
             {{frm_srch.user.as_hidden}}
             {% endif %}
 
-             {% if not request.user_agent.is_mobile %}
-            
-            {{frm_srch.municipio}}
-            Bairro: {{frm_srch.bairro}}
-            Endereço: {{frm_srch.endereco}}
-            <br/>
-            Espécie: {{frm_srch.especie}}
-            <br/>
-
-            {% endif %}
-
-            <button type="submit">Pesquisar</button>
+            <div id="btn">
+            <button class="btn btn-primary btn-success" type="submit">
+            <span class="glyphicon glyphicon-search"></span> 
+              Pesquisar
+            </button>
+            </div>
 
           </form>
+
+          </div>
+          </div>
 
           <script type="text/javascript">
             $('#myForm input').on('change', function() {
@@ -59,10 +64,11 @@
          
 
           <div class="row">    
-        <div class="col-md-9">         
+          
+          <div class="col-md-12">         
           
           <br/>
-          <table class="table table-hover">
+          <table class="table table-condensed">
             <thead>
               <tr>
                 <th>Espécie</th>

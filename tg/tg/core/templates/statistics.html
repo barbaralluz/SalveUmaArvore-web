@@ -9,17 +9,15 @@
   
   
   <div class="container">       
-        
-    <div class="row profile">
-      
+
       {% block content_logged %}
 
        <link href="{% static 'css/control_panel.css' %}" rel="stylesheet" />
        <script src="{% static 'js/Chart.min.js' %}"></script>
 
-      <div class="col-md-12">
-
-        <div class="profile-content">
+     
+       {% if total_arvores %}
+        
 
           <style type="text/css">
             .box {
@@ -48,14 +46,58 @@
 
           
           {% if not request.user_agent.is_mobile %}
-
-          <h3> Minhas Arvores </h3>
-          <div id="mytrees"></div>  
-
-          <h4> Total de Árvores ---- %</h4>
-          <h4> {{ object_list|length }} ---- 100%</h4>
-          <hr/>
           
+          <div class="col-md-6" >
+          <div class="panel panel-green">
+            <div class="panel-heading">
+              
+              <div class="row">
+                <div class="col-xs-3">
+                  <i class="fa fa-pagelines fa-5x"></i>
+                </div>
+                <div class="col-xs-9 text-right">
+                  <div>Parabéns! Você já localizou</div>
+                  <br/>
+                 
+                  <div class="huge">
+                    
+                      {{ arvores_usuario }}
+                    
+                  </div>
+                  <br/>
+                  <div>Árvores</div>
+                </div>
+              </div>
+            
+            </div>
+          </div>
+          </div>
+
+          <div class="col-md-6" >
+          <div class="panel panel-green">
+            <div class="panel-heading">
+              
+              <div class="row">
+                <div class="col-xs-3">
+                  <i class="fa fa-pagelines fa-5x"></i>
+                </div>
+                <div class="col-xs-9 text-right">
+                  <div>Já foram localizadas </div>
+                  <br/>
+                 
+                  <div class="huge">
+                    
+                      {{ total_arvores }}
+                    
+                  </div>
+                  <br/>
+                  <div>Árvores</div>
+                </div>
+              </div>
+            
+            </div>
+          </div>
+          </div>
           <div class="col-md-6">
             <div class="panel panel-default" style="width: 500px; height: 100%;">
               <div class="panel-heading">
@@ -81,104 +123,183 @@
               </div>
             </div>
           </div>
+
+          <div class="col-md-6">
+            <div class="panel panel-default" style="width: 500px; height: 100%;">
+              <div class="panel-heading">
+                <h3 class="panel-title"> Árvores por Condição</h3>
+              </div>
+              <div class="panel-body">
+                  <canvas id="chartCondicao" style="width: 100%"></canvas>
+                  <br/><br/>
+                  <div id="js-legend-condicao" class="chart-legend"></div>      
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="panel panel-default" style="width: 500px; height: 100%;">
+              <div class="panel-heading">
+                <h3 class="panel-title"> Árvores por Necessidade de Manutenção</h3>
+              </div>
+              <div class="panel-body">
+                  <canvas id="chartMan" style="width: 100%"></canvas>
+                  <br/><br/>
+                  <div id="js-legend-man" class="chart-legend"></div>      
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="panel panel-default" style="width: 500px; height: 100%;">
+              <div class="panel-heading">
+                <h3 class="panel-title"> Árvores por Condição de Raízes </h3>
+              </div>
+              <div class="panel-body">
+                  <canvas id="chartRaiz" style="width: 100%"></canvas>
+                  <br/><br/>
+                  <div id="js-legend-raiz" class="chart-legend"></div>      
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="panel panel-default" style="width: 500px; height: 100%;">
+              <div class="panel-heading">
+                <h3 class="panel-title"> Árvores por Presença de Rede Elétrica </h3>
+              </div>
+              <div class="panel-body">
+                  <canvas id="chartLuz" style="width: 100%"></canvas>
+                  <br/><br/>
+                  <div id="js-legend-luz" class="chart-legend"></div>      
+              </div>
+            </div>
+          </div>
           
           {% else %}
 
-          <h3> Árvores por Cidades </h3>
-          <div id="cidades"></div>  
-          
-          <h3> Árvores por Estados </h3>
-          <div id="estados"></div>
+          <table class="table table-condensed">
+            <tr>
+              <th><b>Árvores por Condição</b></th>
+              <th><b> Total </b></th>
+              <th><b> % </b></th>
+              </tr>
+            <tr>
+              <td> Boa </td>
+              <td> {{ arvores_boa }} </td>
+              <td> {{ porcentagem_arvores_boa }} </td>
+            </tr>
+            <tr>
+              <td> Regular </td>
+              <td> {{ arvores_regular }} </td>
+              <td> {{ porcentagem_arvores_regular }} </td>
+            </tr>
+            <tr>
+              <td> Ruim </td>
+              <td> {{ arvores_ruim }} </td>
+              <td> {{ porcentagem_arvores_ruim }} </td>
+            </tr>
+            <tr>
+              <td> Caída </td>
+              <td> {{ arvores_caidas }} </td>
+              <td> {{ porcentagem_arvores_ruim }} </td>
+            </tr>
 
-          <h3> Minhas Arvores </h3>
-          <div id="mytrees"></div>  
+            <tr><th><b>Árvores por Necessidade de Manutenção</b></th>
+                <th><b> Total </b></th>
+                <th><b> % </b></th>
+            </tr>
+            <tr>
+              <td> Sem necessidade </td>
+              <td> {{ arvores_man_sem }} </td>
+              <td> {{ porcentagem_arvores_man_sem }} </td>
+            </tr>
+            <tr>
+              <td> Afastar de construções </td>
+              <td> {{ arvores_man_afastar }} </td>
+              <td> {{ porcentagem_arvores_man_afastar }} </td>
+            </tr>
+            <tr>
+              <td> Liberar Rede Elétrica </td>
+              <td> {{ arvores_man_luz }} </td>
+              <td> {{ porcentagem_arvores_man_luz }} </td>
+            </tr>
+            <tr>
+              <td> Remover ramos que atrapalham trânsito de pedestres ou veículos </td>
+              <td> {{ arvores_man_copa }} </td>
+              <td> {{ porcentagem_arvores_man_copa }} </td>
+            </tr>
 
+            <tr><th><b>Árvores por Condição de Raíz</b></th>
+                <th><b> Total </b></th>
+                <th><b> % </b></th>
+            </tr>
+            <tr>
+              <td> Não apresenta problemas </td>
+              <td> {{ arvores_raiz_sem }} </td>
+              <td> {{ porcentagem_arvores_raiz_sem }} </td>
+            </tr>
+            <tr>
+              <td> Aponta </td>
+              <td> {{ arvores_raiz_aponta }} </td>
+              <td> {{ porcentagem_arvores_raiz_aponta }} </td>
+            </tr>
+            <tr>
+              <td> Quebra </td>
+              <td> {{ arvores_raiz_quebra }} </td>
+              <td> {{ porcentagem_arvores_raiz_quebra }} </td>
+            </tr>
+            <tr>
+              <td> Destrói </td>
+              <td> {{ arvores_raiz_destroi }} </td>
+              <td> {{ porcentagem_arvores_raiz_destroi }} </td>
+            </tr>
 
-          <h4> Total de Árvores ---- %</h4>
-          <h4> {{ object_list|length }} ---- 100%</h4> 
-
+            <tr><th><b>Árvores por Presença de Rede Elétrica</b></th>
+                <th><b> Total </b></th>
+                <th><b> % </b></th>
+            </tr>
+            <tr>
+              <td> Presente sem conflito </td>
+              <td> {{ arvores_luz_sconflito }} </td>
+              <td> {{ porcentagem_arvores_luz_sconflito }} </td>
+            </tr>
+            <tr>
+              <td> Presente com conflito </td>
+              <td> {{ arvores_luz_cconflito }} </td>
+              <td> {{ porcentagem_arvores_luz_cconflito }} </td>
+            </tr>
+            <tr>
+              <td> Ausente </td>
+              <td> {{ arvores_luz_ausente }} </td>
+              <td> {{ porcentagem_arvores_luz_ausente }} </td>
+            </tr>
+            <tr>
+              <th> Minhas Árvores </th>
+              <th> {{ arvores_usuario }} </th>
+              <th> {{ porcentagem_arvores_usuario }}% </th>
+            <tr>
+              <th> Todas as Árvores </th>
+              <th> {{ total_arvores }} </th>
+              <th> 100% </th>
+            </tr>
+          </table>
           {% endif %}
 
-              <script type="text/javascript">     
+  <script type="text/javascript">     
 
-              var trees_user = 0;
-
-              {% for tree in object_list %}
-                {% if tree.usuario == user %}
-                  trees_user = trees_user + 1;
-                {% endif %}
-              {% endfor %}
-              console.log(trees_user);
-              
-
-              var t = document.createElement('div');
-                  t.innerHTML = trees_user;
-                  document.getElementById('mytrees').appendChild(t);
-                  
-                function removeDuplicado(arr) {
-                  var a = [], b = [], c=[], prev;
-    
-                  arr.sort();
-                  for ( var i = 0; i < arr.length; i++ ) {
-                    if ( arr[i] !== prev ) {
-                      a.push(arr[i]);
-                      b.push(1);
-                    } else {
-                      b[b.length-1]++;
-                    }
-                    prev = arr[i];
-                  }
-                
-                  for ( var i = 0; i < b.length; i++ ) {
-                      c.push(Math.round((b[i] * 100)/{{object_list|length}}));
-                  }
-                  
-                  return [a, b, c];
-                }                                   
-
+                window.onload = function(){
+               
+                  {% for key, value in qtde_estados.items %}
+                    var porcentagem = Math.round(({{value}} * 100)/{{total_arvores}})
+                    
+                  {% endfor %}
+                };
+               
                 var options = {
                     responsive:true
                 };
 
-                cidades = [];
-                estados = [];
-
-                {% for arvore in object_list %}
-                  cidades.push("{{arvore.locality}}");  
-                  estados.push("{{arvore.administrative_area_level_1}}");
-                {% endfor %}
-                
-                var totalCidades = removeDuplicado(cidades);
-                
-                var totalEstados = removeDuplicado(estados);
-
-                
-                
-                
-
-                {% if request.user_agent.is_mobile %}
-
-                for (i = 0; i < totalCidades.length-1; i++) { 
-                 
-                  var c = document.createElement('div');
-                  c.innerHTML = totalCidades[0][i] + " ---- " + totalCidades[1][i] + " ---- " +  totalCidades[2][i] + " %";
-                  document.getElementById('cidades').appendChild(c);
-      
-                  //console.log(totalCidades[0][i] + "      " + totalCidades[1][i])
-                }
-
-                for (i = 0; i < totalEstados.length-1; i++) { 
-
-                  var e = document.createElement('div');
-                  e.innerHTML = totalEstados[0][i] + " ---- " + totalEstados[1][i] + " ---- " + totalEstados[2][i] + " %";
-                  document.getElementById('estados').appendChild(e);
-                  
-                  //console.log(totalEstados[0][i] + "      " + totalEstados[1][i])
-                
-                }
-
-                {% endif %}
-                
                 function getRandomColor() {
                   var letters = '0123456789ABCDEF'.split('');
                   var color = '#';
@@ -187,16 +308,19 @@
                   }
                   return color;
                 }
+
                 //Pie Chart Estados
                 var dataProvider = [];
 
-                for (i = 0; i < totalEstados.length-1; i++) {
+                {% for key, value in qtde_estados.items %}
+                  var porcentagem = Math.round(({{value}} * 100) / {{total_arvores}});
+                    
                   dataProvider.push({
-                    value: totalEstados[2][i],
+                    value: "{{value}}",
                     color: getRandomColor(),
-                    label: totalEstados[0][i] + " ("+ totalEstados[1][i] + ") : " + totalEstados[2][i] + " %"
+                    label: "{{key}}" + " ("+ "{{value}}" + ") : " + porcentagem + " %"
                   });
-                }
+                {% endfor %}
 
                 var data = dataProvider;
                 var options = {
@@ -213,13 +337,16 @@
                 //Pie Chart Cidades
                 var dataProviderCidades = [];
 
-                for (i = 0; i < totalCidades.length-1; i++) {
-                  dataProviderCidades.push({
-                    value: totalEstados[2][i],
+                {% for key, value in qtde_cidades.items %}
+                  var porcentagem = Math.round(({{value}} * 100) / {{total_arvores}});
+                    
+                    dataProviderCidades.push({
+                    value: "{{value}}",
                     color: getRandomColor(),
-                    label: totalCidades[0][i] + " ("+ totalCidades[1][i] + ") : " + totalCidades[2][i] + " %"
+                    label: "{{key}}" + " ("+ "{{value}}" + ") : " + porcentagem + " %"
                   });
-                }
+
+                {% endfor %}
 
                 var data = dataProviderCidades;
                 var options = {
@@ -233,12 +360,164 @@
                 var chartCidades = new Chart(ctx).Pie(data, options);
                 document.getElementById('js-legend-cidades').innerHTML = chartCidades.generateLegend();
 
+                //Pie Chart Condição
+                var dataProviderCondicao = [
+
+                {   
+                  value: {{arvores_boa}},
+                  color: "#009900",
+                  label: "Boa" + " ("+ "{{arvores_boa}}" + ") : " + "{{porcentagem_arvores_boa}}" +" %"
+                  },
+                {
+
+                  value: "{{arvores_regular}}",
+                  color: "#FFFF66",
+                  label: "Regular" + " ("+ "{{arvores_regular}}" + ") : " + "{{porcentagem_arvores_regular}}" + " %"
+                  },
+                {
+                  value: "{{arvores_ruim}}",
+                  color: "#FF9900",
+                  label: "Ruim" + " ("+ "{{arvores_ruim}}" + ") : " + "{{porcentagem_arvores_ruim}}" + " %"
+                  },
+                {
+                  value: "{{arvores_caidas}}",
+                  color: "#FF0000",
+                  label: "Caída" + " ("+ "{{arvores_caidas}}" + ") : " + "{{porcentagem_arvores_caidas}}" + " %"
+                }];
+
+                
+
+                var data = dataProviderCondicao;
+                var options = {
+                  segmentShowStroke: false,
+                  animateRotate: true,
+                  animateScale: false,
+                  tooltipTemplate: "<%= label %>"
+                }
+
+                var ctx = document.getElementById("chartCondicao").getContext("2d");
+                var chartCondicao = new Chart(ctx).Pie(data, options);
+                document.getElementById('js-legend-condicao').innerHTML = chartCondicao.generateLegend();
+
+              //Pie Chart Necessidade de Manutenção
+                var dataProviderMan = [
+
+                {   
+                  value: {{arvores_man_sem}},
+                  color: getRandomColor(),
+                  label: "Sem necessidade" + " ("+ "{{arvores_man_sem}}" + ") : " + "{{porcentagem_arvores_man_sem}}" +" %"
+                  },
+                {
+
+                  value: "{{arvores_man_afastar}}",
+                  color: getRandomColor(),
+                  label: "Afastar de construções" + " ("+ "{{arvores_man_afastar}}" + ") : " + "{{porcentagem_arvores_man_afastar}}" + " %"
+                  },
+                {
+                  value: "{{arvores_man_luz}}",
+                  color: getRandomColor(),
+                  label: "Liberar Rede Elétrica" + " ("+ "{{arvores_man_luz}}" + ") : " + "{{porcentagem_arvores_man_luz}}" + " %"
+                  },
+                {
+                  value: "{{arvores_man_copa}}",
+                  color: getRandomColor(),
+                  label: "Remover ramos que atrapalham trânsito de pedestres ou veículos" + " ("+ "{{arvores_man_copa}}" + ") : " + "{{porcentagem_arvores_man_copa}}" + " %"
+                }];
+
+                
+
+                var data = dataProviderMan;
+                var options = {
+                  segmentShowStroke: false,
+                  animateRotate: true,
+                  animateScale: false,
+                  tooltipTemplate: "<%= label %>"
+                }
+
+                var ctx = document.getElementById("chartMan").getContext("2d");
+                var chartMan = new Chart(ctx).Pie(data, options);
+                document.getElementById('js-legend-man').innerHTML = chartMan.generateLegend();
+
+              //Pie Chart Condição das Raízes
+                var dataProviderRaiz = [
+
+                {   
+                  value: {{arvores_raiz_sem}},
+                  color: getRandomColor(),
+                  label: "Não apresenta problemas" + " ("+ "{{arvores_raiz_sem}}" + ") : " + "{{porcentagem_arvores_raiz_sem}}" +" %"
+                  },
+                {
+
+                  value: "{{arvores_raiz_aponta}}",
+                  color: getRandomColor(),
+                  label: "Aponta" + " ("+ "{{arvores_raiz_aponta}}" + ") : " + "{{porcentagem_arvores_raiz_aponta}}" + " %"
+                  },
+                {
+                  value: "{{arvores_raiz_quebra}}",
+                  color: getRandomColor(),
+                  label: "Quebra" + " ("+ "{{arvores_raiz_quebra}}" + ") : " + "{{porcentagem_arvores_raiz_quebra}}" + " %"
+                  },
+                {
+                  value: "{{arvores_raiz_destroi}}",
+                  color: getRandomColor(),
+                  label: "Destrói" + " ("+ "{{arvores_raiz_destroi}}" + ") : " + "{{porcentagem_arvores_raiz_destroi}}" + " %"
+                }];
+
+                
+
+                var data = dataProviderRaiz;
+                var options = {
+                  segmentShowStroke: false,
+                  animateRotate: true,
+                  animateScale: false,
+                  tooltipTemplate: "<%= label %>"
+                }
+
+                var ctx = document.getElementById("chartRaiz").getContext("2d");
+                var chartRaiz = new Chart(ctx).Pie(data, options);
+                document.getElementById('js-legend-raiz').innerHTML = chartRaiz.generateLegend();
+
+              //Pie Chart Proximidade de Rede Elétrica
+                var dataProviderLuz = [
+
+                {   
+                  value: {{arvores_luz_sconflito}},
+                  color: getRandomColor(),
+                  label: "Presente sem conflito" + " ("+ "{{arvores_luz_sconflito}}" + ") : " + "{{porcentagem_arvores_luz_sconflito}}" +" %"
+                  },
+                {
+
+                  value: "{{arvores_luz_cconflito}}",
+                  color: getRandomColor(),
+                  label: "Presente com conflito" + " ("+ "{{arvores_luz_cconflito}}" + ") : " + "{{porcentagem_arvores_luz_cconflito}}" + " %"
+                  },
+                {
+                  value: "{{arvores_luz_ausente}}",
+                  color: getRandomColor(),
+                  label: "Ausente" + " ("+ "{{arvores_luz_ausente}}" + ") : " + "{{porcentagem_arvores_luz_ausente}}" + " %"
+                }];
+
+                var data = dataProviderLuz;
+                var options = {
+                  segmentShowStroke: false,
+                  animateRotate: true,
+                  animateScale: false,
+                  tooltipTemplate: "<%= label %>"
+                }
+
+                var ctx = document.getElementById("chartLuz").getContext("2d");
+                var chartLuz = new Chart(ctx).Pie(data, options);
+                document.getElementById('js-legend-luz').innerHTML = chartLuz.generateLegend();
+
             </script>
         
       </div>
     </div> <!-- Final do Div md-12-->
   </div>
+  {% else %}
 
+  <H2>Ainda não foram cadastradas árvores</H2>
+  {% endif%}
 </div> <!-- Final do Container -->
 
 {% endblock content_logged %}

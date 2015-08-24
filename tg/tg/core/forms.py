@@ -12,17 +12,22 @@ from municipios.widgets import SelectMunicipioWidget
 # deixar opção para marcar Minhas Árvores
 class SearchTreeForm(forms.Form):
 
-    municipio = forms.IntegerField(label=u"UF - Município", widget=SelectMunicipioWidget,  required=False)
+    municipio = forms.IntegerField(label=u"UF - Município", widget=SelectMunicipioWidget(attrs={'style': 'width:100px'}),  required=False)
     bairro = forms.CharField(label=u"Bairro", required=False)
     endereco = forms.CharField(label=u"Endereço", required=False)
     especie = forms.CharField(label=u"Espécie", required=False)
     minhas_arvores = forms.BooleanField(label=u"Minhas Árvores", required=False)
     todas_arvores = forms.BooleanField(label=u"Todas as Árvores", required=False, initial='True')
+    condicao = forms.ChoiceField(choices=Tree.COND_CHOICES_AND_EMPTY , label=u"Condição da Árvore", required=False)
+    raiz = forms.TypedChoiceField(choices=Tree.RAIZ_CHOICES_AND_EMPTY, label=u"Condição das Raízes", required=False)
+    luz = forms.ChoiceField(choices=Tree.LUZ_CHOICES_AND_EMPTY, label=u"Presença de Rede Elétrica", required=False)
+    man = forms.ChoiceField(choices=Tree.MAN_CHOICES_AND_EMPTY, label=u"Necessidade de Manutenção", required=False)
     user = forms.CharField(label=u"Usuário", required=False)
     
     def __init__(self, *args, **kwargs):
         self.queryset = kwargs.pop('queryset', Tree.objects.all())
         super(SearchTreeForm, self).__init__(*args, **kwargs)
+        
 
     def get_queryset(self):
         if self.is_valid():
@@ -46,16 +51,30 @@ class SearchTreeForm(forms.Form):
             especie = self.cleaned_data.get('especie', False)
             if especie:
                 trees = trees.filter(especie=especie)
+            condicao = self.cleaned_data.get('condicao', False)
+            if condicao:
+                trees = trees.filter(condicao_arvore=condicao)
+            raiz = self.cleaned_data.get('raiz', False)
+            if raiz:
+                trees = trees.filter(condicao_raiz=raiz)
+            luz = self.cleaned_data.get('luz', False)
+            if luz:
+                trees = trees.filter(condicao_luz=luz)
+            man = self.cleaned_data.get('man', False)
+            if man:
+                trees = trees.filter(condicao_man=man)
             return trees
         else:
             return self.queryset
 
 class TreeForm(forms.ModelForm):
-    foto = forms.ImageField(label="Adicione uma foto", required=False)
     administrative_area_level_1 = forms.ModelChoiceField(queryset=UF.objects.all(), label="Estado")
     locality = forms.ModelChoiceField(queryset=Municipio.objects.all(), label="Municipio")
     class Meta:
         model = Tree
+        widgets = {
+          'descricao': forms.Textarea(attrs={'rows':1, 'cols':1, 'style': 'height: 5em;'}),
+        }
         fields = ("geometry", "country", "administrative_area_level_1",
                   "locality", "neighborhood", "route", 
                   "numero", "postal_code", "point_of_interest",

@@ -5,13 +5,16 @@ Licensed under MIT
 ***/
 
 body {
-padding-top: 35px;
+padding-top: 5px;
 }
 
 tbody > tr {
     cursor: pointer;
 }
 
+#btn{
+  text-align: center;
+}
 
 /* Profile container */
 .profile {
