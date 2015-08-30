@@ -8,7 +8,7 @@
 {% block content %}
   
   
-  <div class="container">       
+       
 
       {% block content_logged %}
 
@@ -41,11 +41,24 @@
             }  
             .chart-legend li {
               list-style-type: none;
-            }         
+            }        
+
+
+            {% if request.user_agent.is_mobile %}
+              body {
+                padding-top: 2px;
+              } 
+
+              .panel-heading {
+                cursor: pointer;
+              }
+            {% endif %}
           </style>  
 
           
           {% if not request.user_agent.is_mobile %}
+
+          <div class="container-fluid">  
           
           <div class="col-md-6" >
           <div class="panel panel-green">
@@ -175,37 +188,73 @@
               </div>
             </div>
           </div>
-          
+        </div>
           {% else %}
 
-          <table class="table table-condensed">
-            <tr>
-              <th><b>Árvores por Condição</b></th>
-              <th><b> Total </b></th>
-              <th><b> % </b></th>
-              </tr>
-            <tr>
-              <td> Boa </td>
-              <td> {{ arvores_boa }} </td>
-              <td> {{ porcentagem_arvores_boa }} </td>
-            </tr>
-            <tr>
-              <td> Regular </td>
-              <td> {{ arvores_regular }} </td>
-              <td> {{ porcentagem_arvores_regular }} </td>
-            </tr>
-            <tr>
-              <td> Ruim </td>
-              <td> {{ arvores_ruim }} </td>
-              <td> {{ porcentagem_arvores_ruim }} </td>
-            </tr>
-            <tr>
-              <td> Caída </td>
-              <td> {{ arvores_caidas }} </td>
-              <td> {{ porcentagem_arvores_ruim }} </td>
-            </tr>
+            <h2 align="center"> <i class="glyphicon glyphicon-stats"></i> Estatísticas </h2>
+            <hr/>
+            
+            <div class="container-fluid">
 
-            <tr><th><b>Árvores por Necessidade de Manutenção</b></th>
+              <div class="panel-group" id="accordion">
+      
+                <div class="panel panel-default">
+        
+                  <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+                    <h6 class="panel-title">
+                      <a class="accordion-toggle">
+                        <small><b>Condição</b></small>
+                      </a>
+                    </h6>
+                  </div>
+        
+                  <div id="collapseOne" class="panel-collapse collapse">
+                    <div class="panel-body">
+                      <table class="table table-condensed">
+                        <tr>
+                          <th><b> Condição </b></th>
+                          <th><b>Total </b></th>
+                          <th><b>% </b></th>
+                        </tr>
+                        <tr>
+                          <td> Boa </td>
+                          <td> {{ arvores_boa }} </td>
+                          <td> {{ porcentagem_arvores_boa }} </td>
+                        </tr>
+                        <tr>
+                          <td> Regular </td>
+                          <td> {{ arvores_regular }} </td>
+                          <td> {{ porcentagem_arvores_regular }} </td>
+                        </tr>
+                        <tr>
+                          <td> Ruim </td>
+                          <td> {{ arvores_ruim }} </td>
+                          <td> {{ porcentagem_arvores_ruim }} </td>
+                        </tr>
+                        <tr>
+                          <td> Caída </td>
+                          <td> {{ arvores_caidas }} </td>
+                          <td> {{ porcentagem_arvores_ruim }} </td>
+                        </tr>
+                      </table>   
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="panel panel-default">
+        
+                  <div class="panel-heading">
+                    <h5 class="panel-title"  data-toggle="collapse" data-parent="#accordion" data-target="#collapseTwo">
+                      <a class="accordion-toggle">
+                        <small><b>Necessidade de Manutenção</b></small>
+                      </a> 
+                    </h5>
+                  </div>
+        
+                  <div id="collapseTwo" class="panel-collapse collapse">
+                    <div class="panel-body">
+                      <table class="table table-condensed">
+                      <tr><th><b> Tipo de Manutenção</b></th>
                 <th><b> Total </b></th>
                 <th><b> % </b></th>
             </tr>
@@ -229,8 +278,26 @@
               <td> {{ arvores_man_copa }} </td>
               <td> {{ porcentagem_arvores_man_copa }} </td>
             </tr>
+            </table> 
+            
+                    </div>
+                  </div>
+                </div>
 
-            <tr><th><b>Árvores por Condição de Raíz</b></th>
+                <div class="panel panel-default">
+        
+                  <div class="panel-heading">
+                    <h5 class="panel-title" data-toggle="collapse" data-parent="#accordion" data-target="#collapseThree">
+                      <a class="accordion-toggle">
+                        <small><b>Condição da Raíz</b></small>
+                      </a> 
+                    </h5>
+                  </div>
+    
+                  <div id="collapseThree" class="panel-collapse collapse">
+                    <div class="panel-body">
+                      <table class="table table-condensed">
+                      <tr><th><b>Condição da Raíz</b></th>
                 <th><b> Total </b></th>
                 <th><b> % </b></th>
             </tr>
@@ -254,8 +321,26 @@
               <td> {{ arvores_raiz_destroi }} </td>
               <td> {{ porcentagem_arvores_raiz_destroi }} </td>
             </tr>
-
-            <tr><th><b>Árvores por Presença de Rede Elétrica</b></th>
+            </table>
+                 
+                    
+                    </div>
+                  </div>
+                </div>
+                                 <div class="panel panel-default">
+        
+                  <div class="panel-heading">
+                    <h5 class="panel-title" data-toggle="collapse" data-parent="#accordion" data-target="#collapseFour">
+                      <a class="accordion-toggle">
+                        <small><b>Presença de Rede Elétrica</b></small>
+                      </a> 
+                    </h5>
+                  </div>
+    
+                  <div id="collapseFour" class="panel-collapse collapse">
+                    <div class="panel-body">
+                      <table class="table table-condensed">
+                      <tr><th><b>Presença de Rede Elétrica</b></th>
                 <th><b> Total </b></th>
                 <th><b> % </b></th>
             </tr>
@@ -274,6 +359,69 @@
               <td> {{ arvores_luz_ausente }} </td>
               <td> {{ porcentagem_arvores_luz_ausente }} </td>
             </tr>
+            </table>
+                 
+                    
+                    </div>
+                  </div>
+                </div>
+
+                <div class="panel panel-default">
+        
+                  <div class="panel-heading">
+                    <h5 class="panel-title" data-toggle="collapse" data-parent="#accordion" data-target="#collapseFive">
+                      <a class="accordion-toggle">
+                        <small><b>Árvores por Estado</b></small>
+                      </a> 
+                    </h5>
+                  </div>
+    
+                  <div id="collapseFive" class="panel-collapse collapse">
+                    <div class="panel-body">
+                      <table class="table table-condensed" id="my_table">
+                      <tr><th><b>Estado</b></th>
+                <th><b> Total </b></th>
+                <th><b> % </b></th>
+            </tr>
+            <tr id="estados">
+              
+            </tr>
+            </table>
+                 
+                    
+                    </div>
+                  </div>
+                </div>
+
+                <div class="panel panel-default">
+        
+                  <div class="panel-heading">
+                    <h5 class="panel-title" data-toggle="collapse" data-parent="#accordion" data-target="#collapseSix">
+                      <a class="accordion-toggle">
+                        <small><b>Árvores por Cidade</b></small>
+                      </a> 
+                    </h5>
+                  </div>
+    
+                  <div id="collapseSix" class="panel-collapse collapse">
+                    <div class="panel-body">
+                      <table class="table table-condensed">
+                      <tr><th><b>Cidade</b></th>
+                <th><b> Total </b></th>
+                <th><b> % </b></th>
+            </tr>
+            <tr id="cidades">
+            </tr>
+            </table>
+                 
+                    
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <table class="table table-condensed">
             <tr>
               <th> Minhas Árvores </th>
               <th> {{ arvores_usuario }} </th>
@@ -286,7 +434,52 @@
           </table>
           {% endif %}
 
-  <script type="text/javascript">     
+  <script type="text/javascript">   
+
+  {% if request.user_agent.is_mobile %}  
+
+    function toggleChevron(e) {
+    $(e.target)
+        .prev('.panel-heading')
+        .find("i.indicator")
+        .toggleClass('glyphicon-chevron-down glyphicon-chevron-up');
+}
+
+
+
+  {% for key, value in qtde_estados.items %}
+    var porcentagem_estados = Math.round(({{value}} * 100)/{{total_arvores}})
+    
+    var new_row = document.createElement('tr');
+    new_row.insertCell(0).innerHTML = "{{key}}";
+    new_row.insertCell(1).innerHTML = "{{value}}";
+    new_row.insertCell(2).innerHTML = porcentagem_estados;
+    insertAfter(document.getElementById("estados"), new_row);
+
+  {% endfor %}
+
+    {% for key, value in qtde_cidades.items %}
+    var porcentagem_cidades = Math.round(({{value}} * 100)/{{total_arvores}})
+    
+    var new_row = document.createElement('tr');
+    new_row.insertCell(0).innerHTML = "{{key}}";
+    new_row.insertCell(1).innerHTML = "{{value}}";
+    new_row.insertCell(2).innerHTML = porcentagem_cidades;
+    insertAfter(document.getElementById("cidades"), new_row);
+
+  {% endfor %}
+
+    function insertAfter(target, el) {
+      if( !target.nextSibling )
+        target.parentNode.appendChild( el );
+      else
+        target.parentNode.insertBefore( el, target.nextSibling );
+    };
+
+{% endif %}
+    
+                  
+  
 
                 window.onload = function(){
                

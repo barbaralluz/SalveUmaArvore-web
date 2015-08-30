@@ -18,8 +18,8 @@
   <div id="scale-line" class="scale-line"></div>
 
   <div>
-    {% if not request.user_agent.is_mobile %}
-    <a id="localize" href="" onclick="getLocation()"><i class="fa fa-crosshairs fa-4x"></i></a>
+    {% if not request.user_agent.is_mobile and not request.user_agent.is_tablet %}
+    <a id="localize" href="" onclick="getLocation()"><i class="fa fa-compass fa-5x"></i></a>
 
     <!-- Trigger the modal FILTRAR with a button -->
      <button type="button" id="filtro" class="btn btn-primary" data-toggle="modal" data-target="#fModal"><span class="glyphicon glyphicon-map-marker"></span> FILTRAR </button>

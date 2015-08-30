@@ -56,11 +56,11 @@ def signin(request):
             form.save()  
             return redirect(log_in) 
         else:
-            if get_user_agent(request).is_mobile: #| get_user_agent(self.request).is_tablet:
+            if get_user_agent(request).is_mobile | get_user_agent(request).is_tablet:
                 return render(request, "signin_mob.html", {"form": form})
             else:
                 return render(request, "signin.html", {"form": form})
-    if get_user_agent(request).is_mobile: #| get_user_agent(self.request).is_tablet:
+    if get_user_agent(request).is_mobile | get_user_agent(request).is_tablet:
         return render(request, "signin_mob.html", {"form": UserForm() })
     else:  
         return render(request, "signin.html", {"form": UserForm() })
@@ -72,28 +72,14 @@ def log_in(request):
            login(request, form.get_user())
            return redirect(index)
         else:
-            if get_user_agent(request).is_mobile: #| get_user_agent(self.request).is_tablet:
+            if get_user_agent(request).is_mobile | get_user_agent(request).is_tablet:
                 return render(request, "login_mob.html", {"form": form})
             else:
                 return render(request, "login.html", {"form": form})
-    if get_user_agent(request).is_mobile: #| get_user_agent(self.request).is_tablet:
+    if get_user_agent(request).is_mobile | get_user_agent(request).is_tablet:
         return render(request, "login_mob.html", {"form": AuthenticationForm()})
     else:
         return render(request, "login.html", {"form": AuthenticationForm()})
-
-#Perfil 
-@login_required
-def profile(request, username):
-    user = request.user
-    if request.method == "POST":
-        form = ProfileForm(request.POST, request.FILES, instance=user)
-        if form.is_valid():
-            form.save()
-            return redirect(control_panel)
-    else:
-        form = ProfileForm(instance=user)
-    return render_to_response("profile.html", {'form':form},
-            context_instance=RequestContext(request))
 
 class StatisticsView(TemplateView):
     template_name = 'statistics.html'
@@ -284,7 +270,7 @@ def tree_create(request):
     else:
         form = TreeForm()
 
-    if get_user_agent(request).is_mobile: #| get_user_agent(self.request).is_tablet:
+    if get_user_agent(request).is_mobile | get_user_agent(request).is_tablet:
         
         return render_to_response("tree_form_mob.html", {'form': form},
             context_instance=RequestContext(request))
@@ -304,7 +290,7 @@ def tree_update(request, nr_tree):
     else:
         form = TreeForm(instance=tree)
     
-    if get_user_agent(request).is_mobile: #| get_user_agent(self.request).is_tablet:
+    if get_user_agent(request).is_mobile | get_user_agent(request).is_tablet:
         
         return render_to_response("tree_form_mob.html", {'form': form},
             context_instance=RequestContext(request))
@@ -320,7 +306,12 @@ def tree_delete(request, nr_tree):
         
         tree.delete()
         return redirect('user_tree_list', username=request.user.username)
-    return render_to_response("confirm_delete_tree.html", {'object': tree},
+
+    if get_user_agent(request).is_mobile | get_user_agent(request).is_tablet:
+        return render_to_response("confirm_delete_tree_mob.html", {'object': tree},
+                context_instance=RequestContext(request))
+    else:
+        return render_to_response("confirm_delete_tree.html", {'object': tree},
                 context_instance=RequestContext(request))
 
 #Lista com Busca de Árvores
@@ -348,7 +339,12 @@ class SearchTreeList(ListView):
 class TreeList(SearchTreeList):
     form_class = SearchTreeForm
     paginate_by = 20
-    template_name = "core/tree_list.html"
+    
+    def get_template_names(self):
+        if get_user_agent(self.request).is_mobile | get_user_agent(self.request).is_tablet:
+            return "core/tree_list_mob.html"
+        else:  
+            return 'core/tree_list.html'
     
 tree_list = TreeList.as_view()
 
@@ -357,7 +353,7 @@ class TreeListView(ListView):
     model = Tree
     
     def get_template_names(self):
-        if get_user_agent(self.request).is_mobile: #| get_user_agent(self.request).is_tablet:
+        if get_user_agent(self.request).is_mobile | get_user_agent(self.request).is_tablet:
             return "core/user_tree_list_mob.html"
         else:  
             return 'core/user_tree_list.html'
@@ -372,7 +368,12 @@ class TreeListView(ListView):
 user_tree_list = TreeListView.as_view()
 
 class TreeDetailView(DetailView):
-    template_name = "tree_detail.html"
+
+    def get_template_names(self):
+        if get_user_agent(self.request).is_mobile | get_user_agent(self.request).is_tablet:
+            return "tree_detail_mob.html"
+        else:  
+            return 'tree_detail.html'
     queryset = Tree.objects
 
 tree_detail = TreeDetailView.as_view()

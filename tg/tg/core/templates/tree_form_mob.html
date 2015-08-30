@@ -2,89 +2,170 @@
 
 {% load staticfiles %}
 
+{% load bootstrap %}
+
 {% block title %}
-    Formulário de Árvores
+    | Formulário de Árvores
 {% endblock %}
 
 {% block content %}
 
-  <link href="{% static 'css/tree_form.css' %}" rel="stylesheet" />
-    <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>  
+  <link href="{% static 'css/tree_form_mob.css' %}" rel="stylesheet" />
+  <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>  
+  
+  <h2 align="center"> <i class="glyphicon glyphicon-tree-deciduous"></i> Formulário </h2>
+    <hr/>
+  <div class="container-fluid">
 
+    
+    <div class="panel-group" id="accordion">
+      
+      <div class="panel panel-default">
         
-        <p align="right" id="d">
-          <button class="btn btn-primary btn-success" onclick='getLocation()'>
-            <span class="glyphicon glyphicon-map-marker"></span> 
-            Me localize!
-          </button>
-        </p>
-        
-
-        <form method="POST"  enctype="multipart/form-data">
-        {% csrf_token %}
-
-        {{ form.as_p }}
-
-        <div id="dvPreview" align="center"></div> <!-- Para o preview da foto -->
-        
-        {% if form.instance.foto %}
-          <style type="text/css">
-            p > a {
-              background-image: url({{ form.instance.foto.url }});
-              background-position: center center;
-              background-repeat:no-repeat;
-              background-size: contain;
-              display:list-item;
-              height:190px;
-              overflow:hidden;
-              text-indent:100%;
-              white-space:nowrap;
-            }
-          </style>
-        {% endif %}
-        
-        <br/>
-        
-        <p align="center">
-
-          {% if not form.instance.id %}
-
-            <button type="submit" class="btn btn-success">
-              <span class="glyphicon glyphicon-plus-sign"></span> 
-                Cadastrar
-          
-          {% else %}
-
-            <br>       
-            
-            <button type="submit" class="btn btn-warning">
-                <span class="glyphicon glyphicon-pencil"></span> 
-                Alterar
-          {% endif %}
-            </button>
-            
-            &nbsp;
-            &nbsp;
-            &nbsp;
-
-            <button type="submit" onclick="{% url 'user_tree_list' user.username %}" class="btn btn-danger" id="cancelar">
-              <span class="glyphicon glyphicon-remove"></span> 
-                Cancelar
-            </button>
-        </p> 
-        </form>
+        <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+          <h5 class="panel-title">
+            <a class="accordion-toggle">
+              Localização
+            </a>
+          </h5>
         </div>
-      </div> <!-- Final do Div md-12 -->
-    </div>
-  </div> <!-- Final do Container -->
         
+        <div id="collapseOne" class="panel-collapse collapse in">
+          <div class="panel-body">
+            
+            <div align="center">
+              <button class="btn btn-primary btn-success" style="width:100%;" onclick='getLocation()'>
+                <span class="glyphicon glyphicon-map-marker"></span> 
+                Me localize!
+              </button>
+            </div>
+            
+            <br/>
+
+            <form method="POST"  enctype="multipart/form-data">
+              {% csrf_token %}
+
+              {{ form.geometry }}
+
+              {{ form.country | bootstrap_horizontal}}
+            
+              {{ form.administrative_area_level_1 | bootstrap_horizontal}}
+                
+              {{ form.locality | bootstrap_horizontal}}    
+            
+              {{ form.neighborhood | bootstrap_horizontal }}
+            
+              {{ form.route | bootstrap_horizontal }}
+              
+              {{ form.numero | bootstrap_horizontal}}
+              
+              {{ form.postal_code| bootstrap_horizontal}}
+              
+              {{ form.point_of_interest | bootstrap_horizontal}}   
+              <p align="right">
+                <a id="continuar" class="btn btn-default openpanel2" href="#">Continuar</a>
+              </p>
+          
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        
+        <div class="panel-heading">
+          <h5 class="panel-title"  data-toggle="collapse" data-parent="#accordion" data-target="#collapseTwo">
+            <a class="accordion-toggle">
+              Condição da Árvore
+            </a> 
+          </h5>
+        </div>
+        
+        <div id="collapseTwo" class="panel-collapse collapse">
+          <div class="panel-body">
+
+            {{ form.condicao_arvore | bootstrap_horizontal }}      
+        
+            {{ form.especie | bootstrap_horizontal }}     
+        
+            {{ form.altura | bootstrap_horizontal }}
+        
+            {{ form.condicao_raiz | bootstrap_horizontal }}
+        
+            {{ form.condicao_luz | bootstrap_horizontal }}      
+        
+            {{ form.condicao_man | bootstrap_horizontal }}     
+
+            <p id="button" align="center">
+              <a id="anterior" class="btn btn-default closepanel2" href="#">Anterior</a>
+              <a id="continuar"class="btn btn-default openpanel3" href="#" >Continuar</a>
+            </p>  
+          </div>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        
+        <div class="panel-heading">
+          <h5 class="panel-title" data-toggle="collapse" data-parent="#accordion" data-target="#collapseThree">
+            <a class="accordion-toggle">
+              Dados da Árvore
+            </a> 
+          </h5>
+        </div>
+    
+        <div id="collapseThree" class="panel-collapse collapse">
+          <div class="panel-body">
+        
+            {{ form.descricao | bootstrap_horizontal }}
+              
+            {{ form.foto1 | bootstrap_horizontal }}      
+              
+            {{ form.foto2 | bootstrap_horizontal }}  
+        
+            {{ form.foto3 | bootstrap_horizontal }} 
+
+            <p align="right">
+              <a id="anterior" class="btn btn-default closepanel3" href="#">Anterior</a>
+            </p>
+       
+            <p align="center">
+
+                {% if not form.instance.id %}
+
+                <button type="submit" class="btn btn-success" style="width:100%;">
+                  <span class="glyphicon glyphicon-plus-sign"></span> 
+                    Cadastrar
+          
+                {% else %}
+
+                <button type="submit" class="btn btn-warning" style="width:100%;">
+                  <span class="glyphicon glyphicon-pencil"></span> 
+                    Alterar
+                
+                {% endif %}
+                </button>
+                &nbsp;&nbsp;&nbsp;
+                <a href="{% url 'user_tree_list' user.username %}" class="btn btn-danger" id="cancelar" style="width:100%;">
+                  <span class="glyphicon glyphicon-remove"></span> 
+                    Cancelar
+                </a>
+              </p> 
+         
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+      
   <style type="text/css">
+
     #id_geometry_map{
-      width: 100%; height: 400px;
+      width: 100%; height: 200px;
+      box-shadow: 0 0 10px black;
     }
 
     #id_geometry_div_map{
-      width: 100%; height: 430px;
+      width: 100%; height: 220px;
     }
 
     html, body {
@@ -93,17 +174,67 @@
           
     .olImageLoadError { display: none; }
 
+    .panel-heading {
+      cursor: pointer;
+    }
+
   </style>
-  
+
   <script src="{% static 'openlayers/OpenLayers.js' %}"></script> 
   <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>  
 
   <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>  
   
-  <script type="text/javascript">     
+  <script type="text/javascript">   
+
+    $(".openpanel2").on("click", function() {
+      $("#collapseTwo").collapse('show');
+      $("#collapseOne").collapse('hide');
+    });
+
+    $(".openpanel3").on("click", function() {
+      $("#collapseThree").collapse('show');
+      $("#collapseTwo").collapse('hide');
+    });
+    $(".closepanel2").on("click", function() {
+      $("#collapseTwo").collapse('hide');
+      $("#collapseOne").collapse('show');
+    });
+
+    $(".closepanel3").on("click", function() {
+      $("#collapseThree").collapse('hide');
+      $("#collapseTwo").collapse('show');
+    });
+
+ $(function () {
+    //  Accordion Panels
+    $(".accordion div").show();
+    setTimeout("$('.accordion div').slideToggle('slow');", 1000);
+    $(".accordion h5").click(function () {
+        $(this).next(".pane").slideToggle("slow").siblings(".pane:visible").slideUp("slow");
+        $(this).toggleClass("current");
+        $(this).siblings("h5").removeClass("current");
+    });
+});
 
   //mantem opção do menu do usuário selecionado 
     $( document ).ready(function() {
+
+       $("#id_locality :selected").each(function(){
+              $(this).parent().data("default", this);
+            });
+
+    $("#id_locality").change(function(e) {
+              $($(this).data("default")).prop("selected", true);
+            });
+
+     $("#id_administrative_area_level_1 :selected").each(function(){
+              $(this).parent().data("default", this);
+            });
+
+    $("#id_administrative_area_level_1").change(function(e) {
+              $($(this).data("default")).prop("selected", true);
+            });
     
       $("#tree").collapse('show');
 
@@ -125,7 +256,7 @@
       console.log(lonlat);
       console.log("Lat ", lat);
       console.log("Lon ", lon);
-      map.setCenter (lonlat, 18);
+      map.setCenter (lonlat, 15);
 
       markerslayer.clearMarkers();
       markerslayer.addMarker(new OpenLayers.Marker(lonlat,icon));
@@ -190,14 +321,14 @@
       map.getProjectionObject() // to Spherical Mercator Projection
     );
 
-    map.setCenter (lonlat, 18);
+    map.setCenter (lonlat, 15);
 
     markerslayer.clearMarkers();
     markerslayer.addMarker(new OpenLayers.Marker(lonlat,icon));
     //document.getElementById("id_geometry").value =  "POINT(" +  lonlat.lat + " " + lonlat.lon + ")"
   };
 
-  //função para encontrar localização do usuário (shared location - Google)
+  //função para encontrar localização do usuário (shared location)
   function getLocation() {
     var geolocation_support = document.getElementById("d");
     if (navigator.geolocation) {
@@ -251,12 +382,28 @@
               $('#id_administrative_area_level_1 option')
               .filter(function() { return $.trim( $(this).text() ) == long_name; })
               .attr('selected',true);
+
+              $("#id_administrative_area_level_1 :selected").each(function(){
+              $(this).parent().data("default", this);
+            });
+
+    $("#id_administrative_area_level_1").change(function(e) {
+              $($(this).data("default")).prop("selected", true);
+            });
             }
             
             if (type == "locality"){
               $('#id_locality option')
               .filter(function() { return $.trim( $(this).text() ) == long_name; })
               .attr('selected',true);
+
+               $("#id_locality :selected").each(function(){
+              $(this).parent().data("default", this);
+            });
+
+    $("#id_locality").change(function(e) {
+              $($(this).data("default")).prop("selected", true);
+            });
             }
 
             if (type == "neighborhood"){
@@ -308,7 +455,7 @@
 
         if(results.length==1) {
           latLng = results[0].geometry.location;
-          items.push("<li><a href='#' onclick='mark_Google("+latLng.lng() + "," + latLng.lat()+");'>" + results[0].formatted_address + '</a></li><br/>');
+          items.push("<li><a href='#' data-dismiss='modal' onclick='mark_Google("+latLng.lng() + "," + latLng.lat()+");'>" + results[0].formatted_address + '</a></li><br/>');
 
           $('#results_google').empty();
         if (items.length !== 0) {
@@ -328,7 +475,7 @@
 
             latLng = results[i].geometry.location;
             
-            items.push("<li><a href='#' onclick='mark_Google("+latLng.lng() + "," + latLng.lat()+");'>" + results[i].formatted_address + '</a></li><br/>');
+            items.push("<li><a href='#' data-dismiss='modal' onclick='mark_Google("+latLng.lng() + "," + latLng.lat()+");'>" + results[i].formatted_address + '</a></li><br/>');
           }
 
           $('#results_google').empty();
@@ -369,7 +516,7 @@
       map.getProjectionObject() // to Spherical Mercator Projection
     );
 
-    map.setCenter (lonlat, 18);
+    map.setCenter (lonlat, 15);
 
     markerslayer.clearMarkers();
     markerslayer.addMarker(new OpenLayers.Marker(lonlat,icon));
@@ -395,7 +542,7 @@
         var items = [];
         $.each(data, function (key, val) {
             var str = JSON.stringify([val.lat, val.lon]);
-            items.push("<li><a href='#' onclick='mark_Nominatim(" + val.lat + "," + val.lon + ");'>" + val.display_name + '</a></li><br/>');
+            items.push("<li><a href='#' data-dismiss='modal' onclick='mark_Nominatim(" + val.lat + "," + val.lon + ");'>" + val.display_name + '</a></li><br/>');
 
         });
 
@@ -422,7 +569,7 @@
 
   function mark_Nominatim(lat,lon) {
     search_LatLng_Address_Nominatim(lat, lon);
-    var zoom = 18;
+    var zoom = 15;
     var lonlat = new OpenLayers.LonLat(lon, lat).transform(
       new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
       map.getProjectionObject() // to Spherical Mercator Projection
@@ -441,6 +588,7 @@
     $('#id_administrative_area_level_1 option')
               .filter(function() { return $.trim( $(this).text() ) == json.address.state; })
               .attr('selected',true);
+    
     $("#id_administrative_area_level_1 :selected").each(function(){
               $(this).parent().data("default", this);
             });
@@ -459,9 +607,7 @@
     $("#id_locality").change(function(e) {
               $($(this).data("default")).prop("selected", true);
             });
-    document.getElementById('id_neighborhood').value = json.address.suburb;
-    document.getElementById('id_route').value = json.address.road;
-    document.getElementById('id_postal_code').value = json.address.postcode;
+    
   };
 
   //função para busca de dados de endereço com Lat e long - Nominatim
@@ -507,10 +653,12 @@
     var markers = new OpenLayers.Layer.Markers( "Markers" );
     markers.id = "Markers";
     map.addLayer(markers);
+    var scaleline = new OpenLayers.Control.ScaleLine();
+    map.addControl(scaleline);
 
-    var size = new OpenLayers.Size(40,42);
+    var size = new OpenLayers.Size(40,46);
     var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-    var icon = new OpenLayers.Icon('/static/img/marker.png', size, offset);   
+    var icon = new OpenLayers.Icon('/static/img/tree.png', size, offset);   
     var markerslayer = map.getLayer('Markers');
     
     var click = new OpenLayers.Control.Click();
@@ -533,39 +681,7 @@
 
       jQuery('.clear_features').hide();
     });
- 
-  //função para Preview de Foto
-    $(function () {
-      $("#id_foto").change(function () {
-        if (typeof (FileReader) != "undefined") {
-          var dvPreview = $("#dvPreview");
-          dvPreview.html("");
-          var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
-          $($(this)[0].files).each(function () {
-            var file = $(this);
-            if (regex.test(file[0].name.toLowerCase())) {
-              var reader = new FileReader();
-              reader.onload = function (e) {
-                var img = $("<img />");
-                img.attr("style", "height:25%;width: 25%");
-                img.attr("class", "img-thumbnail");
-                img.attr("src", e.target.result);
-                dvPreview.append(img);
-              }
-              reader.readAsDataURL(file[0]);
-            } else {
-              alert(file[0].name + " is not a valid image file.");
-              dvPreview.html("");
-              return false;
-            }
-          });
-        } else {
-          alert("This browser does not support HTML5 FileReader.");
-        }
-      });
-    });
 
   </script>
-
 {% endblock content %}
 

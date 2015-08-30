@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load user_agents %}
+{% load staticfiles %}
+{% load bootstrap %}
+
+{% block title %} | Pesquisar Árvores {% endblock %}
+
+{% block content %}
+
+  <link href="{% static 'css/list_tree.css' %}" rel="stylesheet" />
+  <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script> 
+       <!-- <div id="mapa_tree_list" style="width: 100%; height: 400px;"></div> <!-- Mapa 
+        <br/>
+          <!-- Lista de Árvores -->
+          
+        <ul class="list-group">
+            <h3 align="center"> <i class="glyphicon glyphicon-search"></i> Busca de Árvores </h3>
+             <br/>
+             <div align="center" class="col-md-12">   
+              <button type="button" class="btn btn-success" data-toggle="collapse" data-target="#filter-panel" style="width:100%;">
+            <span class="glyphicon glyphicon-cog"></span> Busca Avançada
+        </button>
+        <br/><br/>
+        </div>
+
+        <div id="filter-panel" class="col-md-12 collapse filter-panel">
+          <div class="panel panel-default">
+
+            <div class="panel-body">
+          <form id="myForm">
+            {{ frm_srch.media }}
+            {{ frm_srch.condicao | bootstrap}}
+            {{frm_srch.especie | bootstrap}}
+
+            
+            
+            {{frm_srch.municipio }}
+            <br>
+            {{frm_srch.bairro | bootstrap}}
+            {{frm_srch.endereco | bootstrap}}
+           
+            {% if user.is_authenticated %}
+             
+            {{frm_srch.minhas_arvores | bootstrap}}  {{frm_srch.todas_arvores | bootstrap}}  
+            {{frm_srch.user.as_hidden}}
+            {% endif %}
+
+            <div id="btn">
+            <button class="btn btn-primary btn-success" type="submit">
+            <span class="glyphicon glyphicon-search"></span> 
+              Pesquisar
+            </button>
+            </div>
+
+          </form>
+
+          </div>
+          </div>
+          </div>
+
+          <script type="text/javascript">
+            $('#myForm input').on('change', function() {
+                if (document.getElementById('id_minhas_arvores').checked){
+                  document.getElementById('id_user').value = {{user.pk}};
+                  document.getElementById('id_todas_arvores').value="";
+                } else {
+                  document.getElementById('id_user').value = " ";
+                }
+            });
+          </script>
+
+        <br/><br/>
+                {% for object in object_list %}
+                  <a href="{% url 'tree_detail' object.pk %}" class="list-group-item">
+                    <div class="square-box pull-left" style="margin-right: 5px">
+
+                      {% if object.foto1 %}
+                        <img class="media-object dp img-thumb" src="{{object.foto1.url}}" style="width: 100px;">
+                      {% elif object.foto2 and not object.foto1 %}
+                          <img class="media-object dp img-thumb" src="{{object.foto2.url}}" style="width: 100px;">
+                      {% elif object.foto3 and not object.foto1 and not object.foto2 %}
+                          <img class="media-object dp img-thumb" src="{{object.foto3.url}}" style="width: 100px;">
+                      {% else %}
+                        <img class="media-object dp img-thumb" src="/static/img/sem_foto.png" style="width: 100px;">
+                      {% endif %}
+                    </div>
+                    <span class="badge"> > </span>
+                    
+                    <address>
+                      <strong>{% if not object.especie or object.especie == ' ' %}Espécie não informada{% else %}{{ object.especie }}{%endif%}</strong><br>
+                      {% if not object.route or object.route == ' '%}{% else %}{{object.route}}{% endif %}, {{object.numero}}{% if not object.neighborhood or object.neighborhood == ' ' %}{% else %}, {{object.neighborhood}}{% endif %}{% if not object.postal_code or object.postal_code == ' ' %}{% else %}, {{object.postal_code}} {% endif %} <br>{{object.locality}}, {{object.administrative_area_level_1}}
+                    </address>
+
+
+                  </a>
+                {% endfor %} 
+          
+          </ul>
+
+{% endblock content %}

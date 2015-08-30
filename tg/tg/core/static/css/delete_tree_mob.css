@@ -1,0 +1,137 @@
+/***
+User Profile Sidebar by @keenthemes
+A component of Metronic Theme - #1 Selling Bootstrap 3 Admin Theme in Themeforest: http://j.mp/metronictheme
+Licensed under MIT
+***/
+
+body {
+  padding-top: 40px;
+}
+
+.asteriskField {
+    display: none;
+}
+
+p >  label {
+  text-align: right; 
+  width: 150px;
+}
+
+p >  input {
+  width: 300px;
+}
+
+p > textarea {
+  width: 300px;
+}
+
+/* Profile container */
+.profile {
+  margin: 20px 0;
+}
+
+/* Profile sidebar */
+.profile-sidebar {
+  padding: 20px 0 10px 0;
+  background: #fff;
+}
+
+.profile-userpic img {
+  float: none;
+  margin: 0 auto;
+  width: 65%;
+  height: 30%;
+  -webkit-border-radius: 50% !important;
+  -moz-border-radius: 50% !important;
+  border-radius: 50% !important;
+}
+
+.profile-usertitle {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.profile-usertitle-name {
+  color:  #476B00;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 7px;
+}
+
+.profile-usermenu {
+  margin-top: 30px;
+}
+
+.profile-usermenu ul li {
+  border-bottom: 1px solid #f0f4f7;
+}
+
+
+.profile-usermenu ul li:last-child {
+  border-bottom: none;
+}
+
+.profile-usermenu ul li a {
+  color: #93a3b5;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.profile-usermenu ul li ul li {
+  color: #93a3b5;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.profile-usermenu ul li a {
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+.profile-usermenu ul li ul li a {
+   margin-right: 8px;
+  font-size: 14px;
+}
+
+.profile-usermenu ul li a:hover {
+  background-color: #fafcfd;
+  color: #6C8933;
+}
+
+.profile-usermenu ul li ul li a:hover{
+background-color: #fafcfd;
+  color: #6C8933;
+}
+
+
+.profile-usermenu ul li.active {
+  border-bottom: none;
+}
+
+.profile-usermenu ul li ul li.active{
+  border-bottom: none;
+}
+
+.profile-usermenu ul li.active a {
+  color: #6C8933;
+  background-color: #fafcfd;
+  border-left: 2px solid #6C8933;
+  margin-left: -2px;
+}
+
+
+/* Profile Content */
+.profile-content {
+  padding: 20px;
+  background: #fff;
+  min-height: 450px;
+}
+
+#footer {
+    
+    margin-top: 39px;
+    background-color: #000; 
+    color: #fff; 
+    text-align: right; 
+    padding: 10px 30px 10px 31px;
+}

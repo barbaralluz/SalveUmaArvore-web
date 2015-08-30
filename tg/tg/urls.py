@@ -9,10 +9,11 @@ admin.autodiscover()
 
 urlpatterns = patterns(
     '',
-    url(r'^municipios_app/', include('municipios.urls')),
     url(r'^$', 'tg.core.views.index', name="index"),
     url(r'^statistics/$', 'tg.core.views.statistics', name="statistics"),
-    url(r'^(?P<username>\w+)/profile/$', 'tg.core.views.profile', name="profile"),
+
+    #Municipios
+    url(r'^municipios_app/', include('municipios.urls')),
 
     # Árvores
     
@@ -33,12 +34,6 @@ urlpatterns = patterns(
     
     url(r'^logout/$', 'django.contrib.auth.views.logout_then_login',
                     {'login_url': '/'}),
-    
-    url(r'^password_change/$', 'django.contrib.auth.views.password_change', 
-                    {'template_name': 'change_password.html'}, name='password_change'),
-    
-    url(r'^password_change/done/$', 'django.contrib.auth.views.password_change_done', 
-                    {'template_name': 'change_password_done.html'}, name='password_change_done'),
 
     url(r'', include('social_auth.urls')),
 

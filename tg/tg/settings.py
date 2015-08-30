@@ -161,7 +161,7 @@ STATIC_URL = '/static/'
 
 LOGIN_URL = "/login/"
 LOGOUT_URL = "/logout/"
-LOGIN_REDIRECT_URL = "/list/tree/"
+LOGIN_REDIRECT_URL = "/"
 
 # configurando o usuario do django para ser
 # o usuario definido pelo projeto e nao o usuario

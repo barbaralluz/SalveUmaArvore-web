@@ -15,9 +15,19 @@
        <!-- <div id="mapa_tree_list" style="width: 100%; height: 400px;"></div> <!-- Mapa 
         <br/>
           <!-- Lista de Árvores -->
+
           <h1> <i class="glyphicon glyphicon-search"></i> Busca de Árvores</h1>
          
           <hr>
+
+          <div align="center" class="col-md-12">   
+              <button type="button" class="btn btn-success" data-toggle="collapse" data-target="#filter-panel" style="width:100%;">
+            <span class="glyphicon glyphicon-cog"></span> Busca Avançada
+        </button>
+        <br/><br/>
+        </div>
+
+        <div id="filter-panel" class="col-md-12 collapse filter-panel">
           <div class="panel panel-default">
 
             <div class="panel-body">
@@ -50,6 +60,7 @@
 
           </div>
           </div>
+          </div>
 
           <script type="text/javascript">
             $('#myForm input').on('change', function() {
@@ -60,8 +71,9 @@
                   document.getElementById('id_user').value = " ";
                 }
             });
+
           </script>
-         
+          
 
           <div class="row">    
           

@@ -499,7 +499,7 @@
 
         if(results.length==1) {
           latLng = results[0].geometry.location;
-          items.push("<li><a href='#' onclick='mark_Google("+latLng.lng() + "," + latLng.lat()+");'>" + results[0].formatted_address + '</a></li><br/>');
+          items.push("<li><a href='#' data-dismiss='modal' onclick='mark_Google("+latLng.lng() + "," + latLng.lat()+");'>" + results[0].formatted_address + '</a></li><br/>');
 
           $('#results_google').empty();
         if (items.length !== 0) {
