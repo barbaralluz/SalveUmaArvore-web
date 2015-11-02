@@ -227,13 +227,13 @@
     var size = new OpenLayers.Size(34,38);
     var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
 
-    {% if object.condicao_arvore == 'Boa' %}
+    {% if object.condicao_arvore == 'Boa - Sem sinal de praga, danos ou doenças' or object.condicao_arvore == 'Boa' %}
       var icon = new OpenLayers.Icon('/static/img/icons/tree_good.png', size, offset);     
-    {% elif object.condicao_arvore == 'Regular' %}
+    {% elif object.condicao_arvore == 'Regular - Pequenos sinais de praga, danos ou doenças' or object.condicao_arvore == 'Regular' %}
       var icon = new OpenLayers.Icon('/static/img/icons/tree_regular.png', size, offset);          
-    {% elif object.condicao_arvore == 'Ruim' %}
+    {% elif object.condicao_arvore == 'Ruim - Risco de queda, sinal de forte ataque de pragas, doenças e danos' or object.condicao_arvore == 'Ruim'%}
       var icon = new OpenLayers.Icon('/static/img/icons/tree_bad.png', size, offset);   
-    {% elif object.condicao_arvore == 'Caída' %}
+    {% elif object.condicao_arvore == 'Caída - Árvore caída' or object.condicao_arvore == 'Caída' %}
       var icon = new OpenLayers.Icon('/static/img/icons/down.png', size, offset);          
     {% endif %}
      

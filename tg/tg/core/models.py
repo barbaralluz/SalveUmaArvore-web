@@ -22,10 +22,10 @@ class Tree(models.Model):
     objects = models.GeoManager()
 
     COND_CHOICES = [
-        ('Boa', 'Boa - Sem sinal de praga, danos ou doenças'),
-        ('Regular', 'Regular - Pequenos sinais de praga, danos ou doenças'),
-        ('Ruim', 'Ruim - Risco de queda, sinal de forte ataque de pragas, doenças e danos'),
-        ('Caída', 'Caída - Árvore caída'),
+        ('Boa - Sem sinal de praga, danos ou doenças', 'Boa - Sem sinal de praga, danos ou doenças'),
+        ('Regular - Pequenos sinais de praga, danos ou doenças', 'Regular - Pequenos sinais de praga, danos ou doenças'),
+        ('Ruim - Risco de queda, sinal de forte ataque de pragas, doenças e danos', 'Ruim - Risco de queda, sinal de forte ataque de pragas, doenças e danos'),
+        ('Caída - Árvore caída', 'Caída - Árvore caída'),
     ]
     
     COND_CHOICES_AND_EMPTY = [('','----------')] + COND_CHOICES
@@ -35,19 +35,19 @@ class Tree(models.Model):
     especie = models.CharField(verbose_name=u'Espécie', null=True, blank=True, max_length=200)
 
     HEIGHT_CHOICES = (
-        ('Muda', 'Muda - Até 1 m'),
-        ('Pequeno Porte', 'Pequeno Porte - Entre 1 e 3 m'),
-        ('Médio Porte', 'Médio Porte - Entre 3 e 6 m'),
-        ('Grande Porte', 'Grande Porte - Mais que 6 m'),
+        ('Muda - Até 1 m', 'Muda - Até 1 m'),
+        ('Pequeno Porte - Entre 1 e 3 m', 'Pequeno Porte - Entre 1 e 3 m'),
+        ('Médio Porte - Entre 3 e 6 m', 'Médio Porte - Entre 3 e 6 m'),
+        ('Grande Porte - Mais que 6 m', 'Grande Porte - Mais que 6 m'),
     )
 
     altura = models.CharField(u'Altura', max_length=100, choices=HEIGHT_CHOICES)
 
     RAIZ_CHOICES = [
-        ('Não apresenta problemas', 'Raízes profundas e sem danos a edificações e pisos próximos'),
-        ('Aponta', 'Raízes superficiais, sem rachaduras, elevação ou desníveis'),
-        ('Quebra', 'Raízes  expostas, presença de algumas rachaduras'),
-        ('Destrói', 'Raízes expostas, destruição da calçada'),
+        ('Não apresenta problemas - Raízes profundas e sem danos a edificações e pisos próximos', 'Não apresenta problemas - Raízes profundas e sem danos a edificações e pisos próximos'),
+        ('Aponta - Raízes superficiais, sem rachaduras, elevação ou desníveis', 'Aponta - Raízes superficiais, sem rachaduras, elevação ou desníveis'),
+        ('Quebra - Raízes  expostas, presença de algumas rachaduras', 'Quebra - Raízes  expostas, presença de algumas rachaduras'),
+        ('Destrói - Raízes expostas, destruição da calçada', 'Destrói - Raízes expostas, destruição da calçada'),
     ]
 
     RAIZ_CHOICES_AND_EMPTY = [('','----------')] + RAIZ_CHOICES
@@ -68,7 +68,7 @@ class Tree(models.Model):
         ('Sem necessidade', 'Sem necessidade'),
         ('Afastar de construções', 'Afastar de construções'),
         ('Liberar Rede Elétrica', 'Liberar Rede Elétrica'),
-        ('Levantamento de copa', 'Remover ramos que atrapalham trânsito de pedestres ou veículos')
+        ('Levantamento de copa', 'Levantamento de copa - Remover ramos que atrapalham trânsito de pedestres ou veículos')
     ]
     
     MAN_CHOICES_AND_EMPTY = [('','----------')] + MAN_CHOICES
@@ -77,7 +77,7 @@ class Tree(models.Model):
 
     descricao = models.TextField(u'Descrição', null=True, blank=True)
     data_cadastro = models.DateField(default=datetime.now)  
-    foto1 = models.ImageField(u'Foto 1', upload_to="img/trees", null=True, blank=True)
+    foto1 = models.ImageField(u'Foto 1', upload_to="img/trees", null=False, blank=False)
     foto2 = models.ImageField(u'Foto 2', upload_to="img/trees", null=True, blank=True)
     foto3 = models.ImageField(u'Foto 3', upload_to="img/trees", null=True, blank=True)
     usuario = models.ForeignKey(User)

@@ -7,13 +7,9 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.core.urlresolvers import reverse_lazy, reverse
 
-from tg.core.models import Tree, User, Profile
-from tg.core.forms import TreeForm, UserForm, ProfileForm, SearchTreeForm
-from municipios.models import Municipio, UF
-
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 
 from django.contrib.comments import Comment
@@ -21,6 +17,42 @@ from django.contrib.comments import Comment
 from django_user_agents.utils import get_user_agent
    
 from django.shortcuts import render, render_to_response, get_object_or_404, redirect
+
+from django.core.context_processors import csrf
+
+from django.http import HttpResponse, HttpResponseBadRequest
+
+from rest_framework.authtoken.models import Token
+from rest_framework.generics import GenericAPIView
+from rest_framework import viewsets
+from rest_framework.renderers import JSONRenderer
+from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
+from rest_framework.parsers import JSONParser, FormParser, MultiPartParser, FileUploadParser
+from rest_framework.generics import RetrieveUpdateAPIView
+from rest_framework.permissions import IsAuthenticated, AllowAny
+
+from rest_auth.registration.views import SocialLoginView
+from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
+
+
+from tg.core.models import Tree, User, Profile
+from tg.core.forms import TreeForm, UserForm, ProfileForm, SearchTreeForm
+from municipios.models import Municipio, UF
+from tg.core.serializers import TreeSerializer, UserDetailsSerializer, LoginSerializer, TokenSerializer
+from django.conf import settings
+
+from django.contrib.auth import login, logout
+from django.conf import settings
+
+from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.generics import GenericAPIView
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.authtoken.models import Token
+from rest_framework.generics import RetrieveUpdateAPIView
 
 def index(request):
     arvores = Tree.objects.all();
@@ -109,29 +141,29 @@ class StatisticsView(TemplateView):
             porcentagem_arvores_usuario = (arvores_usuario * 100) / total_arvores
 
             #arvores por condição
-            arvores_boa = Tree.objects.filter(condicao_arvore='Boa').count()
+            arvores_boa = Tree.objects.filter(condicao_arvore='Boa - Sem sinal de praga, danos ou doenças').count()
             porcentagem_arvores_boa = (arvores_boa * 100) / total_arvores
 
-            arvores_regular = Tree.objects.filter(condicao_arvore='Regular').count()
+            arvores_regular = Tree.objects.filter(condicao_arvore='Regular - Pequenos sinais de praga, danos ou doenças').count()
             porcentagem_arvores_regular = (arvores_regular * 100) / total_arvores
 
-            arvores_ruim = Tree.objects.filter(condicao_arvore='Ruim').count()
+            arvores_ruim = Tree.objects.filter(condicao_arvore='Ruim - Risco de queda, sinal de forte ataque de pragas, doenças e danos').count()
             porcentagem_arvores_ruim = (arvores_ruim * 100) / total_arvores
 
-            arvores_caidas = Tree.objects.filter(condicao_arvore='Caída').count()
+            arvores_caidas = Tree.objects.filter(condicao_arvore='Caída - Árvore caída').count()
             porcentagem_arvores_caidas = (arvores_caidas * 100) / total_arvores
 
             #arvores por condicao de raíz
-            arvores_raiz_sem = Tree.objects.filter(condicao_raiz='Não apresenta problemas').count()
+            arvores_raiz_sem = Tree.objects.filter(condicao_raiz='Não apresenta problemas - Raízes profundas e sem danos a edificações e pisos próximos').count()
             porcentagem_arvores_raiz_sem = (arvores_raiz_sem * 100) / total_arvores
 
-            arvores_raiz_aponta = Tree.objects.filter(condicao_raiz='Aponta').count()
+            arvores_raiz_aponta = Tree.objects.filter(condicao_raiz='Aponta - Raízes superficiais, sem rachaduras, elevação ou desníveis').count()
             porcentagem_arvores_raiz_aponta = (arvores_raiz_aponta * 100) / total_arvores
 
-            arvores_raiz_quebra = Tree.objects.filter(condicao_raiz='Quebra').count()
+            arvores_raiz_quebra = Tree.objects.filter(condicao_raiz='Quebra - Raízes  expostas, presença de algumas rachaduras').count()
             porcentagem_arvores_raiz_quebra = (arvores_raiz_quebra * 100) / total_arvores
 
-            arvores_raiz_destroi = Tree.objects.filter(condicao_raiz='Destrói').count()
+            arvores_raiz_destroi = Tree.objects.filter(condicao_raiz='Destrói - Raízes expostas, destruição da calçada').count()
             porcentagem_arvores_raiz_destroi = (arvores_raiz_destroi * 100) / total_arvores
 
             #arvores por proximidade da rede elétrica
@@ -348,7 +380,7 @@ class TreeList(SearchTreeList):
     
 tree_list = TreeList.as_view()
 
-#Lista de Árvores do Usuário - teste 1 - User Agent
+#Lista de Árvores do Usuário
 class TreeListView(ListView):
     model = Tree
     
@@ -378,3 +410,80 @@ class TreeDetailView(DetailView):
 
 tree_detail = TreeDetailView.as_view()
 
+# Views para aplicativo Android
+@api_view(['GET', 'POST'])
+def tree_list_android(request, format=None):
+    parser_classes = (MultiPartParser, FormParser, FileUploadParser,)
+    permission_classes = (AllowAny)
+    
+    if request.method == 'GET':
+        trees = Tree.objects.all()
+        serializer = TreeSerializer(trees, many=True)
+        return Response(serializer.data, content_type='application/json; charset=utf-8')
+
+    elif request.method == 'POST':
+       
+        serializer = TreeSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class FacebookLogin(SocialLoginView):
+    adapter_class = FacebookOAuth2Adapter
+
+class UserDetailsView(RetrieveUpdateAPIView):
+
+    """
+    Returns User's details in JSON format.
+    Accepts the following GET parameters: token
+    Accepts the following POST parameters:
+        Required: token
+        Optional: email, first_name, last_name and UserProfile fields
+    Returns the updated UserProfile and/or User object.
+    """
+    serializer_class = UserDetailsSerializer
+    permission_classes = (IsAuthenticated, )
+
+    def get_object(self):
+        return self.request.user
+
+class LoginView(GenericAPIView):
+
+    """
+    Check the credentials and return the REST Token
+    if the credentials are valid and authenticated.
+    Calls Django Auth login method to register User ID
+    in Django session framework
+    Accept the following POST parameters: username, password
+    Return the REST Framework Token Object's key.
+    """
+    permission_classes = (AllowAny,)
+    serializer_class = LoginSerializer
+    token_model = Token
+    response_serializer = UserDetailsSerializer
+
+    def login(self):
+        self.user = self.serializer.validated_data['user']
+        self.token, created = self.token_model.objects.get_or_create(
+            user=self.user)
+        if getattr(settings, 'REST_SESSION_LOGIN', True):
+            login(self.request, self.user)
+
+    def get_response(self):
+        return Response(
+            self.response_serializer(self.user).data, 
+                status=status.HTTP_200_OK
+        )
+
+    def get_error_response(self):
+        return Response(
+            self.serializer.errors, status=status.HTTP_400_BAD_REQUEST
+        )
+
+    def post(self, request, *args, **kwargs):
+        self.serializer = self.get_serializer(data=self.request.data)
+        if not self.serializer.is_valid():
+            return self.get_error_response()
+        self.login()
+        return self.get_response()

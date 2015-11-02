@@ -4,6 +4,10 @@ from django.conf.urls import patterns, url, include
 from django.views.generic.base import RedirectView
 from django.contrib import admin
 from django.conf import settings
+from rest_framework import routers
+from rest_framework.urlpatterns import format_suffix_patterns
+from tg.core.views import FacebookLogin, UserDetailsView, LoginView
+
 
 admin.autodiscover()
 
@@ -40,9 +44,22 @@ urlpatterns = patterns(
     # Admin	
     url(r'^admin/', include(admin.site.urls)),
 
+    # Coments
     url(r'^comments/', include('fluent_comments.urls')),
-   
+
+    #Rest Android
+    #Árvores
+    url(r'^trees/$', 'tg.core.views.tree_list_android'),
+    #Autenticação
+    url(r'^rest-auth/', include('rest_auth.urls')),
+    (r'^rest-auth/', include('rest_auth.urls')),
+    (r'^rest-auth/registration/', include('rest_auth.registration.urls')),
+    url(r'^rest-auth/user/logged/$', UserDetailsView.as_view(), name='rest_user_details'),
+    url(r'^rest-auth/loggin/$', LoginView.as_view(), name='rest_login'),
+    url(r'^rest-auth/facebook/$', FacebookLogin.as_view(), name='fb_login'),
 )
+
+urlpatterns = format_suffix_patterns(urlpatterns)
 
 if settings.DEBUG:
     # static files (images, css, javascript, etc.)

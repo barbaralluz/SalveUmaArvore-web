@@ -411,12 +411,14 @@
       if (status == google.maps.GeocoderStatus.OK) {
         if (results[0]) {
           //console.log(results[0].formatted_address);
+          //console.log(results[0].address_components[2].short_name);
 
           components = results[0].address_components;
           for (var i = 0; i < components.length; i++) {
             short_name =  components[i].short_name ;
             type =  components[i].types[0];
             long_name =  components[i].long_name;
+            //console.log(type);
 
             if (type == "country"){
               document.getElementById('id_country').value  = long_name;
@@ -450,9 +452,11 @@
             });
             }
 
-            if (type == "neighborhood"){
+            if (type == "sublocality_level_1"){
               document.getElementById('id_neighborhood').value = long_name;
             }
+
+            
             if (type == "route"){
               document.getElementById('id_route').value = long_name;
             }
@@ -651,6 +655,11 @@
     $("#id_locality").change(function(e) {
               $($(this).data("default")).prop("selected", true);
             });
+
+    document.getElementById('id_neighborhood').value = json.address.suburb;
+    document.getElementById('id_route').value = json.address.road;
+    document.getElementById('id_postal_code').value = json.address.postcode;
+            
     
   };
 

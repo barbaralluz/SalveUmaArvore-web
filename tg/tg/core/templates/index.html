@@ -181,15 +181,15 @@
             "</div>" + 
           "<div align='right'><br><a id='detail' class='btn btn-success' href='{% url 'tree_detail' arvore.pk %}'><span class='glyphicon glyphicon-plus'></span> Detalhes</a></div>"},
 
-            {% if arvore.condicao_arvore == 'Boa' %}
+            {% if arvore.condicao_arvore == 'Boa - Sem sinal de praga, danos ou doenças' or arvore.condicao_arvore == 'Boa' %}
 
             {externalGraphic: '/static/img/icons/tree_good.png', graphicHeight: 36, graphicWidth: 32, graphicXOffset:-22, graphicYOffset:-36}
 
-            {% elif arvore.condicao_arvore == 'Regular' %}
+            {% elif arvore.condicao_arvore == 'Regular - Pequenos sinais de praga, danos ou doenças' or arvore.condicao_arvore == 'Regular' %}
              {externalGraphic: '/static/img/icons/tree_regular.png', graphicHeight: 36, graphicWidth: 32,  graphicXOffset:-12, graphicYOffset:-26}
-             {% elif arvore.condicao_arvore == 'Ruim' %}
+             {% elif arvore.condicao_arvore == 'Ruim - Risco de queda, sinal de forte ataque de pragas, doenças e danos' or arvore.condicao_arvore == 'Ruim'%}
              {externalGraphic: '/static/img/icons/tree_bad.png', graphicHeight: 36, graphicWidth: 32, graphicXOffset:-22, graphicYOffset:-36}
-             {% elif arvore.condicao_arvore == 'Caída' %}
+             {% elif arvore.condicao_arvore == 'Caída - Árvore caída' or arvore.condicao_arvore == 'Caída' %}
              {externalGraphic: '/static/img/icons/down.png', graphicHeight: 36, graphicWidth: 32, graphicXOffset:-12, graphicYOffset:-26}
            {% endif %}
       );             
