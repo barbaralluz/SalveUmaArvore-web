@@ -22,13 +22,13 @@
                     <div class="square-box pull-left" style="margin-right: 5px">
 
                       {% if object.foto1 %}
-                        <img class="media-object dp img-thumb" src="{{object.foto1.url}}" style="width: 100px;">
+                        <img class="media-object dp img-thumb" src="{{object.foto1.url}}" style="width: 80px; height: 100px;">
                       {% elif object.foto2 and not object.foto1 %}
-                          <img class="media-object dp img-thumb" src="{{object.foto2.url}}" style="width: 100px;">
+                          <img class="media-object dp img-thumb" src="{{object.foto2.url}}" style="width: 80px; height: 100px;">
                       {% elif object.foto3 and not object.foto1 and not object.foto2 %}
-                          <img class="media-object dp img-thumb" src="{{object.foto3.url}}" style="width: 100px;">
+                          <img class="media-object dp img-thumb" src="{{object.foto3.url}}" style="width: 80px; height: 100px;">
                       {% else %}
-                        <img class="media-object dp img-thumb" src="/static/img/sem_foto.png" style="width: 100px;">
+                        <img class="media-object dp img-thumb" src="/static/img/sem_foto.png" style="width: 80px; height: 100px;">
                       {% endif %}
                     </div>
                     <span class="badge"> > </span>
